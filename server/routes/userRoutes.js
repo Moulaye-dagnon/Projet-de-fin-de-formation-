@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const connection = require("../mongoDB/db.js");
 const User = require("../models/User");
-const passwordHash = require("../Utils/passwordVerify.js");
 
 connection();
 
@@ -18,7 +17,7 @@ router.post("/logup", async (req, res) => {
   if (findUser) {
     res.status(400).json("Cet utilisateur existe déjà...");
   } else {
-    const hashedPassword = await bcrypt.hash(password, 8).then((hashed) => {
+    const hashedPassword = await bcrypt.hash(password, 10).then((hashed) => {
       return hashed;
     });
     try {
@@ -71,5 +70,26 @@ router.post("/login", async (req, res) => {
     res.status(400).json("Utilisateur introuvable...");
   }
 });
+
+router.post("/update-account", async (req,res)=>{
+    const { username, tel, email, password } = req.body;
+    const findUser = await User.findOne({ email: email });
+    if(findUser){
+        try {
+            const hashedPassword = await bcrypt.hash(password, 10).then((hashed) => {
+                return hashed
+            })
+            findUser.username = username
+            findUser.telephone = tel
+            findUser.password = hashedPassword
+            findUser.save()
+            res.status(200).json({"compte modifié avec succès": findUser})
+        } catch (error) {
+            res.status(500).json({"Une erreur est survenue...": error})
+        }
+    }else{
+        res.status(500).json("Utilisateur introuvable...")
+    }
+})
 
 module.exports = router;
