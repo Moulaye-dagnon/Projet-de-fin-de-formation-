@@ -1,9 +1,15 @@
 const express = require("express");
+const cors = require("cors")
+const dotenv = require("dotenv").config
+const router = require("./routes/userRoutes")
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("backend fonctionne ");
-});
-app.listen(5000, () => {
-  console.log("Serveur sur port 5000");
+app.use(express.json())
+app.use(cors())
+app.use("/",router)
+
+
+const PORT = process.env.PORT || 4000
+app.listen(PORT, () => {
+  console.log(`Serveur sur port ${PORT}`);
 });
