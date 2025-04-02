@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const connection = require("../mongoDB/db.js");
 const User = require("../models/User");
+const upload = require('../middlewares/images');
+
 
 connection();
 
@@ -11,15 +13,23 @@ router.get("/", async (req, res) => {
   res.status(200).json("Bienvenue dans mon application...");
 });
 
-router.post("/logup", async (req, res) => {
-  const { nom, prenom, username, tel, email, password, role } = req.body;
+router.post("/logup", upload.single("photoProfil") ,async (req, res) => {
+  const { nom, prenom, username, tel, email, password, role, photoProfile } = req.body;
   const findUser = await User.findOne({ email: email });
+  if (!req.file) {
+    console.log(role)
+    return res.status(400).json({ error: "Aucun fichier n'a été envoyé" });
+}
   if (findUser) {
     res.status(400).json("Cet utilisateur existe déjà...");
   } else {
     const hashedPassword = await bcrypt.hash(password, 10).then((hashed) => {
       return hashed;
-    });
+    }).catch(error=>{
+      throw new Error (error)
+    })
+    const photoProfil = req.file ? req.file.filename : null;
+    console.log(photoProfil)
     try {
       const user = await User.create({
         nom,
@@ -29,6 +39,7 @@ router.post("/logup", async (req, res) => {
         email,
         password: hashedPassword,
         role,
+        photoProfil: photoProfil
       });
       res.status(201).json({ "Utilisateur crée avec succès": user });
     } catch (error) {
