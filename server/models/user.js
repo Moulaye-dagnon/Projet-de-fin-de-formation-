@@ -8,7 +8,7 @@ const userSchema = new Schema({
     },
     prenom: {
         type: String,
-        require: true
+        require: true 
     },
     username: {
         type: String,
@@ -30,6 +30,9 @@ const userSchema = new Schema({
         type: String,
         default: "collaborateur",
         require: true
+    },
+    photoProfil: {
+        type: String
     },
     projets: [{
         projet: {
