@@ -1,20 +1,18 @@
-import { useState } from 'react'
-import './App.css'
-import Login from './Components/Forms/Login'
+import { useState } from "react";
+import "./App.css";
+import { BrowserRouter } from "react-router-dom";
+import Main from "./Components/Main";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
-      <div className="card">
-        <Login/>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <BrowserRouter>
+        <Main />
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
