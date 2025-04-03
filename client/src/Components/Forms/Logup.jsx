@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Login() {
+export default function Logup() {
   const [data, setData] = useState({
     nom: "",
     prenom: "",
