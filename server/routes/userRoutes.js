@@ -7,7 +7,7 @@ const User = require("../models/User");
 const upload = require("../middlewares/images");
 const emailjs = require("emailjs-com");
 const nodemailer = require("nodemailer");
-const authentification = require("../middlewares/auth.js");
+const {authentification,collaboratorAuth,adminAuth} = require("../middlewares/auth.js");
 
 connection();
 
@@ -88,7 +88,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/update-account", async (req, res) => {
+router.post("/update-account", collaboratorAuth ,async (req, res) => {
   const { username, tel, email, password } = req.body;
   const findUser = await User.findOne({ email: email });
   if (findUser) {
