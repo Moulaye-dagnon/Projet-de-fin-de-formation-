@@ -21,6 +21,8 @@ export default function Login() {
             },
             body: JSON.stringify(data)
         }).then(req=> req.json()).then(res=>{
+            localStorage.setItem("token",res.token)
+            localStorage.setItem("user",JSON.stringify(res.data))
             console.log(res.result)
             navigate("/dashboard")
         })
