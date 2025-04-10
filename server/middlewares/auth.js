@@ -5,7 +5,7 @@ const authentification = async (req,res,next) =>{
     if(req.headers.authorization){
         const token = req.headers.authorization.split(" ")[1]
         if(!token){
-            res.status(500).json("Veuillez vous authentifier!!")
+            res.status(401).json("Veuillez vous authentifier!!")
         }else{
             const decode = jwt.verify(token,process.env.PASSWORD_SECRET_TOKEN)
             const user = await User.findOne({email: decode.email})
@@ -17,7 +17,7 @@ const authentification = async (req,res,next) =>{
             }
         }
     }else{
-        res.status(500).json("Veuillez vous authentifier!!")
+        res.status(401).json("Veuillez vous authentifier!!")
     }
 }
  
