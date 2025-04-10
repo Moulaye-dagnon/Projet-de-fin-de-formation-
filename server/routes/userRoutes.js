@@ -11,7 +11,7 @@ const {authentification,collaboratorAuth,adminAuth} = require("../middlewares/au
 
 connection();
 
-router.get("/", async (req, res) => {
+router.get("/", collaboratorAuth, async (req, res) => {
   res.status(200).json("Bienvenue dans mon application...");
 });
 
@@ -76,7 +76,7 @@ router.post("/login", async (req, res) => {
 
         findUser.authTokens.push({ authToken });
         findUser.save();
-        res.status(200).json({ result: "connexion reussie", token: authToken });
+        res.status(200).json({ result: "connexion reussie", data: {id: findUser._id, nom: findUser.nom, prenom: findUser.prenom, UserName: findUser.username, email: findUser.email}, token: authToken });
       } else {
         throw new Error("Une erreur est survenue...");
       }

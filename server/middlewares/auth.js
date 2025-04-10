@@ -13,56 +13,66 @@ const authentification = async (req,res,next) =>{
                 req.user = user
                 next()
             }else{
-                res.status(400).json("Vous n'etes pas autorisé!");
+                res.status(401).json("Vous n'etes pas autorisé!");
             }
         }
     }else{
         res.status(500).json("Veuillez vous authentifier!!")
     }
 }
-
+ 
 const collaboratorAuth = async (req,res,next)=>{
     if(req.headers.authorization){
         const token = req.headers.authorization.split(" ")[1]
-        if(!token){
-            res.status(500).json("Veuillez vous authentifier1!!")
-        }else{
-            const decode = jwt.verify(token,process.env.SECRET_TOKEN)
-            const user = await User.findOne({email: decode.email})
-            if(user){
-                req.user = user
-                next()
+        try {
+            if(!token){
+                res.status(500).json("Veuillez vous authentifier1!!")
             }else{
-                res.status(500).json("Vous n'etes pas autorisé")
+                const decode = jwt.verify(token,process.env.SECRET_TOKEN)
+                const user = await User.findOne({email: decode.email})
+                if(user){
+                    req.user = user
+                    next()
+                }else{
+                    res.status(401).json("Vous n'etes pas autorisé!");
+                }
             }
+        } catch (error) {
+            res.status(401).json("Vous n'etes pas autorisé!");
         }
+        
     }else{
-        res.status(500).json("Veuillez vous authentifier2!!")
+        res.status(401).json("Veuillez vous authentifier2!!")
     }
 }
 
 const adminAuth = async (req,res,next)=>{
     if(req.headers.authorization){
         const token = req.headers.authorization.split(" ")[1]
-        if(!token){
-            res.status(500).json("Veuillez vous authentifier!!")
-        }else{
-            const decode = jwt.verify(token,process.env.SECRET_TOKEN)
-            const user = await User.findOne({email: decode.email})
-            if(user){
-                if(user.role === "admin"){
-                    req.user = user
-                    next()
-                }
-                else{
-                    res.status(500).json("Vous n'etes pas autorisé")
-                }
+        try {
+            if(!token){
+                res.status(401).json("Veuillez vous authentifier!!")
             }else{
-                res.status(500).json("Vous n'etes pas autorisé") 
+                const decode = jwt.verify(token,process.env.SECRET_TOKEN)
+                const user = await User.findOne({email: decode.email})
+                if(user){
+                    if(user.role === "admin"){
+                        req.user = user
+                        next()
+                    }
+                    else{
+                        res.status(401).json("Seul l'administrateur du projet peux faire cette action")
+                    }
+                }else{
+                    res.status(401).json("Vous n'etes pas autorisé!");
+                }
             }
+        } catch (error) {
+            res.status(401).json("Vous n'etes pas autorisé!");
         }
+        
     }else{
-        res.status(500).json("Veuillez vous authentifier!!")
+        res.status(401).json("Veuillez vous authentifier!!")
     }
 }
 
