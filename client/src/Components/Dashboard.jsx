@@ -23,7 +23,7 @@ export default function Dashboard() {
     }).then(res=> {
       console.log(res)
     })
-  },[user,token,logout])
+  },[token])
   return (
     <div>
       {token && <p>token récupérer</p>}

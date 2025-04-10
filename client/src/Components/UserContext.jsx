@@ -20,6 +20,8 @@ export function UserProvider({ children }) {
   function logout() {
     localStorage.removeItem("token"); 
     localStorage.removeItem("user");
+    setUser("")
+    setToken("")
   }
 
   return (
