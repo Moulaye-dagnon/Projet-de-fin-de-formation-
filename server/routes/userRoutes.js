@@ -19,10 +19,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
   const { nom, prenom, username, tel, email, password, role, photoProfile } =
     req.body;
   const findUser = await User.findOne({ email: email });
-  if (!req.file) {
-    console.log(role);
-    return res.status(400).json({ error: "Aucun fichier n'a été envoyé" });
-  }
+  
   if (findUser) {
     res.status(400).json("Cet utilisateur existe déjà...");
   } else {
@@ -41,7 +38,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
         nom,
         prenom,
         username,
-        tel,
+        telephone: tel,
         email,
         password: hashedPassword,
         role,
@@ -81,7 +78,7 @@ router.post("/login", async (req, res) => {
         throw new Error("Une erreur est survenue...");
       }
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json({"une erreur: ": error});
     }
   } else {
     res.status(400).json("Utilisateur introuvable...");
