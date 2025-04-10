@@ -9,6 +9,7 @@ export default function UserName({data,setData}) {
           value={data.username}
           onChange={(e) => setData({ ...data, username: e.target.value })}
           placeholder="Saisissez votre nom d'utilisateur"
+          required
         />
     </>
   )

@@ -8,6 +8,7 @@ export default function Role({data,setData}) {
           className="border-2 border-gray-300 rounded p-2.5"
           value={data.role}
           onChange={(e) => setData({ ...data, role: e.target.value })}
+          required
         >
           <option value="">Vous etes?</option>
           <option value="admin">Administrateur</option>

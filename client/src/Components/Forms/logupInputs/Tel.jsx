@@ -9,6 +9,7 @@ export default function Tel({data,setData}) {
           value={data.tel}
           onChange={(e) => setData({ ...data, tel: e.target.value })}
           placeholder="Saisissez votre numéro de téléphone"
+          required
         />
     </>
   )

@@ -9,6 +9,7 @@ export default function Email({data,setData}) {
           value={data.email}
           onChange={(e) => setData({ ...data, email: e.target.value })}
           placeholder="Saisissez votre email"
+          required
         />
     </>
   )

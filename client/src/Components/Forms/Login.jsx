@@ -13,6 +13,8 @@ export default function Login() {
     })
 
     const { user, token, logout, login} = useContext(UserContext)
+
+    const [error, setError] = useState("")
     function handleSubmit(e){
         e.preventDefault()
         fetch("http://localhost:4000/login", {
@@ -21,11 +23,20 @@ export default function Login() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
-        }).then(req=> req.json()).then(res=>{
+        }).then(req=> {
+            
+            return req.json()
+        }).then(res=>{
+          if(res.token){
             localStorage.setItem("token",res.token)
             localStorage.setItem("user",JSON.stringify(res.data))
             login(res.data,res.token)
             navigate("/dashboard")
+          }else{
+            setError(true)
+            console.log(res)
+          }
+            
         })
     }
   return (
@@ -43,6 +54,7 @@ export default function Login() {
     
               <p>Vous n'avez pas de compte? <a className="text-blue-600"><Link to="/loguptest">S'inscrire'</Link></a></p>
               <button className="btn rounded w-30 p-2 ms-auto cursor-pointer text-gray-50" type="submit">Se connecter</button>
+              {error && <p className="text-red-600 text-center">Mot de passe ou email incorrect!</p>}
             </form>
           </div>
     

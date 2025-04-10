@@ -23,8 +23,8 @@ export default function LogupTest() {
     role: "",
     photoProfil: "",
   });
-
-  const [loading, setLoading] = useState("")
+  console.log(fields);
+  const [loading, setLoading] = useState("");
 
   const formData = new FormData();
   formData.append("nom", fields.nom);
@@ -34,54 +34,50 @@ export default function LogupTest() {
   formData.append("email", fields.email);
   formData.append("password", fields.password);
   formData.append("role", fields.role);
-  if (fields.photoProfil) {
-    formData.append("photoProfil", fields.photoProfil);
-  }
-
+  formData.append("photoProfil", fields.photoProfil);
 
   const [isSubmited, setIsSubmited] = useState("");
-  console.log(isSubmited)
 
-
-  const errorModal = createPortal(<ErrorModal/>, document.body)
+  const errorModal = createPortal(<ErrorModal />, document.body);
 
   const filter = [
     {
-        champ: "nom",
-        url: "/img1.avif",
+      champ: "nom",
+      url: "/img1.avif",
     },
     {
-        champ: "prenom",
-        url: "/img4.avif",
+      champ: "prenom",
+      url: "/img4.avif",
     },
     {
-        champ: "email",
-        url: "/img4.avif",
+      champ: "email",
+      url: "/img4.avif",
     },
     {
-        champ: "password",
-        url: "/img3.avif",
+      champ: "password",
+      url: "/img3.avif",
     },
     {
-        champ: "tel",
-        url: "/img5.avif",
+      champ: "tel",
+      url: "/img5.avif",
     },
     {
-        champ: "username",
-        url: "/img1.avif",
+      champ: "username",
+      url: "/img1.avif",
     },
     {
-        champ: "role",
-        url: "/img2.avif"
-    }
-  ]
+      champ: "role",
+      url: "/img2.avif",
+    },
+  ];
 
+  const [canSubmit, setCanSubmit] = useState("");
   function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true)
-    setTimeout(() => {
-        setLoading(false)
-    }, 1000);
+    if (isSubmited === "role") {
+      setCanSubmit(true);
+    }
+
     if (
       fields.nom &&
       !fields.prenom &&
@@ -120,7 +116,21 @@ export default function LogupTest() {
     ) {
       setIsSubmited("password");
     } else if (fields.role && !fields.photoProfil) {
-      setIsSubmited("role");
+      if (!canSubmit) {
+        setIsSubmited("role");
+        setCanSubmit(true);
+      }else{
+        fetch("http://localhost:4000/logup", {
+          method: "POST",
+          body: formData,
+        })
+          .then((req) => req.json())
+          .then((res) => {
+            console.log(res);
+            setCanSubmit("");
+            navigate("/login");
+          });
+      }
     } else if (
       fields.username &&
       !fields.password &&
@@ -131,16 +141,8 @@ export default function LogupTest() {
       setIsSubmited("username");
     } else if (fields.tel && !fields.photoProfil && !fields.role) {
       setIsSubmited("tel");
-    } else if (
-      fields.nom &&
-      fields.prenom &&
-      fields.email &&
-      fields.password &&
-      fields.photoProfil &&
-      fields.role &&
-      fields.username &&
-      fields.tel
-    ) {
+    } else if (canSubmit === true) {
+      console.log("envoyé");
       fetch("http://localhost:4000/logup", {
         method: "POST",
         body: formData,
@@ -148,16 +150,38 @@ export default function LogupTest() {
         .then((req) => req.json())
         .then((res) => {
           console.log(res);
+          setCanSubmit("");
           navigate("/login");
         });
+    }
+
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }
+  function handleSkip(e) {
+    if (isSubmited === "password") {
+      setIsSubmited("tel");
+    } else if (isSubmited === "role") {
+      setCanSubmit(true);
+    } else if (isSubmited === "email") {
+      setIsSubmited("username");
     }
   }
   return (
     <div className="box lg:flex">
       <div className="left-box flex-grow-1 p-20 bg-gray-100 h-screen">
-        <p className="text-start mb-30 text-xl"><strong className="font-bold">GPC</strong> Gestion de Projet Collaboratif</p>
-        <h1 className="text-start text-black text-3xl font-bold">Inscrivez-vous sur GPC</h1>
-        <p className="mb-10 text-start text-gray-400">Complètez vos informations</p>
+        <p className="text-start mb-30 text-xl">
+          <strong className="font-bold">GPC</strong> Gestion de Projet
+          Collaboratif
+        </p>
+        <h1 className="text-start text-black text-3xl font-bold">
+          Inscrivez-vous sur GPC
+        </h1>
+        <p className="mb-10 text-start text-gray-400">
+          Complètez vos informations
+        </p>
         <form
           onSubmit={handleSubmit}
           method="post"
@@ -181,13 +205,36 @@ export default function LogupTest() {
           {isSubmited === "role" && <Fdp data={fields} setData={setFields} />}
           {isSubmited === "" && <Nom data={fields} setData={setFields} />}
 
-          <p>Vous avez déjà un compte? <a className="text-blue-600"><Link to="/login">Se connecter</Link></a></p>
-          {fields ? <button className="btn rounded w-30 p-2 ms-auto cursor-pointer text-gray-50" type="submit">Suivant</button> : <button className="btn rounded w-30 p-2 ms-auto cursor-pointer" type="submit" disabled>Suivant</button>}
+          <p>
+            Vous avez déjà un compte?{" "}
+            <a className="text-blue-600">
+              <Link to="/login">Se connecter</Link>
+            </a>
+          </p>
+          <button
+            className="btn rounded w-30 p-2 ms-auto cursor-pointer text-gray-50"
+            type="submit"
+          >
+            {!canSubmit ? "Suivant" : "Envoyer"}
+          </button>
         </form>
+        {(isSubmited === "password" || isSubmited === "email") && (
+          <a onClick={handleSkip} className="cursor-pointer" type="submit">
+            Passer
+          </a>
+        )}
       </div>
 
       <div className="right-box w-52 flex-grow-1 hidden lg:block h-screen">
-        <img className="h-screen w-screen" src={isSubmited ? filter.find(field=> field.champ === isSubmited)?.url : "/img1.avif"} alt="image" />
+        <img
+          className="h-screen w-screen"
+          src={
+            isSubmited
+              ? filter.find((field) => field.champ === isSubmited)?.url
+              : "/img1.avif"
+          }
+          alt="image"
+        />
       </div>
       {loading && errorModal}
     </div>

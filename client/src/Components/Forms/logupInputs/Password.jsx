@@ -9,6 +9,7 @@ export default function Password({data,setData}) {
           value={data.password}
           onChange={(e) => setData({ ...data, password: e.target.value })}
           placeholder="Saisissez votre mot de passe"
+          required
         />
     </>
   )

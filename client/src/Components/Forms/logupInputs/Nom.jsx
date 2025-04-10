@@ -9,6 +9,7 @@ export default function Nom({data,setData}) {
           value={data.nom}
           onChange={(e) => setData({ ...data, nom: e.target.value })}
           placeholder="Saisissez votre nom"
+          required
         />
     </>
   )
