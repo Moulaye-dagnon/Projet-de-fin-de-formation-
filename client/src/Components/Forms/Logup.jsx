@@ -1,4 +1,6 @@
 import { useState } from "react";
+import "./logup.css"
+
 
 export default function Logup() {
   const [data, setData] = useState({
