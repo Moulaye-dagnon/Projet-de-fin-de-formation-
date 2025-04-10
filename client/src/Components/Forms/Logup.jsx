@@ -11,7 +11,6 @@ export default function Logup() {
     role: "admin",
     photoProfil: "",
   });
-  console.log(data.role);
 
   function handleSubmit(e) {
     e.preventDefault();
