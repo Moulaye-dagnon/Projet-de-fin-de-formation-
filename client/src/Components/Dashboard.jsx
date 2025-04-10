@@ -26,7 +26,7 @@ export default function Dashboard() {
   },[token])
   return (
     <div>
-      {token && <p>token récupérer</p>}
+      {token && <p>{user.email}</p>}
     </div>
   )
 }
