@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import Email from "./logupInputs/Email";
 import Password from "./logupInputs/Password";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../UserContext";
 
 export default function Login() {
     const navigate = useNavigate()
@@ -11,7 +12,7 @@ export default function Login() {
         password: ""
     })
 
-
+    const { user, token, logout, login} = useContext(UserContext)
     function handleSubmit(e){
         e.preventDefault()
         fetch("http://localhost:4000/login", {
@@ -23,7 +24,7 @@ export default function Login() {
         }).then(req=> req.json()).then(res=>{
             localStorage.setItem("token",res.token)
             localStorage.setItem("user",JSON.stringify(res.data))
-            console.log(res.result)
+            login(res.data,res.token)
             navigate("/dashboard")
         })
     }
@@ -45,8 +46,8 @@ export default function Login() {
             </form>
           </div>
     
-          <div className="right-box w-52 flex-grow-1">
-            <img className="" src="/img1.avif" alt="image" />
+          <div className="right-box w-52 flex-grow-1 hidden lg:block h-screen">
+            <img className="h-screen w-screen" src="/img1.avif" alt="image" />
           </div>
         </div>
   )

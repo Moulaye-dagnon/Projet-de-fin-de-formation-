@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { UserContext } from "./UserContext"
 
 export default function Dashboard() {
@@ -6,6 +6,8 @@ export default function Dashboard() {
   console.log(user)
   console.log(token)
   return (
-    <div>Dashboard</div>
+    <div>
+      {token && <p>token récupérer</p>}
+    </div>
   )
 }

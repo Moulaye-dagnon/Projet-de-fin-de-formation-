@@ -186,8 +186,8 @@ export default function LogupTest() {
         </form>
       </div>
 
-      <div className="right-box w-52 flex-grow-1">
-        <img className="" src={isSubmited ? filter.find(field=> field.champ === isSubmited)?.url : "/img1.avif"} alt="image" />
+      <div className="right-box w-52 flex-grow-1 hidden lg:block h-screen">
+        <img className="h-screen w-screen" src={isSubmited ? filter.find(field=> field.champ === isSubmited)?.url : "/img1.avif"} alt="image" />
       </div>
       {loading && errorModal}
     </div>
