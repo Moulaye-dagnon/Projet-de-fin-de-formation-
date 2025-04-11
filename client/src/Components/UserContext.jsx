@@ -10,7 +10,6 @@ export function UserProvider({ children }) {
   const [token, setToken] = useState(() => {
     return localStorage.getItem("token");
   });
-  console.log(localStorage.getItem("token"))
 
   function login(user,token){
     setUser(user)

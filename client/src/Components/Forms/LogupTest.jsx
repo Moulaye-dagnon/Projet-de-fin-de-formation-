@@ -23,8 +23,8 @@ export default function LogupTest() {
     role: "",
     photoProfil: "",
   });
-  console.log(fields);
-  const [loading, setLoading] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState(false);
 
   const formData = new FormData();
   formData.append("nom", fields.nom);
@@ -72,6 +72,7 @@ export default function LogupTest() {
   ];
 
   const [canSubmit, setCanSubmit] = useState("");
+
   function handleSubmit(e) {
     e.preventDefault();
     if (isSubmited === "role") {
@@ -119,16 +120,28 @@ export default function LogupTest() {
       if (!canSubmit) {
         setIsSubmited("role");
         setCanSubmit(true);
-      }else{
+      } else {
         fetch("http://localhost:4000/logup", {
           method: "POST",
           body: formData,
         })
-          .then((req) => req.json())
+          .then((req) => {
+            setLoading(true);
+            return req.json();
+          })
           .then((res) => {
-            console.log(res);
-            setCanSubmit("");
-            navigate("/login");
+            if (res === "Cet utilisateur existe déjà..." || res.error) {
+              setFormError(true)
+              setLoading(false);
+            } else{
+              console.log(res)
+              setCanSubmit("");
+              setFormError(false)
+              setLoading(false);
+              navigate("/login");
+            }
+            console.log(formError)
+
           });
       }
     } else if (
@@ -147,18 +160,23 @@ export default function LogupTest() {
         method: "POST",
         body: formData,
       })
-        .then((req) => req.json())
+        .then((req) => {
+          setLoading(true);
+          return req.json();
+        })
         .then((res) => {
-          console.log(res);
-          setCanSubmit("");
-          navigate("/login");
+          if (res === "Cet utilisateur existe déjà..." || res.error) {
+            setFormError(true)
+            setLoading(false);
+          } else{
+            console.log(res)
+            setCanSubmit("");
+            setFormError(false)
+            setLoading(false);
+            navigate("/login");
+          }
         });
     }
-
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
   }
   function handleSkip(e) {
     if (isSubmited === "password") {
@@ -202,7 +220,12 @@ export default function LogupTest() {
           {isSubmited === "password" && (
             <Tel data={fields} setData={setFields} />
           )}
-          {isSubmited === "role" && <Fdp data={fields} setData={setFields} />}
+          {isSubmited === "role" && (
+            <>
+              <Email data={fields} setData={setFields} />{" "}
+              <Fdp data={fields} setData={setFields} />
+            </>
+          )}
           {isSubmited === "" && <Nom data={fields} setData={setFields} />}
 
           <p>
@@ -211,6 +234,12 @@ export default function LogupTest() {
               <Link to="/login">Se connecter</Link>
             </a>
           </p>
+          {formError && (
+            <p className="text-red-500">
+              Vous essayez peut etre de vous connecter avec un mail déjà
+              utilisé!
+            </p>
+          )}
           <button
             className="btn rounded w-30 p-2 ms-auto cursor-pointer text-gray-50"
             type="submit"
@@ -236,7 +265,7 @@ export default function LogupTest() {
           alt="image"
         />
       </div>
-      {loading && errorModal}
+      {loading === true && errorModal}
     </div>
   );
 }

@@ -39,6 +39,7 @@ export default function Login() {
             
         })
     }
+
   return (
     <div className="box lg:flex">
           <div className="left-box flex-grow-1 p-20 bg-gray-100 h-screen">
@@ -53,6 +54,7 @@ export default function Login() {
               <Password data={data} setData={setData}/>
     
               <p>Vous n'avez pas de compte? <a className="text-blue-600"><Link to="/loguptest">S'inscrire'</Link></a></p>
+              <p>Mot de passe oublié? <a className="text-blue-600"><Link to="/resetpasswordemail">Réinitialiser</Link></a></p>
               <button className="btn rounded w-30 p-2 ms-auto cursor-pointer text-gray-50" type="submit">Se connecter</button>
               {error && <p className="text-red-600 text-center">Mot de passe ou email incorrect!</p>}
             </form>

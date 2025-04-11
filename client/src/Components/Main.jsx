@@ -7,6 +7,7 @@ import LogupTest from "./Forms/LogupTest";
 import Login from "./Forms/Login";
 import Dashboard from "./Dashboard";
 import { useState } from "react";
+import ResetPasswordEmail from "./Forms/ResetPasswordEmail";
 
 export default function Main() {
   return (
@@ -19,6 +20,7 @@ export default function Main() {
         <Route path="/loguptest" element={<LogupTest />} />
         <Route path="/login" element={<Login />} />
         <Route path="/resetpassword/:token" element={<ResetPassword />} />
+        <Route path="/resetpasswordemail" element={<ResetPasswordEmail />} />
       </Routes>
     </>
   );
