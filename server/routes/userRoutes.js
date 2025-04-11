@@ -7,7 +7,11 @@ const User = require("../models/User");
 const upload = require("../middlewares/images");
 const emailjs = require("emailjs-com");
 const nodemailer = require("nodemailer");
-const {authentification,collaboratorAuth,adminAuth} = require("../middlewares/auth.js");
+const {
+  authentification,
+  collaboratorAuth,
+  adminAuth,
+} = require("../middlewares/auth.js");
 
 connection();
 
@@ -19,7 +23,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
   const { nom, prenom, username, tel, email, password, role, photoProfile } =
     req.body;
   const findUser = await User.findOne({ email: email });
-  
+
   if (findUser) {
     res.status(400).json("Cet utilisateur existe déjà...");
   } else {
@@ -46,7 +50,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
       });
       res.status(201).json({ "Utilisateur crée avec succès": user });
     } catch (error) {
-      res.status(500).json({ "Une erreur est survenue": error });
+      res.status(500).json({ error: "Une erreur est survenue" });
     }
   }
 });
@@ -73,19 +77,31 @@ router.post("/login", async (req, res) => {
 
         findUser.authTokens.push({ authToken });
         findUser.save();
-        res.status(200).json({ result: "connexion reussie", data: {id: findUser._id, nom: findUser.nom, prenom: findUser.prenom, UserName: findUser.username, email: findUser.email}, token: authToken });
+        res
+          .status(200)
+          .json({
+            result: "connexion reussie",
+            data: {
+              id: findUser._id,
+              nom: findUser.nom,
+              prenom: findUser.prenom,
+              UserName: findUser.username,
+              email: findUser.email,
+            },
+            token: authToken,
+          });
       } else {
         throw new Error("Une erreur est survenue...");
       }
     } catch (error) {
-      res.status(500).json({"une erreur: ": error});
+      res.status(500).json({ "une erreur: ": error });
     }
   } else {
     res.status(400).json("Utilisateur introuvable...");
   }
 });
 
-router.post("/update-account", collaboratorAuth ,async (req, res) => {
+router.post("/update-account", collaboratorAuth, async (req, res) => {
   const { username, tel, email, password } = req.body;
   const findUser = await User.findOne({ email: email });
   if (findUser) {
@@ -144,30 +160,29 @@ router.post("/reset-password", async (req, res) => {
 
       try {
         await transporter.sendMail(mailOptions);
-        console.log('Email de réinitialisation envoyé avec succès !');
+        console.log("Email de réinitialisation envoyé avec succès !");
       } catch (error) {
-        console.error("Erreur lors de l'envoi de l'email :", error);
+        console.log("Erreur lors de l'envoi de l'email :", error);
       }
-
     };
 
     const link = `http://localhost:5173/resetpassword/${authToken}`;
-    sendEmail(findUser.email,findUser.nom, link);
+    sendEmail(findUser.email, findUser.nom, link);
     return res.status(200).send("Vérifiez votre boite mail");
   } else {
     return res.status(400).send("Compte introuvable");
   }
 });
 
-router.post("/set-new-password", authentification, async (req,res)=>{ 
-  const new_password = req.body.password
-  const user = req.user 
-  const password_hashed = await bcrypt.hash(new_password,10).then(hashed=>{
-    return hashed
-  })
-  user.password = password_hashed
-  user.save()
-  res.status(200).json("Mot de passe réinitialisé avec succès")
-})
+router.post("/set-new-password", authentification, async (req, res) => {
+  const new_password = req.body.password;
+  const user = req.user;
+  const password_hashed = await bcrypt.hash(new_password, 10).then((hashed) => {
+    return hashed;
+  });
+  user.password = password_hashed;
+  user.save();
+  res.status(200).json("Mot de passe réinitialisé avec succès");
+});
 
 module.exports = router;
