@@ -1,4 +1,8 @@
 import { useState } from "react";
+import "./logup.css"
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 
 export default function Logup() {
   const [data, setData] = useState({
@@ -40,86 +44,96 @@ export default function Logup() {
     <div>
       <form
         method="post"
-        className="flex flex-col gap-3"
+        className="flex flex-col gap-3 "
         onSubmit={handleSubmit}
         encType="multipart/form-data"
       >
+<div className="pdiv">
         <label htmlFor="nom">Nom</label>
         <input
           type="text"
           id="nom"
-          className="border-2 border-black rounded py-1"
+          className="rounded"
           value={data.nom}
           onChange={(e) => setData({ ...data, nom: e.target.value })}
-        />
+        /> </div>
 
-        <label htmlFor="prenom">Prenom</label>
+<div className="pdiv">
+        <label htmlFor="prenom">Prénom</label>
         <input
           type="text"
           id="prenom"
-          className="border-2 border-black rounded py-1"
+          className="rounded"
+          class="text"
           value={data.prenom}
           onChange={(e) => setData({ ...data, prenom: e.target.value })}
-        />
+        /></div>
 
-        <label htmlFor="username">Username</label>
+<div className="pdiv">
+
+        <label htmlFor="username">Nom d’utilisateur</label>
         <input
           type="text"
           id="username"
-          className="border-2 border-black rounded py-1"
+          className="rounded"
           value={data.username}
           onChange={(e) => setData({ ...data, username: e.target.value })}
-        />
+        /></div>
 
+<div className="pdiv">
         <label htmlFor="tel">Téléphone</label>
         <input
           type="text"
           id="tel"
-          className="border-2 border-black rounded py-1"
+          className="rounded"
           value={data.tel}
           onChange={(e) => setData({ ...data, tel: e.target.value })}
-        />
-
-        <label htmlFor="email">Email</label>
+        /></div>
+    
+<div className="pdiv">
+        <label htmlFor="email">Adresse mail</label>
         <input
           type="email"
           id="email"
-          className="border-2 border-black rounded py-1"
+          className="rounded"
           value={data.email}
           onChange={(e) => setData({ ...data, email: e.target.value })}
-        />
+        /></div>
 
-        <label htmlFor="password">Password</label>
+<div className="pdiv">
+        <label htmlFor="password">Mot de passe</label>
         <input
-          type="text"
+          type="password"
           id="password"
-          className="border-2 border-black rounded py-1"
+          className="rounded"
           value={data.password}
           onChange={(e) => setData({ ...data, password: e.target.value })}
-        />
+        /></div>
 
-        <label htmlFor="role">Role</label>
+<div className="pdiv">
+        <label htmlFor="role">Rôle  </label>
         <select
           name=""
           id="role"
-          className="border-2 border-black rounded py-1"
+          className="rounded"
           value={data.role}
           onChange={(e) => setData({ ...data, role: e.target.value })}
         >
           <option value="admin">Administrateur</option>
           <option value="collab">Collaborateur</option>
-        </select>
+        </select></div>
 
-        <label htmlFor="photo">Photo de profil</label>
+<div className="pdiv">
+        <label htmlFor="photo">Photo de profil  </label>
         <input
           type="file"
           id="photo"
           name="photoProfil"
-          className="border-2 border-black rounded py-1"
+          className="rounded photo"
           onChange={(e) => setData({ ...data, photoProfil: e.target.files[0] })}
-        />
+        /></div>
 
-        <button type="submit" className="btn bg-blue-400">
+        <button type="submit" className="btn btn-primary">
           Envoyer
         </button>
       </form>
