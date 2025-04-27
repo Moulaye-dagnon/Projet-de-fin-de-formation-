@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 const project = require("../models/project");
-const User = require("../models/User");
+const User = require("../models/user");
 const task = require("../models/task");
 
 //Get all project by User
@@ -83,53 +83,64 @@ router.post(
   }
 );
 
-// Route pour récupérer toutes les tâches d'un projet, classées par statut, et les informations du projet
-router.get("/tasks/project/:projectId", async (req, res) => {
-  const projectId = req.params.projectId;
-  try {
-    // Récupérer les informations du projet
-    const projectC = await project.findById(projectId);
-    if (!project) {
-      return res.status(404).json({ message: "Projet non trouvé" });
-    }
+router.get("/project/:projectId/membre", async (req, res) => {
+  const projectID = req.params.projectId;
 
-    // Récupérer les tâches du projet, classées par statut
-    const tasks = await task.aggregate([
-      {
-        $match: {
-          project: new mongoose.Types.ObjectId(projectId),
-        },
-      },
-      {
-        $group: {
-          _id: "$status",
-          tasks: {
-            $push: {
-              _id: "$_id",
-              name: "$name",
-              description: "$description",
-              priority: "$priority",
-              dueDate: "$dueDate",
-              files: "$files",
-              assignTo: "$assignTo",
-            },
-          },
-        },
-      },
-    ]);
-
-    // Retourner les informations du projet et les tâches
-    return res.status(200).json({ projectC, tasks });
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des tâches et des informations du projet :",
-      error
-    );
-    return res.status(500).json({
-      message:
-        "Erreur lors de la récupération des tâches et des informations du projet",
-      error,
+  const projectC = await project.findOne({ _id: projectID });
+  if (!projectC) {
+    return res.status(401).json({
+      message: "Ce project n'existe pas",
     });
   }
+  console.log(projectC);
+  const user = await User.findOne({
+    _id: new mongoose.Types.ObjectId("6804d0b4074c5605a5d2f5d7"),
+  });
+  console.log(user);
+  try {
+    // const Membres = await project.aggregate([
+    // 	{
+    // 	  $match: { _id: new mongoose.Types.ObjectId(projectID) }
+    // 	},
+    // 	{
+    // 	  $lookup: {
+    // 		from: "users",
+    // 		localField: "menbres",
+    // 		foreignField: "_id",
+    // 		as: "membresInfo",
+    // 	  },
+    // 	},
+    // 	{
+    // 	  $unwind: "$membresInfo",
+    // 	},
+    // 	{
+    // 	  $project: {
+    // 		_id: "$membresInfo._id",
+    // 		nom: "$membresInfo.nom",
+    // 		prenom: "$membresInfo.prenom",
+    // 		email: "$membresInfo.email",
+    // 		username: "$membresInfo.username",
+    // 		telephone: "$membresInfo.telephone",
+    // 		role: "$membresInfo.role",
+    // 		photoProfil: "$membresInfo.photoProfil",
+    // 	  },
+    // 	}
+    //   ]);
+    const membresInfos = await Promise.all(
+      projectC.menbres.map(async (membreId) => {
+        const membre = await User.findById(membreId);
+        // console.log(membre);
+      })
+    );
+    // console.log(membresInfos);
+
+    res.status(200).json(membresInfos);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des membres :", error);
+    return res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération des membres", error });
+  }
 });
+
 module.exports = router;

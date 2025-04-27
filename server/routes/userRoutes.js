@@ -3,11 +3,15 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const connection = require("../mongoDB/db.js");
-const User = require("../models/User");
+const User = require("../models/user.js");
 const upload = require("../middlewares/images");
 const emailjs = require("emailjs-com");
 const nodemailer = require("nodemailer");
-const {authentification,collaboratorAuth,adminAuth} = require("../middlewares/auth.js");
+const {
+  authentification,
+  collaboratorAuth,
+  adminAuth,
+} = require("../middlewares/auth.js");
 
 connection();
 
@@ -88,7 +92,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/update-account", collaboratorAuth ,async (req, res) => {
+router.post("/update-account", collaboratorAuth, async (req, res) => {
   const { username, tel, email, password } = req.body;
   const findUser = await User.findOne({ email: email });
   if (findUser) {
@@ -147,30 +151,29 @@ router.post("/reset-password", async (req, res) => {
 
       try {
         await transporter.sendMail(mailOptions);
-        console.log('Email de réinitialisation envoyé avec succès !');
+        console.log("Email de réinitialisation envoyé avec succès !");
       } catch (error) {
         console.error("Erreur lors de l'envoi de l'email :", error);
       }
-
     };
 
     const link = `http://localhost:5173/resetpassword/${authToken}`;
-    sendEmail(findUser.email,findUser.nom, link);
+    sendEmail(findUser.email, findUser.nom, link);
     return res.status(200).send("Vérifiez votre boite mail");
   } else {
     return res.status(400).send("Compte introuvable");
   }
 });
 
-router.post("/set-new-password", authentification, async (req,res)=>{ 
-  const new_password = req.body.password
-  const user = req.user 
-  const password_hashed = await bcrypt.hash(new_password,10).then(hashed=>{
-    return hashed
-  })
-  user.password = password_hashed
-  user.save()
-  res.status(200).json("Mot de passe réinitialisé avec succès")
-})
+router.post("/set-new-password", authentification, async (req, res) => {
+  const new_password = req.body.password;
+  const user = req.user;
+  const password_hashed = await bcrypt.hash(new_password, 10).then((hashed) => {
+    return hashed;
+  });
+  user.password = password_hashed;
+  user.save();
+  res.status(200).json("Mot de passe réinitialisé avec succès");
+});
 
 module.exports = router;

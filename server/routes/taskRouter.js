@@ -6,8 +6,16 @@ const Project = require("../models/project");
 // Route pour créer une nouvelle tâche
 router.post("/task/:userId/new", async (req, res) => {
   const userId = req.params.userId;
-  const { projectId, name, description, assignToId,status, priority, dueDate, files } =
-    req.body;
+  const {
+    projectId,
+    name,
+    description,
+    assignToId,
+    status,
+    priority,
+    dueDate,
+    files,
+  } = req.body;
 
   const project = await Project.findOne({
     _id: new mongoose.Types.ObjectId(projectId),
@@ -19,6 +27,10 @@ router.post("/task/:userId/new", async (req, res) => {
         "L'utilisateur n'a pas de projet dans lequel il a droit de création",
     });
   }
+  const lastTask = await Task.findOne({
+    project: projectId,
+  }).sort({ order: -1 });
+  const newOrder = lastTask ? lastTask.order + 1 : 0;
 
   const newTask = new Task({
     name,
@@ -26,6 +38,7 @@ router.post("/task/:userId/new", async (req, res) => {
     status: status || "todo",
     priority: priority || "medium",
     assignTo: new mongoose.Types.ObjectId(assignToId),
+    order: newOrder,
     project: new mongoose.Types.ObjectId(project._id),
     dueDate: dueDate ? new Date(dueDate) : null,
     files: files || [],
@@ -36,41 +49,36 @@ router.post("/task/:userId/new", async (req, res) => {
     .json({ message: "Nouvelle tâche créée", task: newTask });
 });
 
-// Route pour mettre à jour le statut d'une tâche
-router.put("/task/:id/:userId/status", async (req, res) => {
-  const userId = req.params.userId;
-  const taskId = req.params.id;
-  const { projectId, status } = req.body;
-
-  const project = await Project.findOne({
+router.patch("/task/reorder/:userid", async (req, res) => {
+  const { userId } = req.params;
+  const { tasks, projectId } = req.body;
+  const project = Project.findOne({
     _id: new mongoose.Types.ObjectId(projectId),
-  });
-
-  const task = await Task.findOne({
-    _id: new mongoose.Types.ObjectId(taskId),
+    $or: [
+      { owner: new mongoose.Types.ObjectId(userId) },
+      { menbres: new mongoose.Types.ObjectId(userId) },
+    ],
   });
   if (!project) {
-    return res.status(404).json({ message: "Ce projet n'existe pas" });
-  }
-  if (!task) {
-    return res.status(404).json({ message: "Cette tâche n'existe pas" });
-  }
-
-  if (
-    userId != project.owner.toString() &&
-    userId != task.assignTo.toString()
-  ) {
     return res.status(401).json({
-      message:
-        "Vous n'avez pas les droits nécessaires pour effectuer cette opération",
+      message: "Vous n'avez pas les droits nécessaires sur ce projet",
     });
   }
-
-  await Task.updateOne(
-    { _id: new mongoose.Types.ObjectId(task._id) },
-    { $set: { status } }
-  );
-  return res.status(200).json({ message: "Statut de la tâche mis à jour" });
+  try {
+    await Promise.all(
+      await tasks.map(async (task) => {
+        await Task.findByIdAndUpdate(
+          new mongoose.Types.ObjectId(task._id),
+          { status: task.status, order: task.order },
+          { new: true }
+        );
+      })
+    );
+    return res.status(200).json({ message: "Tâches réorganisées" });
+  } catch (error) {
+    console.error("Erreur lors de la réorganisation des tâches :", error);
+    return res.status(500).json({ message: "Erreur serveur", error });
+  }
 });
 
 // Route pour supprimer une tâche
@@ -98,59 +106,113 @@ router.delete("/task/:id/:userId", async (req, res) => {
 
 // Route pour recuperer tout les taches d'un utilisateur par projet
 router.get("/tasks/user/:userId", async (req, res) => {
-	const userId = req.params.userId;
-	try {
-	  const tasks = await Task.aggregate([
-		{
-		  $match: {
-			assignTo: new mongoose.Types.ObjectId(userId),
-		  },
-		},
-		{
-		  $group: {
-			_id: "$project",
-			tasks: {
-			  $push: {
-				_id: "$_id",
-				name: "$name",
-				description: "$description",
-				status: "$status",
-				priority: "$priority",
-				dueDate: "$dueDate",
-				files: "$files",
-			  },
-			},
-		  },
-		},
-		{
-		  $lookup: {
-			from: "projects",
-			localField: "_id",
-			foreignField: "_id",
-			as: "project",
-		  },
-		},
-		{
-		  $unwind: "$project",
-		},
-		{
-		  $group: {
-			_id: "$project._id",
-			projectName: { $first: "$project.name" },
-			tasksByStatus: {
-			  $push: {
-				status: "$tasks.status",
-				tasks: "$tasks",
-			  },
-			},
-		  },
-		},
-	  ]);
-	  return res.status(200).json(tasks);
-	} catch (error) {
-	  console.error("Erreur lors de la récupération des tâches :", error);
-	  return res.status(500).json({ message: "Erreur lors de la récupération des tâches", error });
-	}
-  });
+  const userId = req.params.userId;
+  try {
+    const tasks = await Task.aggregate([
+      {
+        $match: {
+          assignTo: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $group: {
+          _id: "$project",
+          tasks: {
+            $push: {
+              _id: "$_id",
+              name: "$name",
+              description: "$description",
+              status: "$status",
+              priority: "$priority",
+              dueDate: "$dueDate",
+              files: "$files",
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "projects",
+          localField: "_id",
+          foreignField: "_id",
+          as: "project",
+        },
+      },
+      {
+        $unwind: "$project",
+      },
+      {
+        $group: {
+          _id: "$project._id",
+          projectName: { $first: "$project.name" },
+          tasksByStatus: {
+            $push: {
+              status: "$tasks.status",
+              tasks: "$tasks",
+            },
+          },
+        },
+      },
+    ]);
+    return res.status(200).json(tasks);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des tâches :", error);
+    return res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération des tâches", error });
+  }
+});
+
+// Route pour récupérer toutes les tâches d'un projet, classées par statut, et les informations du projet
+router.get("/tasks/project/:projectId", async (req, res) => {
+  const projectId = req.params.projectId;
+  try {
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Projet non trouvé" });
+    }
+
+    const tasks = await Task.aggregate([
+      {
+        $match: {
+          project: new mongoose.Types.ObjectId(projectId),
+        },
+      },
+      {
+        $sort: { order: 1 },
+      },
+      {
+        $group: {
+          _id: "$status",
+          tasks: {
+            $push: {
+              _id: "$_id",
+              name: "$name",
+              description: "$description",
+              priority: "$priority",
+              dueDate: "$dueDate",
+              files: "$files",
+              assignTo: "$assignTo",
+              order: "$order",
+            },
+          },
+        },
+      },
+    ]);
+
+    // Retourner les informations du projet et les tâches
+    return res.status(200).json({ Project, tasks });
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des tâches et des informations du projet :",
+      error
+    );
+    return res.status(500).json({
+      message:
+        "Erreur lors de la récupération des tâches et des informations du projet",
+      error,
+    });
+  }
+});
 
 module.exports = router;

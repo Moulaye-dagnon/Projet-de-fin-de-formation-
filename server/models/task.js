@@ -18,6 +18,10 @@ const taskSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  order: {
+    type: Number,
+    default: 0,
+  },
   project: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Project",
@@ -29,6 +33,6 @@ const taskSchema = new mongoose.Schema({
   updateAt: { type: Date, default: Date.now },
 });
 
-const task = mongoose.model("task", taskSchema);
+const Task = mongoose.model("task", taskSchema);
 
-module.exports = task;
+module.exports = Task;
