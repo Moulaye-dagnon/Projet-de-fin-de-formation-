@@ -16,7 +16,7 @@ export function BoardItemComponent({
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      className="w-[32%]  pt-4.5 px-2 bg-bg-todo h-[calc(100svh-60px)] "
+      className="w-[32%]  pt-4.5 px-2 bg-bg-todo h-[calc(100svh-90px)] "
     >
       <div className="relative">
         <div className="ml-3">{title}</div>
@@ -24,7 +24,7 @@ export function BoardItemComponent({
           <img src={iconPlus} alt="" />
         </span>
       </div>
-      <div className="mt-5 h-[calc(100svh-130px)] overflow-y-auto">
+      <div className="mt-5 h-[calc(100svh-160px)] overflow-y-auto">
         {tasks.tasks.map((task) => (
           <TaskComponent key={task._id} item={task} />
         ))}

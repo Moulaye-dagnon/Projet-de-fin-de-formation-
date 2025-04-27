@@ -14,13 +14,10 @@ import { AddTaskComponent } from "../../Components/addTaskComponent/AddTaskCompo
 import { Patch_api } from "../../api/api";
 import { use_fetch_all_tasks } from "../../api/all_tasks_in_project";
 export function ProjectDetail() {
-  //   const [data, setData] = useState(null);
-  //   const [tasks, setTasks] = useState([]);
   const [activeTask, setActiveTask] = useState(null);
   const [showAddTask, setShowAddTask] = useState(false);
   const { projectId } = useParams();
-  const { data, tasks } = use_fetch_all_tasks(projectId);
-
+  const { data, tasks } = use_fetch_all_tasks();
   const handlerDrapStart = (e) => {
     const { active } = e;
     const activeTask = tasks.find((task) => task._id === active.id);
@@ -103,7 +100,6 @@ export function ProjectDetail() {
       tasks={tasks}
     />;
   };
-
   const handlerIconPlus = (e) => {
     e.preventDefault();
     setActiveTask((c) => !c);
@@ -123,7 +119,7 @@ export function ProjectDetail() {
   return (
     <>
       {data ? (
-        <div className="flex flex-col h-full min-w-3xl overflow-scroll">
+        <div className="flex flex-col h-full min-w-3xl overflow-x-auto">
           <div className="mb-5 mt-3">Tableau</div>
           <DndContext
             collisionDetection={closestCenter}

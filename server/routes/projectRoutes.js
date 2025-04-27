@@ -3,9 +3,10 @@ const mongoose = require("mongoose");
 const project = require("../models/project");
 const User = require("../models/user");
 const task = require("../models/task");
+const { collaboratorAuth } = require("../middlewares/auth");
 
 //Get all project by User
-router.post("/project/:id", async (req, res) => {
+router.post("/project/:id", collaboratorAuth, async (req, res) => {
   const userId = req.params.id;
   const getProjectAll = await project.aggregate([
     {
@@ -21,7 +22,7 @@ router.post("/project/:id", async (req, res) => {
 });
 
 //create new projet
-router.post("/project/:id/new", async (req, res) => {
+router.post("/project/:id/new", collaboratorAuth, async (req, res) => {
   const userId = req.params.id;
   const { name, description } = req.body;
   const newproject = new project({
@@ -142,5 +143,16 @@ router.get("/project/:projectId/membre", async (req, res) => {
       .json({ message: "Erreur lors de la récupération des membres", error });
   }
 });
+
+router.post("/projet/users", async (req, res) => {
+  const usersIds = req.body;
+  try {
+    const users = await User.find({ _id: { $in: usersIds } });
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+
 
 module.exports = router;

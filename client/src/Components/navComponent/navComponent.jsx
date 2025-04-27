@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
-import iconDashoard from "../assets/dashboard.svg";
-import iconTeams from "../assets/teams.svg";
-import { DropdownMenuList } from "./dropdownMenu/DropdownComponentMenuList";
+import iconDashoard from "../../assets/dashboard.svg";
+import iconTeams from "../../assets/teams.svg";
+import { DropdownMenuList } from "../dropdownMenu/DropdownComponentMenuList";
 
 export function NavComponent() {
   return (

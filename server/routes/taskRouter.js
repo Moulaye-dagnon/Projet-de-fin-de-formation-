@@ -2,6 +2,7 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 const Task = require("../models/task");
 const Project = require("../models/project");
+const task = require("../models/task");
 
 // Route pour créer une nouvelle tâche
 router.post("/task/:userId/new", async (req, res) => {
@@ -215,4 +216,34 @@ router.get("/tasks/project/:projectId", async (req, res) => {
   }
 });
 
+router.post("/tasks/projecttaskbyuser", async (req, res) => {
+  const { projet_id, user_id } = req.body;
+  try {
+    const tasks = await task.aggregate([
+      {
+        $match: {
+          project: new mongoose.Types.ObjectId(projet_id),
+          assignTo: new mongoose.Types.ObjectId(user_id),
+        },
+      },
+      { $group: {
+        _id: "$status",
+        tasks: {
+          $push: {
+            _id: "$_id",
+            name: "$name",
+            description: "$description",
+            priority: "$priority",
+            dueDate: "$dueDate",
+            files: "$files",
+            assignTo: "$assignTo",
+          },
+        },
+      }, },
+    ]);
+    res.status(200).json(tasks);
+  } catch (error) {
+    res.status(500).json({ "erreur: ": error });
+  }
+});
 module.exports = router;

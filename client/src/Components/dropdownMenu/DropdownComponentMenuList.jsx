@@ -37,7 +37,7 @@ export function DropdownMenuList() {
                     <ul className="flex flex-col gap-1 pl-2 mt-1">
                       <li className="flex gap-2">
                         <NavLink
-                          to={`/project/${project._id}`}
+                          to={`/dashboard/project/${project._id}`}
                           className={({ isActive }) =>
                             `flex items-center w-full p-2 rounded-lg transition-all ${
                               isActive ? "bg-gray-200 shadow-lg" : "bg-white"
