@@ -3,9 +3,10 @@ const mongoose = require("mongoose");
 const project = require("../models/project");
 const User = require("../models/User");
 const task = require("../models/task");
+const { collaboratorAuth } = require("../middlewares/auth");
 
 //Get all project by User
-router.post("/project/:id", async (req, res) => {
+router.post("/project/:id", collaboratorAuth, async (req, res) => {
   const userId = req.params.id;
   const getProjectAll = await project.aggregate([
     {
@@ -21,7 +22,7 @@ router.post("/project/:id", async (req, res) => {
 });
 
 //create new projet
-router.post("/project/:id/new", async (req, res) => {
+router.post("/project/:id/new", collaboratorAuth, async (req, res) => {
   const userId = req.params.id;
   const { name, description } = req.body;
   const newproject = new project({
@@ -84,7 +85,7 @@ router.post(
 );
 
 // Route pour récupérer toutes les tâches d'un projet, classées par statut, et les informations du projet
-router.get("/tasks/project/:projectId", async (req, res) => {
+router.get("/tasks/project/:projectId", collaboratorAuth, async (req, res) => {
   const projectId = req.params.projectId;
   try {
     // Récupérer les informations du projet
@@ -117,7 +118,7 @@ router.get("/tasks/project/:projectId", async (req, res) => {
         },
       },
     ]);
-
+    
     // Retourner les informations du projet et les tâches
     return res.status(200).json({ projectC, tasks });
   } catch (error) {
@@ -132,4 +133,14 @@ router.get("/tasks/project/:projectId", async (req, res) => {
     });
   }
 });
-module.exports = router;
+
+router.post("/projet/users", async (req, res) => {
+  const usersIds = req.body;
+  try {
+    const users = await User.find({ _id: { $in: usersIds } });
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+module.exports = router;                    

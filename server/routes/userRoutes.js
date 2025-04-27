@@ -7,6 +7,9 @@ const User = require("../models/User");
 const upload = require("../middlewares/images");
 const emailjs = require("emailjs-com");
 const nodemailer = require("nodemailer");
+const sharp = require("sharp");
+const path = require("path");
+const fs = require("fs");
 const {
   authentification,
   collaboratorAuth,
@@ -19,13 +22,32 @@ router.get("/", collaboratorAuth, async (req, res) => {
   res.status(200).json("Bienvenue dans mon application...");
 });
 
+router.get("/users/user/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const user = await User.find({ _id: id });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ "Une erreur est survenue:": error });
+  }
+});
+
 router.post("/logup", upload.single("photoProfil"), async (req, res) => {
-  const { nom, prenom, username, tel, email, password, role, photoProfile } =
-    req.body;
+  const {
+    nom,
+    prenom,
+    username,
+    tel,
+    email,
+    password,
+    role,
+    poste,
+    photoProfile,
+  } = req.body;
   const findUser = await User.findOne({ email: email });
 
   if (findUser) {
-    res.status(400).json("Cet utilisateur existe déjà...");
+    res.status(409).json("Cet utilisateur existe déjà...");
   } else {
     const hashedPassword = await bcrypt
       .hash(password, 10)
@@ -36,7 +58,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
         throw new Error(error);
       });
     const photoProfil = req.file ? req.file.filename : null;
-    console.log(photoProfil);
+    const date = new Date();
     try {
       const user = await User.create({
         nom,
@@ -46,7 +68,9 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
         email,
         password: hashedPassword,
         role,
+        poste,
         photoProfil: photoProfil,
+        created_At: date,
       });
       res.status(201).json({ "Utilisateur crée avec succès": user });
     } catch (error) {
@@ -58,6 +82,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const findUser = await User.findOne({ email: email });
+  const date = new Date();
   if (findUser) {
     try {
       const isSamePassword = await bcrypt
@@ -69,27 +94,29 @@ router.post("/login", async (req, res) => {
       if (isSamePassword) {
         const authToken = await jwt.sign(
           {
+            _id: findUser._id,
             email: findUser.email,
+            connected_at: date,
           },
           process.env.SECRET_TOKEN,
           { expiresIn: "1h" }
         );
 
         findUser.authTokens.push({ authToken });
+        findUser.last_connexion = date;
         findUser.save();
-        res
-          .status(200)
-          .json({
-            result: "connexion reussie",
-            data: {
-              id: findUser._id,
-              nom: findUser.nom,
-              prenom: findUser.prenom,
-              UserName: findUser.username,
-              email: findUser.email,
-            },
-            token: authToken,
-          });
+        res.status(200).json({
+          result: "connexion reussie",
+          data: {
+            id: findUser._id,
+            nom: findUser.nom,
+            prenom: findUser.prenom,
+            UserName: findUser.username,
+            email: findUser.email,
+            photoProfil: findUser.photoProfil,
+          },
+          token: authToken,
+        });
       } else {
         throw new Error("Une erreur est survenue...");
       }
@@ -101,26 +128,45 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/update-account", collaboratorAuth, async (req, res) => {
-  const { username, tel, email, password } = req.body;
-  const findUser = await User.findOne({ email: email });
-  if (findUser) {
-    try {
-      const hashedPassword = await bcrypt.hash(password, 10).then((hashed) => {
-        return hashed;
-      });
-      findUser.username = username;
-      findUser.telephone = tel;
-      findUser.password = hashedPassword;
-      findUser.save();
-      res.status(200).json({ "compte modifié avec succès": findUser });
-    } catch (error) {
-      res.status(500).json({ "Une erreur est survenue...": error });
+router.post(
+  "/update-account",
+  upload.single("photoProfil"),
+  async (req, res) => {
+    const { nom, prenom, email, username, password, role, poste, telephone } =
+      req.body;
+    const findUser = await User.findOne({ email: email });
+    if (findUser) {
+      try {
+        let hashedPassword;
+        if (password && password !== "") {
+          hashedPassword = await bcrypt.hash(password, 10).then((hashed) => {
+            return hashed;
+          });
+          findUser.password = hashedPassword;
+        }
+
+        const photoProfil = req.file ? req.file.filename : null;
+        if (photoProfil) {
+          console.log(photoProfil);
+          findUser.photoProfil = photoProfil;
+        }
+        findUser.username = username;
+        findUser.nom = nom;
+        findUser.prenom = prenom;
+        findUser.email = email;
+        findUser.role = role;
+        findUser.poste = poste;
+        findUser.telephone = telephone;
+        findUser.save();
+        res.status(200).json({ "compte modifié avec succès": findUser });
+      } catch (error) {
+        res.status(500).json({ error });
+      }
+    } else {
+      res.status(500).json("Utilisateur introuvable...");
     }
-  } else {
-    res.status(500).json("Utilisateur introuvable...");
   }
-});
+);
 
 router.post("/reset-password", async (req, res) => {
   const { email } = req.body;

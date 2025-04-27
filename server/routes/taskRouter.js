@@ -2,12 +2,21 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 const Task = require("../models/task");
 const Project = require("../models/project");
+const task = require("../models/task");
 
 // Route pour créer une nouvelle tâche
 router.post("/task/:userId/new", async (req, res) => {
   const userId = req.params.userId;
-  const { projectId, name, description, assignToId,status, priority, dueDate, files } =
-    req.body;
+  const {
+    projectId,
+    name,
+    description,
+    assignToId,
+    status,
+    priority,
+    dueDate,
+    files,
+  } = req.body;
 
   const project = await Project.findOne({
     _id: new mongoose.Types.ObjectId(projectId),
@@ -98,59 +107,91 @@ router.delete("/task/:id/:userId", async (req, res) => {
 
 // Route pour recuperer tout les taches d'un utilisateur par projet
 router.get("/tasks/user/:userId", async (req, res) => {
-	const userId = req.params.userId;
-	try {
-	  const tasks = await Task.aggregate([
-		{
-		  $match: {
-			assignTo: new mongoose.Types.ObjectId(userId),
-		  },
-		},
-		{
-		  $group: {
-			_id: "$project",
-			tasks: {
-			  $push: {
-				_id: "$_id",
-				name: "$name",
-				description: "$description",
-				status: "$status",
-				priority: "$priority",
-				dueDate: "$dueDate",
-				files: "$files",
-			  },
-			},
-		  },
-		},
-		{
-		  $lookup: {
-			from: "projects",
-			localField: "_id",
-			foreignField: "_id",
-			as: "project",
-		  },
-		},
-		{
-		  $unwind: "$project",
-		},
-		{
-		  $group: {
-			_id: "$project._id",
-			projectName: { $first: "$project.name" },
-			tasksByStatus: {
-			  $push: {
-				status: "$tasks.status",
-				tasks: "$tasks",
-			  },
-			},
-		  },
-		},
-	  ]);
-	  return res.status(200).json(tasks);
-	} catch (error) {
-	  console.error("Erreur lors de la récupération des tâches :", error);
-	  return res.status(500).json({ message: "Erreur lors de la récupération des tâches", error });
-	}
-  });
+  const userId = req.params.userId;
+  try {
+    const tasks = await Task.aggregate([
+      {
+        $match: {
+          assignTo: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $group: {
+          _id: "$project",
+          tasks: {
+            $push: {
+              _id: "$_id",
+              name: "$name",
+              description: "$description",
+              status: "$status",
+              priority: "$priority",
+              dueDate: "$dueDate",
+              files: "$files",
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "projects",
+          localField: "_id",
+          foreignField: "_id",
+          as: "project",
+        },
+      },
+      {
+        $unwind: "$project",
+      },
+      {
+        $group: {
+          _id: "$project._id",
+          projectName: { $first: "$project.name" },
+          tasksByStatus: {
+            $push: {
+              status: "$tasks.status",
+              tasks: "$tasks",
+            },
+          },
+        },
+      },
+    ]);
+    return res.status(200).json(tasks);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des tâches :", error);
+    return res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération des tâches", error });
+  }
+});
 
+router.post("/tasks/projecttaskbyuser", async (req, res) => {
+  const { projet_id, user_id } = req.body;
+  try {
+    const tasks = await task.aggregate([
+      {
+        $match: {
+          project: new mongoose.Types.ObjectId(projet_id),
+          assignTo: new mongoose.Types.ObjectId(user_id),
+        },
+      },
+      { $group: {
+        _id: "$status",
+        tasks: {
+          $push: {
+            _id: "$_id",
+            name: "$name",
+            description: "$description",
+            priority: "$priority",
+            dueDate: "$dueDate",
+            files: "$files",
+            assignTo: "$assignTo",
+          },
+        },
+      }, },
+    ]);
+    res.status(200).json(tasks);
+  } catch (error) {
+    res.status(500).json({ "erreur: ": error });
+  }
+});
 module.exports = router;
