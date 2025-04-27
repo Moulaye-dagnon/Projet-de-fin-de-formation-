@@ -1,4 +1,6 @@
 import { useState } from "react";
+import "./logup.css"
+
 
 export default function Logup() {
   const [data, setData] = useState({
@@ -11,7 +13,6 @@ export default function Logup() {
     role: "admin",
     photoProfil: "",
   });
-  console.log(data.role);
 
   function handleSubmit(e) {
     e.preventDefault();

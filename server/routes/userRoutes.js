@@ -15,7 +15,7 @@ const {
 
 connection();
 
-router.get("/", async (req, res) => {
+router.get("/", collaboratorAuth, async (req, res) => {
   res.status(200).json("Bienvenue dans mon application...");
 });
 
@@ -23,10 +23,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
   const { nom, prenom, username, tel, email, password, role, photoProfile } =
     req.body;
   const findUser = await User.findOne({ email: email });
-  if (!req.file) {
-    console.log(role);
-    return res.status(400).json({ error: "Aucun fichier n'a été envoyé" });
-  }
+
   if (findUser) {
     res.status(400).json("Cet utilisateur existe déjà...");
   } else {
@@ -45,7 +42,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
         nom,
         prenom,
         username,
-        tel,
+        telephone: tel,
         email,
         password: hashedPassword,
         role,
@@ -53,7 +50,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
       });
       res.status(201).json({ "Utilisateur crée avec succès": user });
     } catch (error) {
-      res.status(500).json({ "Une erreur est survenue": error });
+      res.status(500).json({ error: "Une erreur est survenue" });
     }
   }
 });
@@ -80,12 +77,24 @@ router.post("/login", async (req, res) => {
 
         findUser.authTokens.push({ authToken });
         findUser.save();
-        res.status(200).json({ result: "connexion reussie", token: authToken });
+        res
+          .status(200)
+          .json({
+            result: "connexion reussie",
+            data: {
+              id: findUser._id,
+              nom: findUser.nom,
+              prenom: findUser.prenom,
+              UserName: findUser.username,
+              email: findUser.email,
+            },
+            token: authToken,
+          });
       } else {
         throw new Error("Une erreur est survenue...");
       }
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json({ "une erreur: ": error });
     }
   } else {
     res.status(400).json("Utilisateur introuvable...");
@@ -153,7 +162,7 @@ router.post("/reset-password", async (req, res) => {
         await transporter.sendMail(mailOptions);
         console.log("Email de réinitialisation envoyé avec succès !");
       } catch (error) {
-        console.error("Erreur lors de l'envoi de l'email :", error);
+        console.log("Erreur lors de l'envoi de l'email :", error);
       }
     };
 

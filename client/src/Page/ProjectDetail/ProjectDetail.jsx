@@ -214,7 +214,7 @@ export function ProjectDetail() {
       ) : (
         <h1>Chargement...</h1>
       )}
-      {showAddTask ? <AddTaskComponent /> : ""}
+      {/* <AddTaskComponent /> */}
     </>
   );
 }
