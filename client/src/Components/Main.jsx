@@ -1,15 +1,21 @@
 import { Route, Routes, BrowserRouter } from "react-router-dom";
-import ResetPassword from "./Forms/ResetPassword";
-import Home from "./Home";
-import PageNotFound from "./PageNotFound";
+import ResetPassword from "./Pages/ResetPassword";
+import Home from "./Pages/Home";
+import PageNotFound from "./Pages/PageNotFound";
 import Logup from "./Forms/Logup";
-import LogupTest from "./Forms/LogupTest";
-import Login from "./Forms/Login";
-import Dashboard from "./Dashboard";
-import { useState } from "react";
-import ResetPasswordEmail from "./Forms/ResetPasswordEmail";
+import LogupTest from "./Pages/LogupTest";
+import Login from "./Pages/Login";
+import Dashboard from "./Pages/Dashboard";
+import { useState, useContext } from "react";
+import ResetPasswordEmail from "./Pages/ResetPasswordEmail";
+import Users from "./Pages/Users";
+import { UserContext } from "../Context/UserContext";
+import UserProfil from "./Pages/UserProfil";
+import UpdateUser from "./Pages/UpdateUser";
 
 export default function Main() {
+  const { user, token, logout } = useContext(UserContext);
+
   return (
     <>
       <Routes>
@@ -21,6 +27,9 @@ export default function Main() {
         <Route path="/login" element={<Login />} />
         <Route path="/resetpassword/:token" element={<ResetPassword />} />
         <Route path="/resetpasswordemail" element={<ResetPasswordEmail />} />
+        <Route path="/dashboard/users" element={<Users />} />
+        <Route path="/dashboard/users/user/:id" element={<UserProfil />} />
+        <Route path="/dashboard/users/user/update-user/:id" element={<UpdateUser />} />
       </Routes>
     </>
   );
