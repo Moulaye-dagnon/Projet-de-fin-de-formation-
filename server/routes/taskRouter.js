@@ -70,12 +70,12 @@ router.patch("/task/reorder/:userid", async (req, res) => {
       await tasks.map(async (task) => {
         await Task.findByIdAndUpdate(
           new mongoose.Types.ObjectId(task._id),
-          { status: task.status, order: task.order },
+          { status: task.status, priority: task.priority },
           { new: true }
         );
       })
     );
-    return res.status(200).json({ message: "Tâches réorganisées" });
+    return res.status(200).json({ message: "Tâches réorganisées par priorite" });
   } catch (error) {
     console.error("Erreur lors de la réorganisation des tâches :", error);
     return res.status(500).json({ message: "Erreur serveur", error });
@@ -226,20 +226,22 @@ router.post("/tasks/projecttaskbyuser", async (req, res) => {
           assignTo: new mongoose.Types.ObjectId(user_id),
         },
       },
-      { $group: {
-        _id: "$status",
-        tasks: {
-          $push: {
-            _id: "$_id",
-            name: "$name",
-            description: "$description",
-            priority: "$priority",
-            dueDate: "$dueDate",
-            files: "$files",
-            assignTo: "$assignTo",
+      {
+        $group: {
+          _id: "$status",
+          tasks: {
+            $push: {
+              _id: "$_id",
+              name: "$name",
+              description: "$description",
+              priority: "$priority",
+              dueDate: "$dueDate",
+              files: "$files",
+              assignTo: "$assignTo",
+            },
           },
         },
-      }, },
+      },
     ]);
     res.status(200).json(tasks);
   } catch (error) {

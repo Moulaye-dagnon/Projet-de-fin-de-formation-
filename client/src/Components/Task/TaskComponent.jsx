@@ -1,28 +1,35 @@
-import { useSortable } from "@dnd-kit/sortable";
+import { useDrag } from "react-dnd";
 import iconMenuPoint from "../../assets/menu-point.svg";
 import iconPerson from "../../assets/person.svg";
-import { CSS } from "@dnd-kit/utilities";
+import DropdownComponent from "../dropdowmCoponent/DropdownComponent";
+import { useState } from "react";
 export function TaskComponent({ item }) {
-  const { setNodeRef, listeners, attributes, transform, transition } =
-    useSortable({ id: item._id });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
+  const [toggleMenu, setToggleMenu] = useState(false);
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "task",
+    item: item,
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+  const handleToggle = () => {
+    console.log("aa");
+    setToggleMenu((c) => !c);
   };
   return (
     <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      style={style}
-      className=" bg-white p-5 rounded-2xl m-3"
+      ref={drag}
+      className={`bg-white p-5 rounded-2xl m-3 relative cursor-move ${
+        isDragging ? "opacity-50" : "opacity-100"
+      }`}
     >
-      <div className="relative">
+      <div className="relative ">
         <span className="text-[8px]">Project name</span>
-        <span>
-          <img className=" absolute top-2 right-2" src={iconMenuPoint} alt="" />
+        <span onClick={handleToggle} className=" cursor-pointer">
+          <img className=" absolute top-2 right-0" src={iconMenuPoint} alt="" />
         </span>
       </div>
+      {toggleMenu ? <DropdownComponent task={item} /> : <></>}
       <div className="my-4">
         <div className="text-[15px]">{item.name}</div>
         <div className="text-[11px]">

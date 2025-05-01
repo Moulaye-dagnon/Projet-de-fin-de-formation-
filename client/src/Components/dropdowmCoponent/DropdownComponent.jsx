@@ -1,25 +1,59 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { RiProgress1Line, RiProgress3Line } from "react-icons/ri";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { MdDone } from "react-icons/md";
+import { Patch_api } from "../../api/api";
 
-export function DropdownComponent({
-  task,
-  title,
-  value,
-  name,
-  selected,
-  handleChange,
-}) {
+export default function DropdownComponent({ task }) {
+
+	const changeStatus= ({id, status})=>{
+		try {
+			Patch_api({})
+		} catch (error) {
+			
+		}
+	}
+
   return (
-    <div class="relative w-64">
-      <select
-        name={name}
-        onChange={handleChange}
-        class="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-      >
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-      </select>
+    <div className="bg-slate-50 p-2 shadow-2xl rounded-2xl w-60 absolute right-8 ">
+      <li className=" list-none  py-1 hover:bg-gray-100 hover:shadow-lg flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span style={{ color: "rgba(34, 197, 94)" }}>
+            <RiProgress1Line />
+          </span>
+          <span>A faire</span>
+        </div>
+        {task.status == "todo" && (
+          <span>
+            <MdDone />
+          </span>
+        )}
+      </li>
+      <li className=" list-none  py-1 hover:bg-gray-100 hover:shadow-lg flex items-center justify-between ">
+        <div className="flex items-center gap-3">
+          <span style={{ color: "rgba(34, 197, 94)" }}>
+            <RiProgress3Line />
+          </span>
+          <span>En cour</span>
+        </div>
+        {task.status == "doing" && (
+          <span>
+            <MdDone />
+          </span>
+        )}
+      </li>
+      <li className=" list-none gap-3 py-1 hover:bg-gray-100 hover:shadow-lg flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span style={{ color: "rgba(139, 92, 246)" }}>
+            <IoMdCheckmarkCircleOutline />
+          </span>
+          <span> termier</span>
+        </div>
+        {task.status == "done" && (
+          <span>
+            <MdDone />
+          </span>
+        )}
+      </li>
     </div>
   );
 }

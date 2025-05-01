@@ -4,10 +4,10 @@ import { base_url } from "./config";
 export async function Patch_api({ userId, tasks, projectId }) {
   try {
     await axios.patch(`${base_url}/tasks/reorder/${userId}`, {
-      tasks: updatedTasks.map((task) => ({
+      tasks: tasks.map((task) => ({
         _id: task._id,
         status: task.status,
-        order: task.order,
+        priority: task.priority,
       })),
       projectId,
     });

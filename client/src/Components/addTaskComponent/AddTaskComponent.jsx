@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MdAddTask } from "react-icons/md";
-import { DropdownComponent } from "../dropdowmCoponent/DropdownComponent";
+// import { DropdownComponent } from "../dropdowmCoponent/DropdownComponent";
 
 export function AddTaskComponent() {
   const [AddTask, setAddTask] = useState({
@@ -49,7 +49,7 @@ export function AddTaskComponent() {
               />
             </div>
             <div className="flex justify-between items-center w-[45%]">
-              <DropdownComponent
+              {/* <DropdownComponent
                 title={"todo"}
                 name={"status"}
                 handleChange={handleOnchange}
@@ -66,7 +66,7 @@ export function AddTaskComponent() {
                 name={"assignTo"}
                 handleChange={handleOnchange}
                 value={AddTask.assignTo}
-              />
+              /> */}
             </div>
             <hr className="my-4" />
             <div>

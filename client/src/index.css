@@ -21,10 +21,7 @@
   src: url("../Font/GeistMono-Medium.ttf") format("truetype");
 }
 
-.dnd-dragging * {
-  cursor: grabbing !important;
-}
-.sortable-item,
-.sortable-container {
-  pointer-events: auto !important;
+.isdragging {
+  transform: scale(1) !important;
+  opacity: 1 !important ;
 }
