@@ -13,6 +13,7 @@ import {
 import { AddTaskComponent } from "../../Components/addTaskComponent/AddTaskComponent";
 import { Patch_api } from "../../api/api";
 import { use_fetch_all_tasks } from "../../api/all_tasks_in_project";
+import Dashboard from "../dashboard/Dashboard";
 export function ProjectDetail() {
   const [activeTask, setActiveTask] = useState(null);
   const [showAddTask, setShowAddTask] = useState(false);
@@ -115,11 +116,12 @@ export function ProjectDetail() {
     .filter((task) => task.status === "done")
     .sort((a, b) => a.order - b.order);
   const columns = ["todo", "doing", "done"];
-
   return (
     <>
       {data ? (
-        <div className="flex flex-col h-full min-w-3xl overflow-x-auto">
+        <>
+          <Dashboard task = {tasks}/>
+          <div className="flex flex-col h-full min-w-3xl overflow-x-auto">
           <div className="mb-5 mt-3">Tableau</div>
           <DndContext
             collisionDetection={closestCenter}
@@ -207,6 +209,8 @@ export function ProjectDetail() {
             </DragOverlay>
           </DndContext>
         </div>
+        </>
+        
       ) : (
         <h1>Chargement...</h1>
       )}

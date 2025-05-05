@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 
 export const fetchLogin = (data, setError, login, navigate) => {
 	
@@ -9,7 +10,11 @@ export const fetchLogin = (data, setError, login, navigate) => {
     body: JSON.stringify(data),
   })
     .then((req) => {
-      console.log(req);
+      if(req.status === 409){
+        toast.error("E-mail incorrect!!")
+      }else if(req.status === 500){
+        toast.error("mot de passe incorrect!")
+      }
       return req.json();
     })
     .then((res) => {

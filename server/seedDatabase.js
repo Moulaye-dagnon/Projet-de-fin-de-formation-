@@ -254,3 +254,4 @@ async function seedDatabase() {
     console.error("Erreur lors du remplissage de la base de données :", error);
   }
 }
+seedDatabase()

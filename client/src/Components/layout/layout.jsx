@@ -3,9 +3,9 @@ import { NavComponent } from "../navComponent/navComponent";
 
 export function LayoutComponent() {
   return (
-    <div className=" flex w-full max-w-7xl mx-auto  ">
+    <div className=" flex w-full h-screen">
       <NavComponent />
-      <div className=" flex-1 px-6 min-w-3xl overflow-x-scroll">
+      <div className="flex-1 px-6 overflow-x-scroll ">
         <Outlet />
       </div>
     </div>
