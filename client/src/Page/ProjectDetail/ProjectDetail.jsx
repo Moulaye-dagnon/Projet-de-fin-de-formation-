@@ -16,6 +16,7 @@ import {
   UseAllTasksContext,
 } from "../../Context/AllTaskContext";
 
+import Dashboard from "../dashboard/Dashboard";
 export function ProjectDetail() {
   const [activeTask, setActiveTask] = useState(null);
   const [showAddTask, setShowAddTask] = useState(false);
@@ -60,11 +61,11 @@ export function ProjectDetail() {
     .filter((task) => task.status === "done")
     .sort((a, b) => a.order - b.order);
   const columns = ["todo", "doing", "done"];
-
   return (
     <>
       {data ? (
         <>
+          {/* <Dashboard task={tasks} /> */}
           <div className="flex flex-col h-full min-w-3xl overflow-x-auto">
             <div>tableau</div>
             <hr />

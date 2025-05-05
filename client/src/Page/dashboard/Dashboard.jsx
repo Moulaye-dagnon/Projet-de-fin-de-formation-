@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../Context/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import StatsComponent from "../../Components/statsComponent/StatsComponent";
 import ViewUsersComponent from "../../Components/viewUsersComponent/ViewUsersComponent";
 import { fetchProjet } from "../../api/fetchProjet";
@@ -10,8 +10,9 @@ import { ProjectContext } from "../../Context/ProjectContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function Dashboard() {
+export default function Dashboard({task}) {
   const navigate = useNavigate();
+  const {projectId} = useParams()
   const { user, token, logout, setToken } = useContext(UserContext);
   const {
     projets,
@@ -37,7 +38,6 @@ export default function Dashboard() {
           navigate("/login");
           return;
         } else {
-          toast.success(`Bienvenue ${user.prenom} ${user.nom}`);
           return req.json();
         }
       });
@@ -50,9 +50,9 @@ export default function Dashboard() {
     if (!token || !user || token === null || user === null) {
       return;
     } else {
-      fetchProjet(user, token, setProjets, removeTwo, removeData);
+      fetchProjet(user, token, setProjets, removeTwo, removeData,projectId);
     }
-  }, [user, token]);
+  }, [user, token,projectId]);
 
   useEffect(() => {
     if (
@@ -67,16 +67,13 @@ export default function Dashboard() {
       return;
     } else {
       fetchProjectUsers(projets, setProjectUsers, removeData);
-      fetchTasks(projets, token, setTasks, removeData);
     }
   }, [projets]);
   return (
     <div className="text-center">
-      {token && <p>{user.email}</p>}
-
       {Object.keys(projets).length > 0 && tasks?.length >= 0 && (
-        <div className="flex justify-around flex-col sm:flex-row items-center  gap-5 p-4">
-          <StatsComponent />
+        <div className="flex justify-around flex-col sm:flex-row items-center gap-5 p-4">
+          <StatsComponent tasks={task}/>
           {projectUsers && <ViewUsersComponent />}
         </div>
       )}

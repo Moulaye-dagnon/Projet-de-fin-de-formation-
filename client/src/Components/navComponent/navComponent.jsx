@@ -1,14 +1,18 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import iconDashoard from "../../assets/dashboard.svg";
 import iconTeams from "../../assets/teams.svg";
 import { DropdownMenuList } from "../dropdownMenu/DropdownComponentMenuList";
 
 export function NavComponent() {
   return (
-    <div className="flex-none w-50 h-screen bg-white shadow-lg  rounded-2xl py-1">
-      <div className="uppercase text-2xl ">logo</div>
+    <div className="flex-none hidden lg:block w-50 h-screen bg-white shadow-lg rounded-2xl py-1">
+      <div className="uppercase text-2xl cursor-pointer text-center">
+        <NavLink to={"/dashboard"}>
+        <img src="/logo1.png" alt="logo" className="w-30 h-30"/>
+        </NavLink>
+      </div>
 
-      <div className="w-full my-15 h-[75%] overflow-y-auto">
+      <div className="w-full my-10 h-[75%] overflow-y-auto">
         <div>
           <div className=" ml-2 mb-3 opacity-70">Workspace</div>
           <div className="w-full px-2 mt-2 mb-5">

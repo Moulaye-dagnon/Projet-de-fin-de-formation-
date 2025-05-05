@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
-const User = require("./models/User");
+const User = require("./models/user");
 const Project = require("./models/project");
 const Task = require("./models/task");
 
@@ -15,132 +15,163 @@ mongoose.connect(process.env.MONGO_URI)
 
 const users = [
   {
-    nom: "Dupont",
-    prenom: "Jean",
-    username: "jdupont",
-    telephone: "0612345678",
-    email: "jean.dupont@example.com",
-    password: "password123",
-    role: "admin",
+    "nom": "Diaby",
+    "prenom": "Cheickna",
+    "username": "cheickna01",
+    "telephone": "+22370000001",
+    "email": "cheickna@example.com",
+    "password": "hashedpassword1",
+    "role": "admin",
+    "poste": "Chef de projet",
+    "photoProfil": "https://example.com/profil1.jpg",
+    "created_At": "2025-01-01T08:00:00Z",
+    "last_connexion": "2025-04-28T10:00:00Z"
   },
   {
-    nom: "Martin",
-    prenom: "Marie",
-    username: "mmartin",
-    telephone: "0698765432",
-    email: "marie.martin@example.com",
-    password: "password123",
-    role: "collaborateur",
+    "nom": "Traoré",
+    "prenom": "Fatoumata",
+    "username": "fatou_dev",
+    "telephone": "+22370000002",
+    "email": "fatou@example.com",
+    "password": "hashedpassword2",
+    "role": "collaborateur",
+    "poste": "Développeuse front-end",
+    "photoProfil": "https://example.com/profil2.jpg",
+    "created_At": "2025-01-05T09:30:00Z",
+    "last_connexion": "2025-04-28T09:00:00Z"
   },
   {
-    nom: "Bernard",
-    prenom: "Paul",
-    username: "pbernard",
-    telephone: "0623456789",
-    email: "paul.bernard@example.com",
-    password: "password123",
-    role: "collaborateur",
+    "nom": "Konaté",
+    "prenom": "Ibrahim",
+    "username": "ibrahim_kon",
+    "telephone": "+22370000003",
+    "email": "ibrahim@example.com",
+    "password": "hashedpassword3",
+    "role": "collaborateur",
+    "poste": "Designer UX",
+    "photoProfil": "",
+    "created_At": "2025-01-10T07:15:00Z",
+    "last_connexion": "2025-04-27T12:45:00Z"
   },
   {
-    nom: "Durand",
-    prenom: "Sophie",
-    username: "sdurand",
-    telephone: "0634567890",
-    email: "sophie.durand@example.com",
-    password: "password123",
-    role: "admin",
+    "nom": "Cissé",
+    "prenom": "Mariam",
+    "username": "mariamc",
+    "telephone": "+22370000004",
+    "email": "mariam@example.com",
+    "password": "hashedpassword4",
+    "role": "collaborateur",
+    "poste": "Testeuse QA",
+    "photoProfil": "https://example.com/profil3.jpg",
+    "created_At": "2025-02-01T10:20:00Z",
+    "last_connexion": "2025-04-26T15:00:00Z"
   },
   {
-    nom: "Lefevre",
-    prenom: "Luc",
-    username: "llefevre",
-    telephone: "0645678901",
-    email: "luc.lefevre@example.com",
-    password: "password123",
-    role: "collaborateur",
+    "nom": "Keita",
+    "prenom": "Oumar",
+    "username": "oumar_k",
+    "telephone": "+22370000005",
+    "email": "oumar@example.com",
+    "password": "hashedpassword5",
+    "role": "collaborateur",
+    "poste": "Développeur backend",
+    "photoProfil": "",
+    "created_At": "2025-02-15T14:10:00Z",
+    "last_connexion": "2025-04-28T13:22:00Z"
   },
   {
-    nom: "Moreau",
-    prenom: "Julie",
-    username: "jmoreau",
-    telephone: "0656789012",
-    email: "julie.moreau@example.com",
-    password: "password123",
-    role: "collaborateur",
+    "nom": "Camara",
+    "prenom": "Awa",
+    "username": "awa_design",
+    "telephone": "+22370000006",
+    "email": "awa@example.com",
+    "password": "hashedpassword6",
+    "role": "collaborateur",
+    "poste": "Graphiste",
+    "photoProfil": "https://example.com/profil4.jpg",
+    "created_At": "2025-03-01T11:45:00Z",
+    "last_connexion": "2025-04-25T18:30:00Z"
   },
   {
-    nom: "Roux",
-    prenom: "Pierre",
-    username: "proux",
-    telephone: "0667890123",
-    email: "pierre.roux@example.com",
-    password: "password123",
-    role: "admin",
+    "nom": "Sangaré",
+    "prenom": "Boubacar",
+    "username": "boubacar_s",
+    "telephone": "+22370000007",
+    "email": "boubacar@example.com",
+    "password": "hashedpassword7",
+    "role": "collaborateur",
+    "poste": "Scrum Master",
+    "photoProfil": "",
+    "created_At": "2025-03-10T12:30:00Z",
+    "last_connexion": "2025-04-28T07:15:00Z"
   },
   {
-    nom: "Blanc",
-    prenom: "Claire",
-    username: "cblanc",
-    telephone: "0678901234",
-    email: "claire.blanc@example.com",
-    password: "password123",
-    role: "collaborateur",
-  },
+    "nom": "Sidibé",
+    "prenom": "Aminata",
+    "username": "amina_s",
+    "telephone": "+22370000008",
+    "email": "aminata@example.com",
+    "password": "hashedpassword8",
+    "role": "collaborateur",
+    "poste": "Product Owner",
+    "photoProfil": "https://example.com/profil5.jpg",    "created_At": "2025-03-15T16:00:00Z",
+    "last_connexion": "2025-04-28T10:45:00Z"
+  }
 ];
 
 const projects = [
   {
     name: "Projet Alpha",
     description: "Description du projet Alpha",
-    owner: null, // sera mis à jour après la création des utilisateurs
+    owners: [], // sera mis à jour après la création des utilisateurs
     menbres: [],
   },
   {
     name: "Projet Beta",
     description: "Description du projet Beta",
-    owner: null, // sera mis à jour après la création des utilisateurs
+    owners: [], // sera mis à jour après la création des utilisateurs
     menbres: [],
   },
   {
     name: "Projet Gamma",
     description: "Description du projet Gamma",
-    owner: null, // sera mis à jour après la création des utilisateurs
+    owners: [], // sera mis à jour après la création des utilisateurs
     menbres: [],
   },
   {
     name: "Projet Delta",
     description: "Description du projet Delta",
-    owner: null, // sera mis à jour après la création des utilisateurs
+    owners: [], // sera mis à jour après la création des utilisateurs
     menbres: [],
   },
   {
     name: "Projet Epsilon",
     description: "Description du projet Epsilon",
-    owner: null, // sera mis à jour après la création des utilisateurs
+    owners: [], // sera mis à jour après la création des utilisateurs
     menbres: [],
   },
   {
     name: "Projet Zeta",
     description: "Description du projet Zeta",
-    owner: null, // sera mis à jour après la création des utilisateurs
+    owners: [], // sera mis à jour après la création des utilisateurs
     menbres: [],
   },
   {
     name: "Projet Eta",
     description: "Description du projet Eta",
-    owner: null, // sera mis à jour après la création des utilisateurs
+    owners: [], // sera mis à jour après la création des utilisateurs
     menbres: [],
   },
   {
     name: "Projet Theta",
     description: "Description du projet Theta",
-    owner: null, // sera mis à jour après la création des utilisateurs
+    owners: [], // sera mis à jour après la création des utilisateurs
     menbres: [],
   },
   {
     name: "Projet Iota",
     description: "Description du projet Iota",
-    owner: null, // sera mis à jour après la création des utilisateurs
+    owners: [], // sera mis à jour après la création des utilisateurs
     menbres: [],
   },
 ];
@@ -236,7 +267,7 @@ async function seedDatabase() {
 
     const createdUsers = await User.insertMany(users);
     projects.forEach((project, index) => {
-      project.owner = createdUsers[index % createdUsers.length]._id;
+      project.owners.push(createdUsers[index % createdUsers.length]._id)
       project.menbres = createdUsers.map(user => user._id);
     });
 

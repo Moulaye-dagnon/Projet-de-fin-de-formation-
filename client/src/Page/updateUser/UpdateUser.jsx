@@ -24,7 +24,6 @@ export default function UpdateUser() {
     username: "",
     password: "",
     newPassword: "",
-    role: "",
     poste: "",
     telephone: "",
     photoProfil: null,
@@ -39,7 +38,6 @@ export default function UpdateUser() {
   formData.append("telephone", fields.telephone);
   formData.append("email", fields.email);
   formData.append("password", fields.password);
-  formData.append("role", fields.role);
   formData.append("poste", fields.poste);
   formData.append("photoProfil", fields.photoProfil);
   useEffect(() => {
@@ -78,7 +76,6 @@ export default function UpdateUser() {
           prenom: res[0].prenom,
           email: res[0].email,
           username: res[0].username,
-          role: res[0].role,
           poste: res[0].poste,
           telephone: res[0].telephone,
         });
@@ -135,8 +132,6 @@ export default function UpdateUser() {
           <Email data={fields} setData={setFields} update={true} />
           <UserName data={fields} setData={setFields} update={true} />
           <Password data={fields} setData={setFields} update={true} />
-
-          <Role data={fields} setData={setFields} update={true} />
           <Poste data={fields} setData={setFields} update={true} />
           <Tel data={fields} setData={setFields} update={true} />
           <Fdp data={fields} setData={setFields} update={true} />

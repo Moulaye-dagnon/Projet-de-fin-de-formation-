@@ -93,6 +93,7 @@ export default function UserProfil() {
     taskDone = 0;
     pourcentage = 0;
   }
+  const isAdmin = projets.owners.find(owner=> owner === userData[0]?._id)
   return (
     userData && (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
@@ -135,7 +136,7 @@ export default function UserProfil() {
             <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
               <p className="text-sm text-gray-500">Rôle</p>
               <p className="text-lg font-medium text-gray-800">
-                {userData[0].role}
+                {isAdmin ? "Administrateur" : "Collaborateur"}
               </p>
             </div>
             <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">

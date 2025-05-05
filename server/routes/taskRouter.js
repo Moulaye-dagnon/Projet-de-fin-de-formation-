@@ -207,10 +207,6 @@ router.get("/tasks/project/:projectId", async (req, res) => {
     // Retourner les informations du projet et les tâches
     return res.status(200).json({ Project, tasks });
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des tâches et des informations du projet :",
-      error
-    );
     return res.status(500).json({
       message:
         "Erreur lors de la récupération des tâches et des informations du projet",

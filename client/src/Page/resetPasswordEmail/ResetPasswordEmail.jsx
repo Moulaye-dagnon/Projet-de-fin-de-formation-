@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function ResetPasswordEmail() {
   const [email, setEmail] = useState("");
@@ -13,10 +14,17 @@ export default function ResetPasswordEmail() {
       },
       body: JSON.stringify({ email }),
     })
-      .then((req) => req.json())
-      .then((res) => {
-        setResponse(res);
-      });
+      .then((req) => {
+        if(req.status === 200){
+          toast.success("Verifiez votre boite mail")
+        }else if(req.status === 409){
+          toast.error("Compte introuvable!")
+        }
+        return req.json()
+      })
+      .catch(e=>{
+        toast.error("Une erreur est survenue!")
+      })
   }
   return (
     <div className="box lg:flex">
@@ -55,6 +63,7 @@ export default function ResetPasswordEmail() {
       <div className="flex-grow-1 right-box w-52 hidden lg:block h-screen">
         <img className="h-screen w-screen" src="/img1.avif" alt="image" />
       </div>
+      <ToastContainer/>
     </div>
   );
 }

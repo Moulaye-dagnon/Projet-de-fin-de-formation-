@@ -26,11 +26,6 @@ const userSchema = new Schema({
     type: String,
     require: true,
   },
-  role: {
-    type: String,
-    default: "collaborateur",
-    require: true,
-  },
   poste: {
     type: String,
     require: true,

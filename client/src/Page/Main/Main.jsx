@@ -14,6 +14,8 @@ import { UserContext } from "../../Context/UserContext";
 import UserProfil from "../userProfil/UserProfil";
 import UpdateUser from "../updateUser/UpdateUser";
 import Cover from "../../Components/Cover/Cover";
+import AddUser from "../AddUser/AddUser";
+import AcceptInvitation from "../acceptInvitation/AcceptInvitation";
 
 export default function Main() {
   const { user, token, logout } = useContext(UserContext);
@@ -24,15 +26,17 @@ export default function Main() {
         <Route path="/" element={<Cover />} />
 
         <Route path="/dashboard/" element={<LayoutComponent />}>
-          <Route index element={<Dashboard />} />
+          <Route path="project/:projectId" index element={<ProjectDetail />} />
           <Route path="users" element={<Users />} />
+          <Route path="users/adduser" element={<AddUser />} />
           <Route path="users/user/:id" element={<UserProfil />} />
           <Route path="users/user/update-user/:id" element={<UpdateUser />} />
-          <Route path="project/:projectId" element={<ProjectDetail />} />
+          <Route path="/dashboard/stats" element={<Dashboard />} />
         </Route>
 
         {/* <Route path="/logup" element={<Logup />} /> */}
         <Route path="/loguptest" element={<LogupTest />} />
+        <Route path="/logup/:token" element={<AcceptInvitation />} />
         <Route path="/login" element={<Login />} />
         <Route path="/resetpassword/:token" element={<ResetPassword />} />
         <Route path="/resetpasswordemail" element={<ResetPasswordEmail />} />
