@@ -66,7 +66,7 @@ export function NavComponent() {
           </div>
         </div>
         <div>
-          <div className=" mb-3 opacity-70 px-2">Your teams</div>
+          <div className=" mb-3 opacity-70 px-2">Mes projets</div>
           <DropdownMenuList />
         </div>
       </div>

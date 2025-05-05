@@ -66,6 +66,7 @@ export default function Dashboard({task}) {
     ) {
       return;
     } else {
+      fetchTasks(projets, token, setTasks, removeData)
       fetchProjectUsers(projets, setProjectUsers, removeData);
     }
   }, [projets]);
@@ -73,8 +74,8 @@ export default function Dashboard({task}) {
     <div className="text-center">
       {Object.keys(projets).length > 0 && tasks?.length >= 0 && (
         <div className="flex justify-around flex-col sm:flex-row items-center gap-5 p-4">
-          <StatsComponent tasks={task}/>
-          {projectUsers && <ViewUsersComponent />}
+          <StatsComponent tasks={tasks}/>
+          {projectUsers && <ViewUsersComponent/>}
         </div>
       )}
       <ToastContainer />

@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
+import { useParams } from "react-router-dom";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { UserContext } from "../../Context/UserContext";
 export default function ViewUsersComponent() {
   const { user, token, logout } = useContext(UserContext);
+  const {projectId} = useParams()
 
   const {
     projets,
@@ -43,7 +45,7 @@ export default function ViewUsersComponent() {
         ))}
       </div>
       <div className="footer border-t">
-        <Link to={"/dashboard/users"}>
+        <Link to={`/dashboard/users/${projectId}`}>
           <p className="font-bold text-sm text-end">
             View all({projectUsers && projectUsers.length - showUsers.length})
           </p>

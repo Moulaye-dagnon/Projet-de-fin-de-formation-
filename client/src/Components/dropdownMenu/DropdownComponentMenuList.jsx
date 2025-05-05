@@ -68,7 +68,7 @@ export function DropdownMenuList() {
 
                       <li className="flex gap-2">
                         <NavLink
-                          to={"/Teams"}
+                          to={`/dashboard/users/${project._id}`}
                           className={({ isActive }) =>
                             `flex items-center w-full p-2 rounded-lg transition-all ${
                               isActive ? "bg-gray-200 shadow-lg" : "bg-white"
@@ -84,7 +84,7 @@ export function DropdownMenuList() {
 
                       <li className="flex gap-2">
                         <NavLink
-                          to={"/dashboard/stats"}
+                          to={`/dashboard/stats/${project._id}`}
                           className={({ isActive }) =>
                             `flex items-center w-full p-2 rounded-lg transition-all ${
                               isActive ? "bg-gray-200 shadow-lg" : "bg-white"

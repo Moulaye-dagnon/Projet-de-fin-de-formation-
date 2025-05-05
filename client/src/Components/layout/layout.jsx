@@ -5,7 +5,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 export function LayoutComponent() {
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className=" flex w-full max-w-7xl mx-auto  ">
+      <div className=" flex ">
         <NavComponent />
         <div className=" flex-1 px-6 min-w-3xl overflow-x-scroll">
           <Outlet />

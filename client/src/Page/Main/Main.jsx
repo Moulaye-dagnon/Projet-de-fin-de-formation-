@@ -16,6 +16,7 @@ import UpdateUser from "../updateUser/UpdateUser";
 import Cover from "../../Components/Cover/Cover";
 import AddUser from "../AddUser/AddUser";
 import AcceptInvitation from "../acceptInvitation/AcceptInvitation";
+import ViewUsersComponent from "../../Components/viewUsersComponent/ViewUsersComponent";
 
 export default function Main() {
   const { user, token, logout } = useContext(UserContext);
@@ -27,11 +28,12 @@ export default function Main() {
 
         <Route path="/dashboard/" element={<LayoutComponent />}>
           <Route path="project/:projectId" index element={<ProjectDetail />} />
-          <Route path="users" element={<Users />} />
+          <Route path="users/:projectId" element={<Users />} />
           <Route path="users/adduser" element={<AddUser />} />
           <Route path="users/user/:id" element={<UserProfil />} />
           <Route path="users/user/update-user/:id" element={<UpdateUser />} />
-          <Route path="/dashboard/stats" element={<Dashboard />} />
+          <Route path="/dashboard/stats/:projectId" element={<Dashboard />} />
+          <Route path="/dashboard/team/:projectId" element={<ViewUsersComponent />} />
         </Route>
 
         {/* <Route path="/logup" element={<Logup />} /> */}
