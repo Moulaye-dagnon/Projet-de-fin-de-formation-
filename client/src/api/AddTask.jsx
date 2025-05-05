@@ -1,21 +1,29 @@
-import { useState } from "react";
+import axios from "axios";
+import { useContext, useState } from "react";
+import { UserContext } from "../Context/UserContext";
 
-export async function AddTaskApi() {
-  const [newTaskName, setNewTaskName] = useState("");
-
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        `http://localhost:3000/task/${userId}/new`,
-        {
-          projectId,
-          name: newTaskName,
-          assignToId: userId,
-        }
-      );
-      setTasks([...tasks, { ...response.data.task, status: "todo" }]);
-      setNewTaskName("");
-    } catch (error) {
-      console.error("Erreur:", error);
-    }
+export async function AddTaskApi({
+  data,
+  alltasks,
+  setAllTasks,
+  userId,
+  projectId,
+}) {
+  try {
+    const response = await axios.post(
+      `http://localhost:4000/task/${userId}/new`,
+      {
+        name: data.name,
+        description: data.description,
+        status: data.status,
+        priority: data.priority,
+        assignTo: data.assignTo,
+        projectId: projectId,
+      }
+    );
+    console.log(response.data.task);
+    setAllTasks([...alltasks, response.data.task]);
+  } catch (error) {
+    console.error("Erreur:", error);
+  }
 }

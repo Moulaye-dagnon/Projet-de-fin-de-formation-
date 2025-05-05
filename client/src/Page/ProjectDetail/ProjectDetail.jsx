@@ -11,6 +11,10 @@ import { AddTaskComponent } from "../../Components/addTaskComponent/AddTaskCompo
 import { Patch_api } from "../../api/api";
 import { use_fetch_all_tasks } from "../../api/all_tasks_in_project";
 import { useDragLayer } from "react-dnd";
+import {
+  AllTasksContextProvider,
+  UseAllTasksContext,
+} from "../../Context/AllTaskContext";
 
 export function ProjectDetail() {
   const [activeTask, setActiveTask] = useState(null);
@@ -18,9 +22,8 @@ export function ProjectDetail() {
   const { projectId } = useParams();
 
   const [data, setData] = useState(null);
-  const [alltasks, setAllTasks] = useState([]);
   const { token } = useContext(UserContext);
-
+  const { alltasks, setAllTasks } = UseAllTasksContext();
   useEffect(() => {
     async function fetchProject() {
       try {
@@ -41,10 +44,10 @@ export function ProjectDetail() {
       }
     }
     fetchProject();
-  }, []);
+  }, [projectId, token]);
   const handlerIconPlus = (e) => {
     e.preventDefault();
-    setActiveTask((c) => !c);
+    setActiveTask((c) => true);
     console.log("test");
   };
   const todo = alltasks
@@ -63,6 +66,8 @@ export function ProjectDetail() {
       {data ? (
         <>
           <div className="flex flex-col h-full min-w-3xl overflow-x-auto">
+            <div>tableau</div>
+            <hr />
             <div className="mb-5 mt-3">Tableau</div>
 
             <div className="flex justify-between gap-x-2 h-[100svh-24px] overflow-x-auto">
@@ -72,9 +77,7 @@ export function ProjectDetail() {
                 project_name={data.Project}
                 columnid="todo"
                 handlerIconPlus={handlerIconPlus}
-                color={"rgba(250, 204, 21, 0.063)"}
-                setAllTasks={setAllTasks}
-                alltasks={alltasks}
+                color={"rgba(249, 115, 22, 0.063)"}
               />
 
               <BoardItemComponent
@@ -83,9 +86,7 @@ export function ProjectDetail() {
                 project_name={data.Project}
                 columnid="doing"
                 handlerIconPlus={handlerIconPlus}
-                color={"rgba(34, 197, 94, 0.063)"}
-                setAllTasks={setAllTasks}
-                alltasks={alltasks}
+                color={"rgba(250, 204, 21, 0.063)"}
               />
 
               <BoardItemComponent
@@ -94,18 +95,16 @@ export function ProjectDetail() {
                 project_name={data.Project}
                 columnid="done"
                 handlerIconPlus={handlerIconPlus}
-                color={"rgba(139, 92, 246, 0.63)"}
-                setAllTasks={setAllTasks}
-                alltasks={alltasks}
+                color={"rgba(139, 92, 246, 0.063)"}
               />
             </div>
           </div>
           <CustomDragLayer />
+          {activeTask && <AddTaskComponent setToggle={setActiveTask} />}
         </>
       ) : (
         <h1>Chargement...</h1>
       )}
-      {/* <AddTaskComponent /> */}
     </>
   );
 }
@@ -126,32 +125,41 @@ const CustomDragLayer = () => {
       style={{
         position: "absolute",
         pointerEvents: "none",
-        left: currentOffset?.x,
-        top: currentOffset?.y,
+        left: 0,
+        top: 0,
+        transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
+        width: "282px",
       }}
-      className={`bg-white p-5 rounded-2xl m-3 absolute cursor-move isdragging `}
     >
-      <div className="relative ">
-        <span className="text-[8px]">Project name</span>
-        <span className=" cursor-pointer">
-          <img className=" absolute top-2 right-0" src={iconMenuPoint} alt="" />
-        </span>
-      </div>
-      <div className="my-4">
-        <div className="text-[15px]">{item.name}</div>
-        <div className="text-[11px]">
-          {item.description || "Sans description"}
+      <div
+        className={`bg-white w-full p-5 rounded-2xl m-3 absolute cursor-move isdragging `}
+      >
+        <div className="relative ">
+          <span className="text-[8px]">Project name</span>
+          <span className=" cursor-pointer">
+            <img
+              className=" absolute top-2 right-0"
+              src={iconMenuPoint}
+              alt=""
+            />
+          </span>
         </div>
-      </div>
-      <div className="flex justify-between items-center">
-        {item.dueDate && (
-          <p className="text-xs text-gray-500">
-            Échéance: {new Date(item.dueDate).toLocaleDateString()}
-          </p>
-        )}
-        <span>
-          <img src={iconPerson} alt="" />
-        </span>
+        <div className="my-4">
+          <div className="text-[15px]">{item.name}</div>
+          <div className="text-[11px]">
+            {item.description || "Sans description"}
+          </div>
+        </div>
+        <div className="flex justify-between items-center">
+          {item.dueDate && (
+            <p className="text-xs text-gray-500">
+              Échéance: {new Date(item.dueDate).toLocaleDateString()}
+            </p>
+          )}
+          <span>
+            <img src={iconPerson} alt="" />
+          </span>
+        </div>
       </div>
     </div>
   );
