@@ -4,7 +4,6 @@ import { ProjectDetail } from "../ProjectDetail/ProjectDetail";
 import ResetPassword from "../resetPassword/ResetPassword";
 import Home from "../home/Home";
 import PageNotFound from "../pagenotFound/PageNotFound";
-import Logup from "../../Components/Forms/Logup";
 import LogupTest from "../logupTest/LogupTest";
 import Login from "../login/Login";
 import Dashboard from "../dashboard/Dashboard";
@@ -14,6 +13,7 @@ import Users from "../user/Users";
 import { UserContext } from "../../Context/UserContext";
 import UserProfil from "../userProfil/UserProfil";
 import UpdateUser from "../updateUser/UpdateUser";
+import Cover from "../../Components/Cover/Cover";
 
 export default function Main() {
   const { user, token, logout } = useContext(UserContext);
@@ -21,7 +21,7 @@ export default function Main() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Cover />} />
 
         <Route path="/dashboard/" element={<LayoutComponent />}>
           <Route index element={<Dashboard />} />

@@ -21,7 +21,4 @@
   src: url("../Font/GeistMono-Medium.ttf") format("truetype");
 }
 
-.isdragging {
-  transform: scale(1) !important;
-  opacity: 1 !important ;
-}
+

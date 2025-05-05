@@ -1,4 +1,5 @@
 import "./App.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 import { BrowserRouter } from "react-router-dom";
 import Main from "./Page/Main/Main";
 
