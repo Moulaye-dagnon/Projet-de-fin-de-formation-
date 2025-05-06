@@ -10,6 +10,7 @@ export const fetchLogin = (data, setError, login, navigate) => {
   })
     .then((req) => {
       console.log(req);
+      console.log(data);
       return req.json();
     })
     .then((res) => {

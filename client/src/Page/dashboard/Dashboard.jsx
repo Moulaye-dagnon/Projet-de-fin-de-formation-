@@ -69,7 +69,7 @@ export default function Dashboard() {
       fetchProjectUsers(projets, setProjectUsers, removeData);
       fetchTasks(projets, token, setTasks, removeData);
     }
-  }, [projets]);
+  }, [projets]); console.log(projets);
   return (
     <div className="text-center">
       {token && <p>{user.email}</p>}

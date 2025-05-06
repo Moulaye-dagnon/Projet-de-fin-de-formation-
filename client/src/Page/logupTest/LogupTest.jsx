@@ -82,8 +82,9 @@ export default function LogupTest() {
     },
   ];
 
-  const [canSubmit, setCanSubmit] = useState("");
+  const [canSubmit, setCanSubmit] = useState(false);
   const [current, setCurrent] = useState(0);
+
   function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
@@ -91,10 +92,13 @@ export default function LogupTest() {
       if (current === 7) {
         setCanSubmit(true);
       }
-      setCurrent(current + 1);
+      setCurrent(prev => prev + 1);
+      setLoading(false); // Arrêt du chargement
+
     } else {
       fetch("http://localhost:4000/logup", {
         method: "POST",
+      
         body: formData,
       })
         .then((req) => {
