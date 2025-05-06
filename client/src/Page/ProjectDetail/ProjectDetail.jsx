@@ -1,216 +1,167 @@
 import { BoardItemComponent } from "../../Components/BoardItem/BoardItemComponent";
-import { useEffect, useState } from "react";
 import iconMenuPoint from "../../assets/menu-point.svg";
-
 import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { base_url } from "../../api/config";
+import { UserContext } from "../../Context/UserContext";
+import iconPerson from "../../assets/person.svg";
+import DropdownComponent from "../../Components/dropdowmCoponent/DropdownComponent";
 import { useParams } from "react-router-dom";
-import { DndContext, DragOverlay, closestCenter } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  horizontalListSortingStrategy,
-} from "@dnd-kit/sortable";
 import { AddTaskComponent } from "../../Components/addTaskComponent/AddTaskComponent";
 import { Patch_api } from "../../api/api";
 import { use_fetch_all_tasks } from "../../api/all_tasks_in_project";
+import { useDragLayer } from "react-dnd";
+import {
+  AllTasksContextProvider,
+  UseAllTasksContext,
+} from "../../Context/AllTaskContext";
+
+import Dashboard from "../dashboard/Dashboard";
 export function ProjectDetail() {
   const [activeTask, setActiveTask] = useState(null);
   const [showAddTask, setShowAddTask] = useState(false);
   const { projectId } = useParams();
-  const { data, tasks } = use_fetch_all_tasks();
-  const handlerDrapStart = (e) => {
-    const { active } = e;
-    const activeTask = tasks.find((task) => task._id === active.id);
-    setActiveTask(activeTask);
-  };
-  const handleDrapEnd = async (e) => {
-    const { active, over } = e;
-    setActiveTask(null);
-    if (!over) return;
 
-    const activeTaskId = active.id;
-    const overId = over.id;
-
-    const activeTask = tasks.find((task) => task._id === activeTaskId);
-    if (!activeTask) return;
-
-    // Déterminer la colonne de destination
-    let overColumn = null;
-    if (tasks.some((task) => task._id === overId)) {
-      overColumn = tasks.find((task) => task._id === overId).status;
-    } else {
-      overColumn = overId; // overId est un ID de colonne (todo, doing, done)
-    }
-
-    if (!overColumn) return;
-
-    let updatedTasks = [...tasks];
-
-    if (activeTask.status === overColumn) {
-      // Réorganisation dans la même colonne
-      const columnTasks = tasks
-        .filter((task) => task.status === activeTask.status)
-        .sort((a, b) => a.order - b.order);
-      const activeIndex = columnTasks.findIndex(
-        (task) => task._id === activeTaskId
-      );
-      const overIndex = columnTasks.findIndex((task) => task._id === overId);
-      if (activeIndex !== overIndex) {
-        const newColumnTasks = [...columnTasks];
-        const [movedTask] = newColumnTasks.splice(activeIndex, 1);
-        newColumnTasks.splice(overIndex, 0, movedTask);
-
-        // Mettre à jour l'ordre
-        updatedTasks = tasks.map((task) => {
-          const index = newColumnTasks.findIndex((t) => t._id === task._id);
-          if (index !== -1) {
-            return { ...task, order: index };
-          }
-          return task;
+  const [data, setData] = useState(null);
+  const { token } = useContext(UserContext);
+  const { alltasks, setAllTasks } = UseAllTasksContext();
+  useEffect(() => {
+    async function fetchProject() {
+      try {
+        const response = await axios.get(
+          `${base_url}/tasks/project/${projectId}`
+        );
+        const result = await response.data;
+        setData(result);
+        const allTasks = [];
+        result.tasks.forEach((group) => {
+          group.tasks.forEach((task) => {
+            allTasks.push({ ...task, status: group._id });
+          });
         });
+        setAllTasks(allTasks);
+      } catch (error) {
+        console.log("Erreur:", error);
       }
-    } else {
-      // Déplacement vers une autre colonne
-      updatedTasks = tasks.map((task) => {
-        if (task._id === activeTaskId) {
-          return { ...task, status: overColumn, order: 0 }; // Placer en haut
-        }
-        return task;
-      });
-
-      // Réorganiser l'ordre dans la colonne de destination
-      const destinationTasks = updatedTasks
-        .filter((task) => task.status === overColumn)
-        .sort((a, b) => a.order - b.order);
-      updatedTasks = updatedTasks.map((task) => {
-        const index = destinationTasks.findIndex((t) => t._id === task._id);
-        if (index !== -1) {
-          return { ...task, order: index };
-        }
-        return task;
-      });
     }
-
-    setTasks(updatedTasks);
-
-    // Mettre à jour le backend
-    <Patch_api
-      userId={"6804d0b4074c5605a5d2f5d6"}
-      projectId={projectId}
-      tasks={tasks}
-    />;
-  };
+    fetchProject();
+  }, [projectId, token]);
   const handlerIconPlus = (e) => {
     e.preventDefault();
-    setActiveTask((c) => !c);
+    setActiveTask((c) => true);
     console.log("test");
   };
-  const todo = tasks
+  const todo = alltasks
     .filter((task) => task.status === "todo")
     .sort((a, b) => a.order - b.order);
-  const doing = tasks
+  const doing = alltasks
     .filter((task) => task.status === "doing")
     .sort((a, b) => a.order - b.order);
-  const done = tasks
+  const done = alltasks
     .filter((task) => task.status === "done")
     .sort((a, b) => a.order - b.order);
   const columns = ["todo", "doing", "done"];
-
   return (
     <>
       {data ? (
-        <div className="flex flex-col h-full min-w-3xl overflow-x-auto">
-          <div className="mb-5 mt-3">Tableau</div>
-          <DndContext
-            collisionDetection={closestCenter}
-            onDragStart={handlerDrapStart}
-            onDragEnd={handleDrapEnd}
-          >
-            <SortableContext
-              items={columns}
-              strategy={horizontalListSortingStrategy}
-            >
-              <div className="flex justify-between gap-x-2 h-[100svh-24px] overflow-x-auto">
-                <SortableContext
-                  id="todo"
-                  items={todo.map((task) => task._id)}
-                  strategy={verticalListSortingStrategy}
-                >
-                  <BoardItemComponent
-                    title={"À faire"}
-                    tasks={{ tasks: todo }}
-                    project_name={data.Project}
-                    columnid="todo"
-                    handlerIconPlus={handlerIconPlus}
-                  />
-                </SortableContext>
-                <SortableContext
-                  id="doing"
-                  items={doing.map((task) => task._id)}
-                  strategy={verticalListSortingStrategy}
-                >
-                  <BoardItemComponent
-                    title={"En cours"}
-                    tasks={{ tasks: doing }}
-                    project_name={data.Project}
-                    columnId="doing"
-                    handlerIconPlus={handlerIconPlus}
-                  />
-                </SortableContext>
-                <SortableContext
-                  id="done"
-                  items={done.map((task) => task._id)}
-                  strategy={verticalListSortingStrategy}
-                >
-                  <BoardItemComponent
-                    title={"Terminé"}
-                    tasks={{ tasks: done }}
-                    project_name={data.Project}
-                    columnId="done"
-                    handlerIconPlus={handlerIconPlus}
-                  />
-                </SortableContext>
-              </div>
-            </SortableContext>
-            <DragOverlay>
-              {activeTask ? (
-                <div className=" bg-white p-5 rounded-2xl m-3">
-                  <div className="relative">
-                    <span className="text-[8px]">Project name</span>
-                    <span>
-                      <img
-                        className=" absolute top-2 right-2"
-                        src={iconMenuPoint}
-                        alt=""
-                      />
-                    </span>
-                  </div>
-                  <div className="my-4">
-                    <div className="text-[15px]">{activeTask.name}</div>
-                    <div className="text-[11px]">
-                      {activeTask.description || "Sans description"}
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    {activeTask.dueDate && (
-                      <p className="text-xs text-gray-500">
-                        Échéance:{" "}
-                        {new Date(activeTask.dueDate).toLocaleDateString()}
-                      </p>
-                    )}
-                    {/* <span>
-				  <img src={iconPerson} alt="" />
-				</span> */}
-                  </div>
-                </div>
-              ) : null}
-            </DragOverlay>
-          </DndContext>
-        </div>
+        <>
+          {/* <Dashboard task={tasks} /> */}
+          <div className="flex flex-col h-full min-w-3xl overflow-x-auto">
+            <div>tableau</div>
+            <hr />
+            <div className="mb-5 mt-3">Tableau</div>
+
+            <div className="flex justify-between gap-x-2 h-[100svh-24px] overflow-x-auto">
+              <BoardItemComponent
+                title={"À faire"}
+                tasks={todo}
+                project_name={data.Project}
+                columnid="todo"
+                handlerIconPlus={handlerIconPlus}
+                color={"rgba(249, 115, 22, 0.063)"}
+              />
+
+              <BoardItemComponent
+                title={"En cours"}
+                tasks={doing}
+                project_name={data.Project}
+                columnid="doing"
+                handlerIconPlus={handlerIconPlus}
+                color={"rgba(250, 204, 21, 0.063)"}
+              />
+
+              <BoardItemComponent
+                title={"Terminé"}
+                tasks={done}
+                project_name={data.Project}
+                columnid="done"
+                handlerIconPlus={handlerIconPlus}
+                color={"rgba(139, 92, 246, 0.063)"}
+              />
+            </div>
+          </div>
+          <CustomDragLayer />
+          {activeTask && <AddTaskComponent setToggle={setActiveTask} />}
+        </>
       ) : (
         <h1>Chargement...</h1>
       )}
-      {/* <AddTaskComponent /> */}
     </>
   );
 }
+
+const CustomDragLayer = () => {
+  const { isDragging, item, currentOffset } = useDragLayer((monitor) => ({
+    isDragging: monitor.isDragging(),
+    item: monitor.getItem(),
+    currentOffset: monitor.getSourceClientOffset(),
+  }));
+
+  if (!isDragging) {
+    return null;
+  }
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        pointerEvents: "none",
+        left: 0,
+        top: 0,
+        transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
+        width: "282px",
+      }}
+    >
+      <div
+        className={`bg-white w-full p-5 rounded-2xl m-3 absolute cursor-move isdragging `}
+      >
+        <div className="relative ">
+          <span className="text-[8px]">Project name</span>
+          <span className=" cursor-pointer">
+            <img
+              className=" absolute top-2 right-0"
+              src={iconMenuPoint}
+              alt=""
+            />
+          </span>
+        </div>
+        <div className="my-4">
+          <div className="text-[15px]">{item.name}</div>
+          <div className="text-[11px]">
+            {item.description || "Sans description"}
+          </div>
+        </div>
+        <div className="flex justify-between items-center">
+          {item.dueDate && (
+            <p className="text-xs text-gray-500">
+              Échéance: {new Date(item.dueDate).toLocaleDateString()}
+            </p>
+          )}
+          <span>
+            <img src={iconPerson} alt="" />
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -4,12 +4,10 @@ import { widthPourcentage } from "../../Utils/widthPourcentage";
 import { dateFormat } from "../../Utils/dateFormat";
 import { ProjectContext } from "../../Context/ProjectContext";
 
-export default function StatsComponent() {
+export default function StatsComponent({tasks}) {
   const {
     projets,
     setProjets,
-    tasks,
-    setTasks,
     projectUsers,
     setProjectUsers,
   } = useContext(ProjectContext);
@@ -18,8 +16,8 @@ export default function StatsComponent() {
   let tasksDone = 0;
   let pourcentage = 0;
   if (tasks.length > 0) {
-    totalTaches = tasks.reduce((acc, current) => acc + current.tasks.length, 0);
-    tasksDone = tasks.find((t) => t._id === "done")?.tasks.length;
+    totalTaches = tasks.length;
+    tasksDone = tasks.filter((t) => t.status === "done").length;
   }
   if (tasksDone > 0) {
     pourcentage = (tasksDone * 100) / totalTaches;
@@ -33,8 +31,9 @@ export default function StatsComponent() {
       return widthPourcentage(width, pourcentage);
     }
   };
+
   return (
-    <div className="border-[#50b1a1] shadow-lg sm:w-2xl w-full lg:h-40 bg-white p-2 rounded-3xl">
+    <div className="border-[#50b1a1] shadow-lg sm:w-2xl lg:h-40 bg-white p-2 rounded-3xl w-90">
       <p className="text-start font-bold mb-6">{projets && projets.name}</p>
       <div className="flex justify-between  align-baseline items-center flex-col lg:flex-row">
         <div className="status flex-grow-1">

@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const GuestUser = require("../models/guestUser");
 
 const authentification = async (req, res, next) => {
   if (req.headers.authorization) {
@@ -75,4 +76,28 @@ const adminAuth = async (req, res, next) => {
   }
 };
 
-module.exports = { authentification, collaboratorAuth, adminAuth };
+const userInviteAuth = async (req, res, next) => {
+  if (req.headers.authorization) {
+    const token = req.headers.authorization.split(" ")[1];
+    try {
+      if (!token) {
+        res.status(401).json("Veuillez vous authentifier1!!");
+      } else {
+        const decode = jwt.verify(token, process.env.SECRET_TOKEN);
+        const user = await GuestUser.findOne({ email: decode.email });
+        if (user) {
+          req.user = user;
+          next();
+        } else {
+          res.status(401).json("Vous n'etes pas autorisé!");
+        }
+      }
+    } catch (error) {
+      res.status(401).json("Vous n'etes pas autorisé!");
+    }
+  } else {
+    res.status(401).json("Veuillez vous authentifier2!!");
+  }
+};
+
+module.exports = { authentification, collaboratorAuth, adminAuth, userInviteAuth };

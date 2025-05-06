@@ -4,16 +4,20 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const connection = require("../mongoDB/db.js");
 const User = require("../models/user.js");
+const project = require("../models/project.js");
+const GuestUser = require("../models/guestUser.js");
 const upload = require("../middlewares/images");
 const emailjs = require("emailjs-com");
 const nodemailer = require("nodemailer");
 const sharp = require("sharp");
 const path = require("path");
 const fs = require("fs");
+const mongoose = require("mongoose");
 const {
   authentification,
   collaboratorAuth,
   adminAuth,
+  userInviteAuth,
 } = require("../middlewares/auth.js");
 
 connection();
@@ -33,17 +37,8 @@ router.get("/users/user/:id", async (req, res) => {
 });
 
 router.post("/logup", upload.single("photoProfil"), async (req, res) => {
-  const {
-    nom,
-    prenom,
-    username,
-    tel,
-    email,
-    password,
-    role,
-    poste,
-    photoProfile,
-  } = req.body;
+  const { nom, prenom, username, tel, email, password, poste, photoProfile } =
+    req.body;
   const findUser = await User.findOne({ email: email });
 
   if (findUser) {
@@ -67,7 +62,6 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
         telephone: tel,
         email,
         password: hashedPassword,
-        role,
         poste,
         photoProfil: photoProfil,
         created_At: date,
@@ -78,6 +72,69 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
     }
   }
 });
+
+router.post(
+  "/logup/acceptInvitation",
+  userInviteAuth,
+  upload.single("photoProfil"),
+  async (req, res) => {
+    const {
+      nom,
+      prenom,
+      username,
+      tel,
+      email,
+      password,
+      role,
+      poste,
+      photoProfile,
+    } = req.body;
+    const guestUser = req.user;
+    const hashedPassword = await bcrypt
+      .hash(password, 10)
+      .then((hashed) => {
+        return hashed;
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
+    const photoProfil = req.file ? req.file.filename : null;
+    const date = new Date();
+    try {
+      const user = await User.create({
+        nom,
+        prenom,
+        username,
+        telephone: tel,
+        email,
+        password: hashedPassword,
+        role,
+        poste,
+        photoProfil: photoProfil,
+        created_At: date,
+      });
+      if (guestUser.role === "admin") {
+        await project.updateOne(
+          { _id: new mongoose.Types.ObjectId(guestUser.project_Id) },
+          {
+            $addToSet: { menbres: new mongoose.Types.ObjectId(user.id) },
+            $push: { owners: new mongoose.Types.ObjectId(user.id) },
+          }
+        );
+      } else {
+        await project.updateOne(
+          { _id: new mongoose.Types.ObjectId(guestUser.project_Id) },
+          { $addToSet: { menbres: new mongoose.Types.ObjectId(user.id) } }
+        );
+      }
+
+      await GuestUser.deleteOne({ email: guestUser.email });
+      res.status(201).json({ "Utilisateur crée avec succès": user });
+    } catch (error) {
+      res.status(500).json({ error: "Une erreur est survenue" });
+    }
+  }
+);
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -118,14 +175,14 @@ router.post("/login", async (req, res) => {
           token: authToken,
         });
       } else {
-        throw new Error("Une erreur est survenue...");
+        throw new Error();
       }
     } catch (error) {
       res.status(500).json({ "une erreur: ": error });
       console.log(error);
     }
   } else {
-    res.status(400).json("Utilisateur introuvable...");
+    res.status(409).json("Utilisateur introuvable...");
   }
 });
 
@@ -171,54 +228,59 @@ router.post(
 
 router.post("/reset-password", async (req, res) => {
   const { email } = req.body;
-  const findUser = await User.findOne({ email: email });
-  if (findUser) {
-    authToken = jwt.sign(
-      { email: findUser.email },
-      process.env.PASSWORD_SECRET_TOKEN,
-      {
-        expiresIn: "1h",
-      }
-    );
-
-    findUser.authTokens.push({ authToken });
-    findUser.save();
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.USER,
-        pass: process.env.PASSWORD,
-      },
-    });
-
-    const sendEmail = async (email, name, resetLink) => {
-      const mailOptions = {
-        from: `"Support" ${process.env.USER}`,
-        to: email,
-        subject: "Réinitialisation de votre mot de passe",
-        html: `
-          <p>Bonjour ${name},</p>
-          <p>Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous :</p>
-          <a href="${resetLink}">Réinitialiser mon mot de passe</a>
-          <p>Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</p>
-        `,
+  try {
+    const findUser = await User.findOne({ email: email });
+    if (findUser) {
+      authToken = jwt.sign(
+        { email: findUser.email },
+        process.env.PASSWORD_SECRET_TOKEN,
+        {
+          expiresIn: "1h",
+        }
+      );
+  
+      findUser.authTokens.push({ authToken });
+      findUser.save();
+  
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.USER,
+          pass: process.env.PASSWORD,
+        },
+      });
+  
+      const sendEmail = async (email, name, resetLink) => {
+        const mailOptions = {
+          from: `"Support" ${process.env.USER}`,
+          to: email,
+          subject: "Réinitialisation de votre mot de passe",
+          html: `
+            <p>Bonjour ${name},</p>
+            <p>Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous :</p>
+            <a href="${resetLink}">Réinitialiser mon mot de passe</a>
+            <p>Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</p>
+          `,
+        };
+  
+        try {
+          await transporter.sendMail(mailOptions);
+          console.log("Email de réinitialisation envoyé avec succès !");
+        } catch (error) {
+          console.log("Erreur lors de l'envoi de l'email :", error);
+        }
       };
-
-      try {
-        await transporter.sendMail(mailOptions);
-        console.log("Email de réinitialisation envoyé avec succès !");
-      } catch (error) {
-        console.log("Erreur lors de l'envoi de l'email :", error);
-      }
-    };
-
-    const link = `http://localhost:5173/resetpassword/${authToken}`;
-    sendEmail(findUser.email, findUser.nom, link);
-    return res.status(200).send("Vérifiez votre boite mail");
-  } else {
-    return res.status(400).send("Compte introuvable");
+  
+      const link = `http://localhost:5173/resetpassword/${authToken}`;
+      sendEmail(findUser.email, findUser.nom, link);
+      return res.status(200).send({ email: email });
+    } else {
+      return res.status(409).send({ email: email });
+    }
+  } catch (error) {
+    return res.status(500).send({ email: email });
   }
+  
 });
 
 router.post("/set-new-password", authentification, async (req, res) => {

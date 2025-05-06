@@ -11,7 +11,7 @@ export default function Role({ data, setData, update }) {
           onChange={(e) => setData({ ...data, role: e.target.value })}
           required
         >
-          <option value="">Vous etes?</option>
+          <option value="">Role</option>
           <option value="admin">Administrateur</option>
           <option value="collaborateur">Collaborateur</option>
         </select>

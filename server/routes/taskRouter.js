@@ -20,9 +20,10 @@ router.post("/task/:userId/new", async (req, res) => {
 
   const project = await Project.findOne({
     _id: new mongoose.Types.ObjectId(projectId),
-    owner: new mongoose.Types.ObjectId(userId),
+    // owner: new mongoose.Types.ObjectId(userId),
   });
   if (!project) {
+    console.log("pas de project");
     return res.status(404).json({
       message:
         "L'utilisateur n'a pas de projet dans lequel il a droit de création",
@@ -70,12 +71,14 @@ router.patch("/task/reorder/:userid", async (req, res) => {
       await tasks.map(async (task) => {
         await Task.findByIdAndUpdate(
           new mongoose.Types.ObjectId(task._id),
-          { status: task.status, order: task.order },
+          { status: task.status, priority: task.priority },
           { new: true }
         );
       })
     );
-    return res.status(200).json({ message: "Tâches réorganisées" });
+    return res
+      .status(200)
+      .json({ message: "Tâches réorganisées par priorite" });
   } catch (error) {
     console.error("Erreur lors de la réorganisation des tâches :", error);
     return res.status(500).json({ message: "Erreur serveur", error });
@@ -204,10 +207,6 @@ router.get("/tasks/project/:projectId", async (req, res) => {
     // Retourner les informations du projet et les tâches
     return res.status(200).json({ Project, tasks });
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des tâches et des informations du projet :",
-      error
-    );
     return res.status(500).json({
       message:
         "Erreur lors de la récupération des tâches et des informations du projet",
@@ -226,20 +225,22 @@ router.post("/tasks/projecttaskbyuser", async (req, res) => {
           assignTo: new mongoose.Types.ObjectId(user_id),
         },
       },
-      { $group: {
-        _id: "$status",
-        tasks: {
-          $push: {
-            _id: "$_id",
-            name: "$name",
-            description: "$description",
-            priority: "$priority",
-            dueDate: "$dueDate",
-            files: "$files",
-            assignTo: "$assignTo",
+      {
+        $group: {
+          _id: "$status",
+          tasks: {
+            $push: {
+              _id: "$_id",
+              name: "$name",
+              description: "$description",
+              priority: "$priority",
+              dueDate: "$dueDate",
+              files: "$files",
+              assignTo: "$assignTo",
+            },
           },
         },
-      }, },
+      },
     ]);
     res.status(200).json(tasks);
   } catch (error) {

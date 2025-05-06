@@ -1,4 +1,4 @@
-export const fetchProjet = async (user, token, setProjets, removeTwo, removeData) => {
+export const fetchProjet = async (user, token, setProjets, removeTwo, removeData,projectId) => {
 
   try {
     const res = await fetch(`http://localhost:4000/project/${user.id}`, {
@@ -11,7 +11,10 @@ export const fetchProjet = async (user, token, setProjets, removeTwo, removeData
 
     const data = await res.json();
 
-    const lastProject = Array.isArray(data) ? data[data.length - 1] : null;
+    function getLastProject(data, projectId) {
+      return Array.isArray(data) ? data.find(p => p._id === projectId) : null;
+    }
+    const lastProject = getLastProject(data, projectId);
     if (lastProject) {
       setProjets(lastProject);
       localStorage.setItem("project", JSON.stringify(lastProject));

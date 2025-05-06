@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 const projectShema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  owners: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
+  ],
   menbres: [
     { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   ],

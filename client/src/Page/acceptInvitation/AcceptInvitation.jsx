@@ -1,22 +1,23 @@
-import { useState } from "react";
-import { Link, Route, useNavigate } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { data, Link, Route, useNavigate, useParams } from "react-router-dom";
 import Nom from "../../Components/Forms/logupInputs/Nom";
 import Prenom from "../../Components/Forms/logupInputs/Prenom";
-import Email from "../../Components/Forms/logupInputs/Email";
 import UserName from "../../Components/Forms/logupInputs/UserName";
 import Password from "../../Components/Forms/logupInputs/Password";
 import Tel from "../../Components/Forms/logupInputs/Tel";
-import Role from "../../Components/Forms/logupInputs/Role";
 import Fdp from "../../Components/Forms/logupInputs/Fdp";
 import { createPortal } from "react-dom";
 import ErrorModal from "../../Components/Modals/ErrorModal";
-import { fetchLogup } from "../../api/fetchLogup";
-import Poste from "../../Components/Forms/logupInputs/Poste";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ProjectContext } from "../../Context/ProjectContext";
+import { UserContext } from "../../Context/UserContext";
 
-export default function LogupTest() {
+export default function AcceptInvitation() {
   const navigate = useNavigate();
+  const param = useParams();
+  const { projets } = useContext(ProjectContext);
+  const { user, token } = useContext(UserContext);
   const [fields, setFields] = useState({
     nom: "",
     prenom: "",
@@ -24,6 +25,7 @@ export default function LogupTest() {
     username: "",
     telephone: "",
     password: "",
+    role: "",
     poste: "",
     photoProfil: "",
   });
@@ -36,6 +38,7 @@ export default function LogupTest() {
   formData.append("tel", fields.telephone);
   formData.append("email", fields.email);
   formData.append("password", fields.password);
+  formData.append("role", fields.role);
   formData.append("poste", fields.poste);
   formData.append("photoProfil", fields.photoProfil);
 
@@ -74,56 +77,69 @@ export default function LogupTest() {
       champ: 7,
       url: "/img2.avif",
     },
-    
+    {
+      champ: 8,
+      url: "/img2.avif",
+    },
   ];
+  useEffect(() => {
+    fetch("http://localhost:4000/project/users/finduserinvite", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${param.token}`,
+      },
+    })
+      .then((res) => {
+        if (res.status === 401) {
+          navigate("*");
+        } else if (res.status === 200) {
+          navigate("/login");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setFields({
+          ...fields,
+          email: data.email,
+          role: data.role,
+        });
+      })
+      .catch((err) => console.error("Erreur:", err));
+  }, []);
 
-  const [canSubmit, setCanSubmit] = useState(false);
+  const [canSubmit, setCanSubmit] = useState("");
   const [current, setCurrent] = useState(0);
-
   function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    if (current < 7) {
-      if (current === 6) {
+    if (current < 5) {
+      if (current === 4) {
         setCanSubmit(true);
       }
-      setCurrent(prev => prev + 1);
-      setLoading(false); // Arrêt du chargement
-
+      setCurrent(current + 1);
     } else {
-      fetch("http://localhost:4000/logup", {
+      fetch("http://localhost:4000/logup/acceptInvitation", {
         method: "POST",
-      
+        headers: {
+          authorization: `Bearer ${param.token}`,
+        },
         body: formData,
-      })
-        .then((req) => {
-          if (req.status === 201) {
-            toast.success("Utilisateur crée avec succès!");
-          } else if (req.status === 409) {
-            toast.error("Vous avez fourni un email déjà existant!");
-          } else {
-            toast.error("Une erreur est survenue!");
-          }
-          return req.json();
-        })
-        .then((res) => {
-          setLoading(false);
-          if (res === "Cet utilisateur existe déjà..." || res.error) {
-            console.log(res);
-          } else {
-            setCanSubmit("");
-            setTimeout(() => {
-              navigate("/login");
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          toast.error("Une erreur est survenue!");
-        });
+      }).then((req) => {
+        if (req.status === 201) {
+          toast.success("Compte créer avec succès!");
+          setTimeout(() => {
+            navigate("/login");
+          }, 3000);
+        }else{
+          toast.error("Une erreur est survenue!")
+        }
+        return req.json()
+      });
     }
   }
   function handleSkip(e) {
-    if (current === 6) {
+    if (current === 4) {
       setCanSubmit(true);
     }
     setCurrent(current + 1);
@@ -131,15 +147,16 @@ export default function LogupTest() {
   function handlePrevious() {
     setCurrent(current - 1);
   }
+  console.log(fields)
   return (
     <div className="box lg:flex">
       <div className="left-box flex-grow-1 p-20 bg-gray-100 h-screen">
-        <p className="text-start sm:mb-30 mb-16 sm:text-xl text-sm">
+        <p className="text-start mb-30 text-xl">
           <strong className="font-bold">GPC</strong> Gestion de Projet
           Collaboratif
         </p>
-        <h1 className="text-start text-black sm:text-3xl font-bold ">
-          Inscrivez-vous sur GPC
+        <h1 className="text-start text-black text-3xl font-bold">
+          Créer un compte GPC
         </h1>
         <p className="mb-10 text-start text-gray-400">
           Complètez vos informations
@@ -151,20 +168,11 @@ export default function LogupTest() {
           onSubmit={handleSubmit}
         >
           {current === 1 && <Prenom data={fields} setData={setFields} />}
-          {current === 2 && <Email data={fields} setData={setFields} />}
-          {current === 3 && <UserName data={fields} setData={setFields} />}
-          {current === 4 && <Password data={fields} setData={setFields} />}
-          {current === 5 && <Poste data={fields} setData={setFields} />}
-          {current === 6 && <Tel data={fields} setData={setFields} />}
-          {current === 7 && <Fdp data={fields} setData={setFields} />}
+          {current === 2 && <UserName data={fields} setData={setFields} />}
+          {current === 3 && <Password data={fields} setData={setFields} />}
+          {current === 4 && <Tel data={fields} setData={setFields} />}
+          {current === 5 && <Fdp data={fields} setData={setFields} />}
           {current === 0 && <Nom data={fields} setData={setFields} />}
-
-          <p className="text-sm">
-            Vous avez déjà un compte?{" "}
-            <a className="text-[#50b1a1]">
-              <Link to="/login">Se connecter</Link>
-            </a>
-          </p>
 
           <div className="flex gap-4 ms-auto">
             {current !== 0 && (
@@ -184,7 +192,7 @@ export default function LogupTest() {
             </button>
           </div>
         </form>
-        {(current === 3 || current === 7 || current === 6) && (
+        {(current === 2 || current === 4 || current === 5) && (
           <a
             onClick={handleSkip}
             className="cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded "
