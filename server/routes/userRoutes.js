@@ -122,6 +122,7 @@ router.post("/login", async (req, res) => {
       }
     } catch (error) {
       res.status(500).json({ "une erreur: ": error });
+      console.log(error);
     }
   } else {
     res.status(400).json("Utilisateur introuvable...");

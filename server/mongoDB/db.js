@@ -1,12 +1,19 @@
 const mongoose = require("mongoose");
-const dotenv = require("dotenv").config();
+require("dotenv").config();
 
 const connection = () => {
+  const uri = process.env.MONGO_URI;
+
   try {
-    mongoose.connect("mongodb://localhost:27017/gestion-de-projet");
-    console.log("Connection à la base de données reussie!!!");
+    mongoose.connect(uri)
+    .then(() => {
+      console.log("Connexion à la base de données réussie !!!");
+    })
+    .catch((error) => {
+      console.error("Erreur lors de la connexion à la base de données :", error);
+    });
   } catch (error) {
-    console.log("erreur lors de la connexion à la base de donnée...");
+    console.error("Erreur inattendue :", error);
   }
 };
 

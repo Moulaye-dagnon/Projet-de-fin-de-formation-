@@ -5,11 +5,14 @@ const dotenv = require("dotenv").config;
 const multer = require("multer");
 const path = require("path");
 const app = express();
+const connectDB = require('./mongoDB/db'); 
 
 const router = require("./routes/userRoutes");
 
 const ProjectRouter = require("./routes/projectRoutes");
 const TaskRouter = require("./routes/taskRouter");
+
+connectDB(); // Connexion à MongoDB
 
 app.use(cors());
 app.use(express.json());

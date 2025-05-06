@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
-const User = require("./models/User");
+const User = require("./models/user");
 const Project = require("./models/project");
 const Task = require("./models/task");
 
@@ -253,4 +253,7 @@ async function seedDatabase() {
   } catch (error) {
     console.error("Erreur lors du remplissage de la base de données :", error);
   }
+
 }
+
+seedDatabase();
