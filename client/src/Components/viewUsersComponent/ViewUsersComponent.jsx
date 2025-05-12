@@ -17,7 +17,7 @@ export default function ViewUsersComponent() {
   } = useContext(ProjectContext);
   const showUsers = projectUsers.slice(0, 2);
   return (
-    <div className="border-[#50b1a1] shadow-lg rounded-3xl bg-white 0 w-90 p-4 flex flex-col gap-2">
+    <div className="border-[#50b1a1] shadow-lg rounded-3xl bg-white w-full h-1/3 p-4 flex flex-col gap-2">
       <div className="header flex justify-between border-b">
         <p className="font-bold">Team</p>
       </div>

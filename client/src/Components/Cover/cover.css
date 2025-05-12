@@ -1,12 +1,4 @@
-/* #root {
-    max-width: 995px;
-    margin: 4% auto;
-    padding: 0;
-    text-align: center;
-    height: 390px;
-  }
-   
-
+/* 
 .navbar {
   width: 995px;
   justify-self: center;
@@ -24,8 +16,8 @@
   margin-left: 60px;
 }
 
-.div {
-  width: 1100px;
+.thom-div {
+  width: 100%;
   display: flex;
 }
 
@@ -36,26 +28,11 @@
 .divmin2 {
   margin-top: -2%;
 }
-.div1 {
-  width: 494.43px;
-  height: 256.23px;
-  background-color: rgb(207, 42, 42);
+.thom-div1 {
   padding-top: 10%;
 }
 
-.div2 {
-  width: 494.43px;
-  height: 246.06px;
-}
-.div3 {
-  width: 500.43px;
-  height: 100.8;
-  background-color: black;
-}
 .div4 {
-  width: 500.43px;
-  height: 123.49px;
-  background-color: rgb(160, 73, 240);
   padding-top: 1%;
 }
 
@@ -63,14 +40,14 @@
   font-size: small;
 }
 
-input:focus, select:focus, button:focus {
+.thom-input:focus, select:focus, button:focus {
     
     border-color: #f63bda;
     background-color: #f3f17f;
     outline: none;
   }
 
- .btn {
+ .thom-btn {
   background-color: #ea3bf6;
   border-color: #ea3bf6;
 }
@@ -79,7 +56,7 @@ input:focus, select:focus, button:focus {
   display: flex;
 }
 
-.btn:hover {
+.btndiv:hover {
   background-color: #ebde25;
 }
 .pres {

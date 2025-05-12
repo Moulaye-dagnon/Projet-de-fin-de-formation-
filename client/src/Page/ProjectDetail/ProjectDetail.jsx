@@ -49,7 +49,6 @@ export function ProjectDetail() {
   const handlerIconPlus = (e) => {
     e.preventDefault();
     setActiveTask((c) => true);
-    console.log("test");
   };
   const todo = alltasks
     .filter((task) => task.status === "todo")
@@ -66,12 +65,12 @@ export function ProjectDetail() {
       {data ? (
         <>
           {/* <Dashboard task={tasks} /> */}
-          <div className="flex flex-col h-full min-w-3xl overflow-x-auto">
+          <div className="flex flex-col h-full min-w-3xl">
             <div>tableau</div>
             <hr />
             <div className="mb-5 mt-3">Tableau</div>
 
-            <div className="flex justify-between gap-x-2 h-[100svh-24px] overflow-x-auto">
+            <div className="flex justify-center gap-x-10 h-[100svh-24px] overflow-x-auto">
               <BoardItemComponent
                 title={"À faire"}
                 tasks={todo}

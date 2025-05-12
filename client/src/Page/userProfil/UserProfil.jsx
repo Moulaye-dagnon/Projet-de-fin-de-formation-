@@ -96,7 +96,7 @@ export default function UserProfil() {
   const isAdmin = projets.owners.find(owner=> owner === userData[0]?._id)
   return (
     userData && (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+      <div className="h-full sm:h-[calc(100svh-90px)] flex items-center justify-center px-4">
         <div className="bg-white shadow-lg rounded-2xl p-8 max-w-3xl w-full">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <img
@@ -125,7 +125,7 @@ export default function UserProfil() {
                   <Link
                     to={`/dashboard/users/user/update-user/${userData[0]._id}`}
                   >
-                    Modifier le profil
+                    Modifier mon profil
                   </Link>
                 </button>
               )}

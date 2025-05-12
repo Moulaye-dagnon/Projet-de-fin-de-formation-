@@ -65,7 +65,7 @@ export function BoardItemComponent({
   };
 
   return (
-    <div ref={drop} className="w-84  bg-bg-todo h-[calc(100svh-90px)] ">
+    <div ref={drop} className="w-84  bg-bg-todo h-[calc(90svh-90px)] ">
       <div style={{ backgroundColor: `${color}` }} className="relative py-4 ">
         <div className="flex items-center ml-3 font-bold">
           <span className=" inline-block mx-2">
