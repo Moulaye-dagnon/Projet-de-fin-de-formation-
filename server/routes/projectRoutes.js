@@ -14,6 +14,7 @@ const axios = require("axios");
 const nodemailer = require("nodemailer");
 const sendEmail = require("../Utils/sendMail.js");
 
+
 //Get all project by User
 router.post("/project/:id", collaboratorAuth, async (req, res) => {
   const userId = req.params.id;
@@ -104,7 +105,7 @@ router.get("/project/:projectId/membre", async (req, res) => {
   }
   console.log(projectC);
   const user = await User.findOne({
-    _id: new mongoose.Types.ObjectId("6804d0b4074c5605a5d2f5d7"),
+    _id: new mongoose.Types.ObjectId("682220a52e8086b24e4a22ef"),
   });
   console.log(user);
   try {
@@ -300,5 +301,36 @@ router.post(
     }
   }
 );
+
+router.post("/new-notification", async (req, res) => {
+  const idProject = req.body.idProject;
+  const notifType = req.body.type;
+  const message = req.body.message;
+    try {
+      const findProject = await project.findOne({ _id: new mongoose.Types.ObjectId(idProject) });
+      if (project) {
+        findProject.notifications.push({
+          notification: {
+            type: notifType,
+            message: message,
+            isvew: false,
+          },
+        });
+        await findProject.save();
+      }
+    } catch (error) {
+      res.status(500).json(error);
+    } 
+  res.status(200).json("users");
+});
+
+router.get("/notifications/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  const notifs = await User.findOne(
+    { _id: new mongoose.Types.ObjectId(userId) },
+    { _id: 0, notifications: 1 }
+  );
+  res.status(200).json({ notifs: notifs });
+});
 
 module.exports = router;

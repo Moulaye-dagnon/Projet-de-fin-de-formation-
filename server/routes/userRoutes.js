@@ -148,7 +148,6 @@ router.post("/login", async (req, res) => {
           return isSame;
         });
       if (isSamePassword) {
-        console.log(isSamePassword);
         const authToken = await jwt.sign(
           {
             _id: findUser._id,
@@ -171,6 +170,7 @@ router.post("/login", async (req, res) => {
             UserName: findUser.username,
             email: findUser.email,
             photoProfil: findUser.photoProfil,
+            newNotif: findUser.notifications,
           },
           token: authToken,
         });
@@ -237,10 +237,10 @@ router.post("/reset-password", async (req, res) => {
           expiresIn: "1h",
         }
       );
-  
+
       findUser.authTokens.push({ authToken });
       findUser.save();
-  
+
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -248,7 +248,7 @@ router.post("/reset-password", async (req, res) => {
           pass: process.env.PASSWORD,
         },
       });
-  
+
       const sendEmail = async (email, name, resetLink) => {
         const mailOptions = {
           from: `"Support" ${process.env.USER}`,
@@ -261,7 +261,7 @@ router.post("/reset-password", async (req, res) => {
             <p>Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</p>
           `,
         };
-  
+
         try {
           await transporter.sendMail(mailOptions);
           console.log("Email de réinitialisation envoyé avec succès !");
@@ -269,7 +269,7 @@ router.post("/reset-password", async (req, res) => {
           console.log("Erreur lors de l'envoi de l'email :", error);
         }
       };
-  
+
       const link = `http://localhost:5173/resetpassword/${authToken}`;
       sendEmail(findUser.email, findUser.nom, link);
       return res.status(200).send({ email: email });
@@ -279,7 +279,6 @@ router.post("/reset-password", async (req, res) => {
   } catch (error) {
     return res.status(500).send({ email: email });
   }
-  
 });
 
 router.post("/set-new-password", authentification, async (req, res) => {
