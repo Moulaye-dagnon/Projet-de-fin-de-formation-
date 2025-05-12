@@ -21,4 +21,12 @@
   src: url("../Font/GeistMono-Medium.ttf") format("truetype");
 }
 
-
+html,
+body,
+#root {
+  height: 100vh;
+  height: 100svh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}

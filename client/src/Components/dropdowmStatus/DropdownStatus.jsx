@@ -2,46 +2,36 @@ import { RiProgress1Line } from "react-icons/ri";
 import { LuCircleDashed } from "react-icons/lu";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { MdDone } from "react-icons/md";
-import { Patch_api } from "../../api/api";
-import { UseAllTasksContext } from "../../Context/AllTaskContext";
-import axios from "axios";
-import { useContext } from "react";
-import { UserContext } from "../../Context/UserContext";
-import { useParams } from "react-router-dom";
-import { base_url } from "../../api/config";
+import { useEffect, useRef } from "react";
 
-export default function DropdownComponent({ task }) {
-  const { alltasks, setAllTasks } = UseAllTasksContext();
-  const { user } = useContext(UserContext);
-  const { projectId } = useParams();
-  const changeStatus = async (status) => {
-    try {
-      let updatedTaks = [...alltasks];
-      updatedTaks = updatedTaks.map((item) => {
-        if (item._id == task._id) {
-          return { ...item, status: status };
-        }
-        return item;
-      });
-      try {
-        await axios.patch(`${base_url}/task/reorder/${user._id}`, {
-          tasks: updatedTaks.map((task) => ({
-            _id: task._id,
-            status: task.status,
-          })),
-          projectId,
+import useUpdateTask from "../../api/UpdateTask";
+
+export default function DropdownStatus({ task, setToggleMenu }) {
+  const { updateTask } = useUpdateTask();
+  const dropdownRef = useRef();
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setToggleMenu({
+          status: false,
+          priority: false,
         });
-        setAllTasks([...updatedTaks]);
-      } catch (err) {
-        console.log(err);
       }
-    } catch (error) {
-      console.log("bon", error);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+  const changeStatus = async (status) => {
+    const result = await updateTask(task._id, "status", status);
+    if (!result.success) {
+      console.log(result.error);
     }
   };
-
   return (
-    <div className="bg-slate-50 p-2 shadow-2xl rounded-2xl w-60 absolute right-8 ">
+    <div
+      ref={dropdownRef}
+      className="bg-slate-50 p-2 shadow-2xl rounded-2xl w-60 absolute right-8 "
+    >
       <li
         onClick={() => changeStatus("todo")}
         className=" list-none  py-1 hover:bg-gray-100 hover:shadow-lg flex items-center justify-between"

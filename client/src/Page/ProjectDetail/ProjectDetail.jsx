@@ -5,18 +5,18 @@ import { useContext, useEffect, useState } from "react";
 import { base_url } from "../../api/config";
 import { UserContext } from "../../Context/UserContext";
 import iconPerson from "../../assets/person.svg";
-import DropdownComponent from "../../Components/dropdowmCoponent/DropdownComponent";
 import { useParams } from "react-router-dom";
 import { AddTaskComponent } from "../../Components/addTaskComponent/AddTaskComponent";
 import { Patch_api } from "../../api/api";
-import { use_fetch_all_tasks } from "../../api/all_tasks_in_project";
 import { useDragLayer } from "react-dnd";
 import {
   AllTasksContextProvider,
   UseAllTasksContext,
 } from "../../Context/AllTaskContext";
+import { FiSidebar } from "react-icons/fi";
 
 import Dashboard from "../dashboard/Dashboard";
+import { Header } from "../../Components/header/header";
 export function ProjectDetail() {
   const [activeTask, setActiveTask] = useState(null);
   const [showAddTask, setShowAddTask] = useState(false);
@@ -66,38 +66,39 @@ export function ProjectDetail() {
       {data ? (
         <>
           {/* <Dashboard task={tasks} /> */}
-          <div className="flex flex-col h-full min-w-3xl overflow-x-auto">
-            <div>tableau</div>
-            <hr />
-            <div className="mb-5 mt-3">Tableau</div>
+          <div className=" w-full overflow-hidden  flex items-center flex-col h-full min-w-3xl ">
+            <Header />
+            <div className="h-[calc(100svh - 80px)] lg:h-[calc(100svh-96px)]  w-full   overflow-auto">
+              <div className="w-full h-full overflow-x-auto ">
+                <div className="flex h-full overflow-x-auto gap-3 px-2 min-w-max">
+                  <BoardItemComponent
+                    title={"À faire"}
+                    tasks={todo}
+                    project_name={data.Project}
+                    columnid="todo"
+                    handlerIconPlus={handlerIconPlus}
+                    color={"rgba(249, 115, 22, 0.063)"}
+                  />
 
-            <div className="flex justify-between gap-x-2 h-[100svh-24px] overflow-x-auto">
-              <BoardItemComponent
-                title={"À faire"}
-                tasks={todo}
-                project_name={data.Project}
-                columnid="todo"
-                handlerIconPlus={handlerIconPlus}
-                color={"rgba(249, 115, 22, 0.063)"}
-              />
+                  <BoardItemComponent
+                    title={"En cours"}
+                    tasks={doing}
+                    project_name={data.Project}
+                    columnid="doing"
+                    handlerIconPlus={handlerIconPlus}
+                    color={"rgba(250, 204, 21, 0.063)"}
+                  />
 
-              <BoardItemComponent
-                title={"En cours"}
-                tasks={doing}
-                project_name={data.Project}
-                columnid="doing"
-                handlerIconPlus={handlerIconPlus}
-                color={"rgba(250, 204, 21, 0.063)"}
-              />
-
-              <BoardItemComponent
-                title={"Terminé"}
-                tasks={done}
-                project_name={data.Project}
-                columnid="done"
-                handlerIconPlus={handlerIconPlus}
-                color={"rgba(139, 92, 246, 0.063)"}
-              />
+                  <BoardItemComponent
+                    title={"Terminé"}
+                    tasks={done}
+                    project_name={data.Project}
+                    columnid="done"
+                    handlerIconPlus={handlerIconPlus}
+                    color={"rgba(139, 92, 246, 0.063)"}
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <CustomDragLayer />

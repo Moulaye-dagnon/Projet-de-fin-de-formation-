@@ -2,12 +2,12 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 const project = require("../models/project");
 const GuestUser = require("../models/guestUser.js");
-const User = require("../models/user");
+const User = require('../models/user.js')
 const task = require("../models/task");
 const {
   collaboratorAuth,
   adminAuth,
-  userInviteAuth,
+  userInviteAuth, 
 } = require("../middlewares/auth");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
@@ -102,9 +102,8 @@ router.get("/project/:projectId/membre", async (req, res) => {
       message: "Ce project n'existe pas",
     });
   }
-  console.log(projectC);
   const user = await User.findOne({
-    _id: new mongoose.Types.ObjectId("6804d0b4074c5605a5d2f5d7"),
+    _id: new mongoose.Types.ObjectId("6804d0b4074c5605a5d2f5d6"),
   });
   console.log(user);
   try {
@@ -276,9 +275,9 @@ router.post(
         { _id: new mongoose.Types.ObjectId(projectId) },
         { $pull: { menbres: new mongoose.Types.ObjectId(userId) } }
       );
-      res.status(200).json(deleteUser)
+      res.status(200).json(deleteUser);
     } catch (error) {
-      res.status(500).json(error)
+      res.status(500).json(error);
     }
   }
 );
@@ -294,9 +293,9 @@ router.post(
         { _id: new mongoose.Types.ObjectId(projectId) },
         { $addToSet: { owners: new mongoose.Types.ObjectId(userId) } }
       );
-      res.status(200).json(updateuser)
+      res.status(200).json(updateuser);
     } catch (error) {
-      res.status(500).json(error)
+      res.status(500).json(error);
     }
   }
 );

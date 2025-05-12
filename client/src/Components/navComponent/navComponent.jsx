@@ -3,12 +3,18 @@ import iconDashoard from "../../assets/dashboard.svg";
 import iconTeams from "../../assets/teams.svg";
 import { DropdownMenuList } from "../dropdownMenu/DropdownComponentMenuList";
 
-export function NavComponent() {
+export function NavComponent({ toggleNav }) {
   return (
-    <div className="flex-none hidden lg:block w-50 h-screen bg-white shadow-lg rounded-2xl py-1">
+    <div
+      className={`flex-none absolute transition-all duration-300   w-50 h-svh overflow-hidden bg-white shadow-lg rounded-2xl py-1 ${
+        toggleNav
+          ? "opacity-100 translate-x-0"
+          : "opacity-0 translate-x-[-100%]"
+      } `}
+    >
       <div className="uppercase text-2xl cursor-pointer text-center">
         <NavLink to={"/dashboard"}>
-        <img src="/logo1.png" alt="logo" className="w-30 h-30"/>
+          <img src="/logo1.png" alt="logo" className="w-30 h-30" />
         </NavLink>
       </div>
 

@@ -1,13 +1,31 @@
 import { useContext, useState } from "react";
 import { MdAddTask } from "react-icons/md";
-import DropdownComponent from "../dropdowmCoponent/DropdownComponent";
 import { AddTaskApi } from "../../api/AddTask";
 import { UseAllTasksContext } from "../../Context/AllTaskContext";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
 import { MdCancel } from "react-icons/md";
+import CustomDropdown from "../customDropdow/CustomDropDown";
 
 export function AddTaskComponent({ setToggle }) {
+  // Définir les options pour chaque dropdown
+  const statusOptions = [
+    { value: "todo", label: "À faire" },
+    { value: "doing", label: "En cours" },
+    { value: "done", label: "Terminée" },
+  ];
+
+  const priorityOptions = [
+    { value: "low", label: "Faible" },
+    { value: "medium", label: "Moyen" },
+    { value: "high", label: "Élevé" },
+  ];
+
+  const assignToOptions = [
+    { value: "6804d0b4074c5605a5d2f5d6", label: "Utilisateur A" },
+    { value: "6804d0b4074c5605a5d2f5d7", label: "Utilisateur B" },
+    { value: "6804d0b4074c5605a5d2f5d8", label: "Utilisateur C" },
+  ];
   const { projectId } = useParams();
   const { alltasks, setAllTasks } = UseAllTasksContext();
   const { user } = useContext(UserContext);
@@ -36,7 +54,7 @@ export function AddTaskComponent({ setToggle }) {
   };
 
   return (
-    <div className=" absolute p-5 top-0 right-0 left-0 bottom-0 bg-amber-950">
+    <div className=" absolute p-5 top-0 right-0 left-0 bottom-0 bg-black/50 backdrop-blur-xs">
       <div className=" w-full py-3 lg:w-3xl rounded-2xl mx-auto bg-slate-50">
         <div className="flex items-center justify-between">
           <span className="  ml-3  w-20 flex items-center border rounded-2xl  ">
@@ -71,44 +89,31 @@ export function AddTaskComponent({ setToggle }) {
                 onChange={handleOnchange}
               />
             </div>
-            <div className="flex justify-between items-center w-[45%] space-x-4">
-              <select
+            <div className="flex justify-between items-center w-[95%] space-x-4">
+              <CustomDropdown
                 name="status"
-                id=""
                 value={AddTask.status}
                 onChange={handleOnchange}
-                className="border border-gray-300 rounded-md p-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="todo">À faire</option>
-                <option value="doing">En cours</option>
-                <option value="done">Terminée</option>
-              </select>
+                options={statusOptions}
+                placeholder="statut"
+              />
 
-              <select
+              <CustomDropdown
                 name="priority"
-                id=""
                 value={AddTask.priority}
                 onChange={handleOnchange}
-                className="border border-gray-300 rounded-md p-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="low">Faible</option>
-                <option value="medium">Moyen</option>
-                <option value="high">Élevé</option>
-              </select>
+                options={priorityOptions}
+                placeholder=" priorité"
+              />
 
-              <select
+              <CustomDropdown
                 name="assignTo"
-                id=""
                 value={AddTask.assignTo}
                 onChange={handleOnchange}
-                className="border border-gray-300 rounded-md p-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="6804d0b4074c5605a5d2f5d6">a</option>
-                <option value="6804d0b4074c5605a5d2f5d6">a</option>
-                <option value="6804d0b4074c5605a5d2f5d6">a</option>
-              </select>
+                options={assignToOptions}
+                placeholder="Assigner à"
+              />
             </div>
-
             <hr className="my-4" />
             <div className="flex justify-end">
               <button
