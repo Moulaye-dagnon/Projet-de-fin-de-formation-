@@ -6,8 +6,11 @@ import { useParams } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
 import { MdCancel } from "react-icons/md";
 import CustomDropdown from "../customDropdow/CustomDropDown";
+import { ProjectContext } from "../../Context/ProjectContext";
 
 export function AddTaskComponent({ setToggle }) {
+  const { projectUsers } = useContext(ProjectContext);
+  console.log(projectUsers);
   // Définir les options pour chaque dropdown
   const statusOptions = [
     { value: "todo", label: "À faire" },
@@ -21,11 +24,9 @@ export function AddTaskComponent({ setToggle }) {
     { value: "high", label: "Élevé" },
   ];
 
-  const assignToOptions = [
-    { value: "6804d0b4074c5605a5d2f5d6", label: "Utilisateur A" },
-    { value: "6804d0b4074c5605a5d2f5d7", label: "Utilisateur B" },
-    { value: "6804d0b4074c5605a5d2f5d8", label: "Utilisateur C" },
-  ];
+  const assignToOptions = projectUsers.map((item) => {
+    return { value: item._id, label: item.nom };
+  });
   const { projectId } = useParams();
   const { alltasks, setAllTasks } = UseAllTasksContext();
   const { user } = useContext(UserContext);

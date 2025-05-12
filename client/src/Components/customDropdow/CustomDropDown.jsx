@@ -24,12 +24,10 @@ const CustomDropdown = ({ name, value, onChange, options, placeholder }) => {
     setIsOpen(false); // Fermer le dropdown
   };
 
-  // Trouver le libellé de l'option sélectionnée
   const selectedOption = options.find((option) => option.value === value);
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
-      {/* Bouton qui affiche l'option sélectionnée ou le placeholder */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
