@@ -94,6 +94,7 @@ export default function UserProfil() {
     pourcentage = 0;
   }
   const isAdmin = projets.owners.find(owner=> owner === userData[0]?._id)
+  console.log(userData)
   return (
     userData && (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
@@ -101,8 +102,8 @@ export default function UserProfil() {
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <img
               src={
-                userData[0].photoProfil
-                  ? `http://localhost:4000/images/${userData[0].photoProfil}`
+                userData.photoProfil
+                  ? `http://localhost:4000/images/${userData.photoProfil}`
                   : "/profil.jpg"
               }
               alt="Photo de profil"
@@ -111,19 +112,19 @@ export default function UserProfil() {
 
             <div className="flex-1 text-center sm:text-left">
               <h2 className="text-2xl font-bold text-gray-800">
-                {userData[0].prenom} {userData[0].nom}
+                {userData.prenom} {userData.nom}
               </h2>
-              <p className="text-gray-600">{userData[0].email}</p>
-              {userData[0].telephone && (
-                <p className="text-gray-600">{userData[0].telephone}</p>
+              <p className="text-gray-600">{userData.email}</p>
+              {userData.telephone && (
+                <p className="text-gray-600">{userData.telephone}</p>
               )}
-              {userData[0].username && (
-                <p className="text-gray-600">{userData[0].username}</p>
+              {userData.username && (
+                <p className="text-gray-600">{userData.username}</p>
               )}
-              {userData[0]._id === user.id && (
+              {userData._id === user.id && (
                 <button className="mt-4 bg-[#50b1a1] hover:bg-[#3e978c] text-white px-4 py-2 rounded-xl font-medium transition-all cursor-pointer">
                   <Link
-                    to={`/dashboard/users/user/update-user/${userData[0]._id}`}
+                    to={`/dashboard/users/user/update-user/${userData._id}`}
                   >
                     Modifier le profil
                   </Link>
@@ -142,20 +143,20 @@ export default function UserProfil() {
             <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
               <p className="text-sm text-gray-500">Date d'inscription</p>
               <p className="text-lg font-medium text-gray-800">
-                {dateFormat(userData[0].created_At)}
+                {dateFormat(userData.created_At)}
               </p>
             </div>
             <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
               <p className="text-sm text-gray-500">Dernière activité</p>
               <p className="text-lg font-medium text-green-600">
-                {userData[0].last_connexion &&
-                  getLastConnexion(userData[0].last_connexion)}
+                {userData.last_connexion &&
+                  getLastConnexion(userData.last_connexion)}
               </p>
             </div>
             <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
               <p className="text-sm text-gray-500">Poste</p>
               <p className="text-lg font-medium text-gray-800">
-                {userData[0].poste}
+                {userData.poste}
               </p>
             </div>
             <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
