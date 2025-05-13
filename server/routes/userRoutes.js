@@ -148,7 +148,6 @@ router.post("/login", async (req, res) => {
           return isSame;
         });
       if (isSamePassword) {
-        console.log(isSamePassword);
         const authToken = await jwt.sign(
           {
             _id: findUser._id,
@@ -171,6 +170,7 @@ router.post("/login", async (req, res) => {
             UserName: findUser.username,
             email: findUser.email,
             photoProfil: findUser.photoProfil,
+            newNotif: findUser.notifications,
           },
           token: authToken,
         });

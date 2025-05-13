@@ -37,7 +37,7 @@ export default function Login() {
 
   return (
     <div className="box lg:flex">
-      <div className="left-box flex-grow-1 p-20 bg-gray-100 h-screen">
+      <div className="left-box flex-grow-1 p-20 bg-gray-100 h-full">
         <p className="text-start sm:mb-30 mb-16 sm:text-xl text-sm">
           <strong className="font-bold">GPC</strong> Gestion de Projet
           Collaboratif

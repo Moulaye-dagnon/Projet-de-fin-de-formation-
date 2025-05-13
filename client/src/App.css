@@ -34,6 +34,10 @@ label {
   box-shadow: 0px 50px 85px -18px #4f4f4f;
 } */
 
+body {
+  margin: 0;
+  padding: 0;
+}
 button {
   background-color: #76b1a6;
   transition: all 0.5s;

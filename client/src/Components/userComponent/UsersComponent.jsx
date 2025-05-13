@@ -1,16 +1,17 @@
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import UserAction from "../Modals/UserAction";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import { ProjectContext } from "../../Context/ProjectContext";
+
 
 export default function UsersComponent({ user, myId }) {
   const [openModal, setOpenModal] = useState("");
 
   const { projets } = useContext(ProjectContext);
-  const isAdmin = projets.owners.find((owner) => owner === myId);
-  const isAdminn = projets.owners.find((owner) => owner === user._id);
+  const isAdmin = projets.owners?.find((owner) => owner === myId);
+  const isAdminn = projets.owners?.find((owner) => owner === user._id);
   function closeModal() {
     setOpenModal(!openModal);
   }

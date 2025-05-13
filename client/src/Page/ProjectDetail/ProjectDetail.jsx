@@ -49,7 +49,6 @@ export function ProjectDetail() {
   const handlerIconPlus = (e) => {
     e.preventDefault();
     setActiveTask((c) => true);
-    console.log("test");
   };
   const todo = alltasks
     .filter((task) => task.status === "todo")

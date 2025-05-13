@@ -16,7 +16,7 @@ export function DropdownMenuList() {
                 <details className="group">
                   <summary className="flex items-center justify-between gap-2 p-2 font-medium marker:content-none hover:cursor-pointer">
                     <span className="flex gap-2 items-center">
-                      <span className="text-xs">{project.name}</span>
+                      <span className="text-xs font-bold">{project.name}</span>
                     </span>
                     <svg
                       className="w-4 h-4 text-gray-500 transition group-open:rotate-90"
@@ -45,7 +45,7 @@ export function DropdownMenuList() {
                           }
                         >
                           <span className="w-4.5 inline-block mr-2">
-                            <img src={iconProject} alt="Project Icon" />
+                            <i className="fas fa-lightbulb text-[#76b1a6]"></i>{" "}
                           </span>
                           <span className="flex-grow text-xs">Projects</span>
                         </NavLink>
@@ -60,7 +60,7 @@ export function DropdownMenuList() {
                           }
                         >
                           <span className="w-4.5 inline-block mr-2">
-                            <img src={iconTask} alt="Tasks Icon" />
+                            <i className="fas fa-tasks text-[#76b1a6]"></i>{" "}
                           </span>
                           <span className="flex-grow text-xs">Tasks</span>
                         </NavLink>
@@ -76,7 +76,7 @@ export function DropdownMenuList() {
                           }
                         >
                           <span className="w-4.5 inline-block mr-2">
-                            <img src={iconTask} alt="Tasks Icon" />
+                            <i className="fas fa-users text-[#76b1a6]"></i>{" "}
                           </span>
                           <span className="flex-grow text-xs">Team</span>
                         </NavLink>
@@ -92,9 +92,11 @@ export function DropdownMenuList() {
                           }
                         >
                           <span className="w-4.5 inline-block mr-2">
-                            <img src={iconTask} alt="Tasks Icon" />
+                            <i className="fas fa-chart-line text-[#76b1a6]"></i>
                           </span>
-                          <span className="flex-grow text-xs">statistiques</span>
+                          <span className="flex-grow text-xs">
+                            statistiques
+                          </span>
                         </NavLink>
                       </li>
                     </ul>

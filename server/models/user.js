@@ -51,8 +51,8 @@ const userSchema = new Schema({
     type: Date,
   },
   last_connexion: {
-    type: Date
-  }
+    type: Date,
+  },
 });
 
 const User = mongoose.model("User", userSchema);

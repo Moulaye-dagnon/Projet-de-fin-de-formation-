@@ -20,20 +20,28 @@ import ViewUsersComponent from "../../Components/viewUsersComponent/ViewUsersCom
 
 export default function Main() {
   const { user, token, logout } = useContext(UserContext);
-
   return (
     <>
       <Routes>
         <Route path="/" element={<Cover />} />
 
-        <Route path="/dashboard/" element={<LayoutComponent />}>
+        <Route
+          path="/dashboard/"
+          element={token ? <LayoutComponent /> : <Login />}
+        >
           <Route path="project/:projectId" index element={<ProjectDetail />} />
-          <Route path="users/:projectId" element={<Users />} />
+          <Route
+            path="users/:projectId"
+            element={<Users />}
+          />
           <Route path="users/adduser" element={<AddUser />} />
           <Route path="users/user/:id" element={<UserProfil />} />
           <Route path="users/user/update-user/:id" element={<UpdateUser />} />
           <Route path="/dashboard/stats/:projectId" element={<Dashboard />} />
-          <Route path="/dashboard/team/:projectId" element={<ViewUsersComponent />} />
+          <Route
+            path="/dashboard/team/:projectId"
+            element={<ViewUsersComponent />}
+          />
         </Route>
 
         {/* <Route path="/logup" element={<Logup />} /> */}
