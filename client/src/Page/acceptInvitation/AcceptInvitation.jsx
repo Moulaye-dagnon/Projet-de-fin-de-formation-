@@ -12,6 +12,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { UserContext } from "../../Context/UserContext";
+import { io } from "socket.io-client";
+const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 
 export default function AcceptInvitation() {
   const navigate = useNavigate();
@@ -94,6 +96,7 @@ export default function AcceptInvitation() {
         if (res.status === 401) {
           navigate("*");
         } else if (res.status === 200) {
+          socket.emit("add-user")
           navigate("/login");
         }
         return res.json();
@@ -128,9 +131,11 @@ export default function AcceptInvitation() {
       }).then((req) => {
         if (req.status === 201) {
           toast.success("Compte créer avec succès!");
+          socket.emit("add-user")
           setTimeout(() => {
             navigate("/login");
           }, 3000);
+
         }else{
           toast.error("Une erreur est survenue!")
         }

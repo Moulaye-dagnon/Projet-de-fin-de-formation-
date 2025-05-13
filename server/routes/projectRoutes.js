@@ -2,12 +2,12 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 const project = require("../models/project");
 const GuestUser = require("../models/guestUser.js");
-const User = require('../models/user.js')
+const User = require("../models/user.js");
 const task = require("../models/task");
 const {
   collaboratorAuth,
   adminAuth,
-  userInviteAuth, 
+  userInviteAuth,
 } = require("../middlewares/auth");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
@@ -299,5 +299,38 @@ router.post(
     }
   }
 );
+
+router.post("/new-notification", async (req, res) => {
+  const idProject = req.body.idProject;
+  const notifType = req.body.type;
+  const message = req.body.message;
+  try {
+    const findProject = await project.findOne({
+      _id: new mongoose.Types.ObjectId(idProject),
+    });
+    if (project) {
+      findProject.notifications.push({
+        notification: {
+          type: notifType,
+          message: message,
+          isvew: false,
+        },
+      });
+      await findProject.save();
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+  res.status(200).json("users");
+});
+
+router.get("/notifications/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  const notifs = await User.findOne(
+    { _id: new mongoose.Types.ObjectId(userId) },
+    { _id: 0, notifications: 1 }
+  );
+  res.status(200).json({ notifs: notifs });
+});
 
 module.exports = router;

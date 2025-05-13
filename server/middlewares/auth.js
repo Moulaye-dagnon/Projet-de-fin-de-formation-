@@ -100,4 +100,9 @@ const userInviteAuth = async (req, res, next) => {
   }
 };
 
-module.exports = { authentification, collaboratorAuth, adminAuth, userInviteAuth };
+module.exports = {
+  authentification,
+  collaboratorAuth,
+  adminAuth,
+  userInviteAuth,
+};

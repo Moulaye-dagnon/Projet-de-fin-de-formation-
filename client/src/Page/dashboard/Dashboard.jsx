@@ -9,6 +9,7 @@ import { fetchProjectUsers } from "../../api/fetchProjectUsers";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { fetchAuth } from "../../api/fetchAuth";
 
 export default function Dashboard({task}) {
   const navigate = useNavigate();
@@ -24,27 +25,6 @@ export default function Dashboard({task}) {
     removeData,
     removeTwo,
   } = useContext(ProjectContext);
-  useEffect(() => {
-    try {
-      fetch("http://localhost:4000/", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-      }).then((req) => {
-        if (req.status === 401) {
-          logout();
-          navigate("/login");
-          return;
-        } else {
-          return req.json();
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, [token]);
 
   useEffect(() => {
     if (!token || !user || token === null || user === null) {
@@ -71,9 +51,9 @@ export default function Dashboard({task}) {
     }
   }, [projets]);
   return (
-    <div className="text-center">
+    <div className="text-center max-w-xl m-auto sm:max-h-screen h-full">
       {Object.keys(projets).length > 0 && tasks?.length >= 0 && (
-        <div className="flex justify-around flex-col sm:flex-row items-center gap-5 p-4">
+        <div className="h-full flex flex-col gap-20 items-center py-10">
           <StatsComponent tasks={tasks}/>
           {projectUsers && <ViewUsersComponent/>}
         </div>

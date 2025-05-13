@@ -15,13 +15,14 @@ export default function StatsComponent({tasks}) {
   let totalTaches = 0;
   let tasksDone = 0;
   let pourcentage = 0;
-  if (tasks.length > 0) {
-    totalTaches = tasks.length;
-    tasksDone = tasks.filter((t) => t.status === "done").length;
+  if (tasks?.length > 0) {
+    totalTaches = tasks?.reduce((acc,item)=> acc += item.tasks?.length,0);
+    tasksDone = tasks?.find((t) => t._id === "done")?.tasks?.length;
   }
   if (tasksDone > 0) {
     pourcentage = (tasksDone * 100) / totalTaches;
   } else {
+    console.log("first")
     tasksDone = 0;
     pourcentage = 0;
   }
@@ -31,13 +32,11 @@ export default function StatsComponent({tasks}) {
       return widthPourcentage(width, pourcentage);
     }
   };
-
   return (
-    <div className="border-[#50b1a1] shadow-lg sm:w-2xl lg:h-40 bg-white p-2 rounded-3xl w-90">
-      <p className="text-start font-bold mb-6">{projets && projets.name}</p>
-      <div className="flex justify-between  align-baseline items-center flex-col lg:flex-row">
-        <div className="status flex-grow-1">
-          <p>Statut</p>
+    <div className="border-[#50b1a1] shadow-lg bg-white p-2 rounded-3xl w-full">
+      <div className="flex gap-10 align-baseline items-center flex-col ">
+        <div className="status flex-grow-1 w-full">
+          <p className="font-bold text-xl">Statut</p>
           <div className={`rounded-full bg-indigo-200 flex relative`}>
             <div
               className={`rounded-full  ${calculStats()} text-center`}
@@ -54,13 +53,13 @@ export default function StatsComponent({tasks}) {
         </div>
 
         <div className="flex-grow-1">
-          <p>Total Taches</p>
+          <p className="font-bold text-xl">Taches Terminées</p>
           <p className="font-bold">
             {tasks && tasksDone}/{tasks && totalTaches}
           </p>
         </div>
         <div className="flex-grow-1">
-          <p>Echéance</p>
+          <p className="font-bold text-xl">Echéance</p>
           <p className="font-bold">
             {projets && dateFormat(projets.createdAt)}
           </p>

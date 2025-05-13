@@ -8,6 +8,13 @@ const projectShema = new mongoose.Schema({
   menbres: [
     { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   ],
+  notifications: [
+    {
+      notification: {
+        type: Object,
+      },
+    },
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 

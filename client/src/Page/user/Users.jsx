@@ -8,6 +8,9 @@ import UserAction from "../../Components/Modals/UserAction";
 import { fetchTasks } from "../../api/fetchTasks";
 import { fetchProjectUsers } from "../../api/fetchProjectUsers";
 import { fetchProjet } from "../../api/fetchProjet";
+import { io } from "socket.io-client";
+import { toast } from "react-toastify";
+const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 export default function Users() {
   const navigate = useNavigate();
   const { projectId } = useParams();
@@ -21,26 +24,26 @@ export default function Users() {
     removeData,
     removeTwo,
   } = useContext(ProjectContext);
-
   const { user, token, logout } = useContext(UserContext);
   const myId = user.id;
-  const isAdmin = projets.owners?.find((owner) => owner === user.id);
+
+  const ids = projectUsers.map((u) => u._id);
+
   useEffect(() => {
-    fetch("http://localhost:4000/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((req) => {
-      if (req.status === 401) {
-        logout();
-        navigate("/login");
-      } else {
-        return req.json();
-      }
+    socket.on("update-role", (updateRoleMessage) => {
+      fetchProjet(user, token, setProjets, removeTwo, removeData, projectId);
     });
-  }, [token]);
+
+    socket.on("delete-user", (deleteUser) => {
+      fetchProjet(user, token, setProjets, removeTwo, removeData, projectId);
+    });
+
+    return () => {
+      socket.off("update-role");
+      socket.off("delete-user");
+    };
+  }, []);
+
   useEffect(() => {
     if (!token || !user || token === null || user === null) {
       return;
@@ -65,8 +68,10 @@ export default function Users() {
       fetchProjectUsers(projets, setProjectUsers, removeData);
     }
   }, [projets]);
+
+  const isAdmin = projets.owners?.find((owner) => owner === user.id);
   return (
-    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10 place-items-center mt-4 mb-4">
+    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10 place-items-center mt-4 mb-4 sm:h-[calc(90svh-90px)] ">
       {projets && (
         <>
           {projectUsers.map((user) => (
