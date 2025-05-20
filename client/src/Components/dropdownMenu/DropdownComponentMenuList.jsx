@@ -2,10 +2,11 @@ import { All_user_project } from "../../api/all_project_by_user";
 import { NavLink } from "react-router-dom";
 import iconProject from "../../assets/project.svg";
 import iconTask from "../../assets/task.svg";
+import { useContext } from "react";
+import { UserContext } from "../../Context/UserContext";
 
-export function DropdownMenuList() {
-  const { UserProject, loading } = All_user_project();
-
+export function DropdownMenuList({UserProject}) {
+  const {user} = useContext(UserContext)
   return (
     <div>
       <ul className="flex flex-col gap-2 max-w-[280px] mx-auto ">
@@ -47,12 +48,12 @@ export function DropdownMenuList() {
                           <span className="w-4.5 inline-block mr-2">
                             <i className="fas fa-lightbulb text-[#76b1a6]"></i>{" "}
                           </span>
-                          <span className="flex-grow text-xs">Projects</span>
+                          <span className="flex-grow text-xs">Principale</span>
                         </NavLink>
                       </li>
                       <li className="flex gap-2">
                         <NavLink
-                          to={"/Teams"}
+                          to={`/dashboard/${project._id}/userTasks/${user.id}`}
                           className={({ isActive }) =>
                             `flex items-center w-full p-2 rounded-lg transition-all ${
                               isActive ? "bg-gray-200 shadow-lg" : "bg-white"
@@ -62,7 +63,7 @@ export function DropdownMenuList() {
                           <span className="w-4.5 inline-block mr-2">
                             <i className="fas fa-tasks text-[#76b1a6]"></i>{" "}
                           </span>
-                          <span className="flex-grow text-xs">Tasks</span>
+                          <span className="flex-grow text-xs">Mes taches</span>
                         </NavLink>
                       </li>
 
@@ -78,7 +79,7 @@ export function DropdownMenuList() {
                           <span className="w-4.5 inline-block mr-2">
                             <i className="fas fa-users text-[#76b1a6]"></i>{" "}
                           </span>
-                          <span className="flex-grow text-xs">Team</span>
+                          <span className="flex-grow text-xs">L'équipe</span>
                         </NavLink>
                       </li>
 

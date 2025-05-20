@@ -17,10 +17,10 @@ import { FiSidebar } from "react-icons/fi";
 
 import Dashboard from "../dashboard/Dashboard";
 import { Header } from "../../Components/header/header";
-export function ProjectDetail() {
+export default function UserTasks() {
   const [activeTask, setActiveTask] = useState(null);
   const [showAddTask, setShowAddTask] = useState(false);
-  const { projectId } = useParams();
+  const { projectId,userId } = useParams();
 
   const [data, setData] = useState(null);
   const { token } = useContext(UserContext);
@@ -39,7 +39,8 @@ export function ProjectDetail() {
             allTasks.push({ ...task, status: group._id });
           });
         });
-        setAllTasks(allTasks);
+        const userTasks = allTasks.filter(t=> t.assignTo === userId)
+        setAllTasks(userTasks);
       } catch (error) {
         console.log("Erreur:", error);
       }
@@ -60,11 +61,13 @@ export function ProjectDetail() {
     .filter((task) => task.status === "done")
     .sort((a, b) => a.order - b.order);
   const columns = ["todo", "doing", "done"];
+
+
   return (
     <>
       {data ? (
         <>
-          <div className="flex items-center flex-col h-full w-full">
+          <div className=" w-full overflow-hidden  flex items-center flex-col h-full">
             <div className="h-full w-full overflow-auto">
               <div className="w-full h-full overflow-x-auto">
                 <div className="flex h-full overflow-x-auto gap-3 px-2 min-w-max">

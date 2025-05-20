@@ -8,39 +8,69 @@ import { fetchAuth } from "../../api/fetchAuth";
 import TopBar from "../topBarComponent/TopBar";
 import { fetchProjet } from "../../api/fetchProjet";
 import { io } from "socket.io-client";
+import AddProjectModal from "../Modals/AddProjectModal";
+import { All_user_project } from "../../api/all_project_by_user";
+import { fetchNotif } from "../../api/fetchNotif";
+import { ProjectContext } from "../../Context/ProjectContext";
+import { Header } from "../header/header";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 export function LayoutComponent() {
-  const { user, token, logout, setToken } = useContext(UserContext);
+  const { user, token, logout, setToken,setUser } = useContext(UserContext);
+  const { projets } = useContext(ProjectContext);
+  const { UserProject, loading, setNewProject } = All_user_project();
   const navigate = useNavigate();
   useEffect(() => {
     socket.on("add-user", (addUser) => {
-      fetchProjet(user, token, setProjets, removeTwo, removeData, projectId);
+      console.log("first");
+    });
+
+    socket.on("new-project", (newProject) => {
+      setNewProject((state) => !state);
     });
 
     return () => {
       socket.off("add-user");
+      socket.off("new-project");
+      socket.off("fetch-notif");
     };
   }, []);
+  const projectID = projets._id
   useEffect(() => {
-    fetchAuth(token, logout, navigate);
+    fetchAuth(token, logout, navigate,projectID);
   }, [token]);
   const [toggleNav, setToggleNav] = useState(true);
   const handleToggleNav = () => {
     setToggleNav((c) => !c);
   };
+
+  const [openAddProject, setOpenAddProject] = useState("");
+
+  function handleToggleModal() {
+    setOpenAddProject(!openAddProject);
+  }
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className=" flex w-full flex-col relative  ">
-        <TopBar />
+      <div className="flex relative">
+        <NavComponent
+          toggleNav={toggleNav}
+          handleToggleModal={handleToggleModal}
+          userProject={UserProject}
+          handleToggleNav={handleToggleNav}
+        />
 
-        <NavComponent toggleNav={toggleNav} />
         <div
-          className={` transition-all duration-300 flex-1 mx-2 border-bg-todo min-w-3xl h-svh overflow-hidden w-full border rounded-md ${
-            toggleNav ? "ml-52" : ""
-          }`}
+          className={` transition-all duration-300 flex-1 mx-2 border-bg-todo h-svh overflow-hidden border rounded-md`}
         >
+          <Header handleToggleNav={handleToggleNav}/>
+
           <Outlet context={[handleToggleNav]} />
         </div>
+        {openAddProject && (
+          <AddProjectModal
+            openAddProject={openAddProject}
+            setOpenAddProject={setOpenAddProject}
+          />
+        )}
       </div>
     </DndProvider>
   );

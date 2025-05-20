@@ -17,6 +17,9 @@ import Cover from "../../Components/Cover/Cover";
 import AddUser from "../AddUser/AddUser";
 import AcceptInvitation from "../acceptInvitation/AcceptInvitation";
 import ViewUsersComponent from "../../Components/viewUsersComponent/ViewUsersComponent";
+import Help from "../help/Help";
+import UserTasks from "../userTasks/UserTasks";
+import ContactUs from "../contactUs/ContactUs";
 
 export default function Main() {
   const { user, token, logout } = useContext(UserContext);
@@ -30,10 +33,8 @@ export default function Main() {
           element={token ? <LayoutComponent /> : <Login />}
         >
           <Route path="project/:projectId" index element={<ProjectDetail />} />
-          <Route
-            path="users/:projectId"
-            element={<Users />}
-          />
+          <Route path="users/:projectId" element={<Users />} />
+          <Route path=":projectId/userTasks/:userId" element={<UserTasks />} />
           <Route path="users/adduser" element={<AddUser />} />
           <Route path="users/user/:id" element={<UserProfil />} />
           <Route path="users/user/update-user/:id" element={<UpdateUser />} />
@@ -42,6 +43,8 @@ export default function Main() {
             path="/dashboard/team/:projectId"
             element={<ViewUsersComponent />}
           />
+          <Route path="help" element={<Help />} />
+          <Route path="contactus" element={<ContactUs />} />
         </Route>
 
         {/* <Route path="/logup" element={<Logup />} /> */}

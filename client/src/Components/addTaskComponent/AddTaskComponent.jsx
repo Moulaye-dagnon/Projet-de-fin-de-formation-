@@ -10,7 +10,6 @@ import { ProjectContext } from "../../Context/ProjectContext";
 
 export function AddTaskComponent({ setToggle }) {
   const { projectUsers } = useContext(ProjectContext);
-  console.log(projectUsers);
   // Définir les options pour chaque dropdown
   const statusOptions = [
     { value: "todo", label: "À faire" },
@@ -53,9 +52,8 @@ export function AddTaskComponent({ setToggle }) {
     });
     setToggle(false);
   };
-
   return (
-    <div className=" absolute p-5 top-0 right-0 left-0 bottom-0 bg-black/50 backdrop-blur-xs">
+    <div className=" absolute p-5 top-0 right-0 left-0 bottom-0 bg-black/50 backdrop-blur-xs z-50">
       <div className=" w-full py-3 lg:w-3xl rounded-2xl mx-auto bg-slate-50">
         <div className="flex items-center justify-between">
           <span className="  ml-3  w-20 flex items-center border rounded-2xl  ">

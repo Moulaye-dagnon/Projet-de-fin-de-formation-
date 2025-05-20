@@ -1,11 +1,13 @@
 import { FiSidebar } from "react-icons/fi";
 import { useOutletContext } from "react-router-dom";
+import TopBar from "../topBarComponent/TopBar";
 
-export function Header({ title, children }) {
-  const [handleToggleNav] = useOutletContext();
+export function Header({ handleToggleNav }) {
   return (
-    <div className=" w-full  flex  my-3 flex-col justify-start  ">
+    <div className=" w-full  flex   flex-col justify-start  ">
+        <TopBar />
       <div className=" w-full flex justify-stretch items-center border-b border-black/50 h-10 ">
+
         <div className="flex items-center  justify-items-start">
           <span
             onClick={handleToggleNav}
@@ -16,13 +18,7 @@ export function Header({ title, children }) {
           >
             <FiSidebar size={"20px"} />
           </span>
-          <span>{title}</span>
         </div>
-        {children}
-      </div>
-
-      <div className="w-full px-2 border-black/50 border-b h-10 flex justify-start items-center ">
-        Tableau
       </div>
     </div>
   );

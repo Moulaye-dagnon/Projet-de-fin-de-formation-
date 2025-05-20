@@ -1,7 +1,7 @@
 import { useDrag } from "react-dnd";
 import iconMenuPoint from "../../assets/menu-point.svg";
 import iconPerson from "../../assets/person.svg";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { RiProgress1Line, RiProgress3Line } from "react-icons/ri";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaRegCircle } from "react-icons/fa";
@@ -13,6 +13,7 @@ import {
 } from "react-icons/md";
 import DropdownStatus from "../dropdowmStatus/DropdownStatus";
 import DropdownPriority from "../dropdowPriority/dropdownPriority";
+import { ProjectContext } from "../../Context/ProjectContext";
 
 export function TaskComponent({ item }) {
   const [toggleMenu, setToggleMenu] = useState({
@@ -38,6 +39,7 @@ export function TaskComponent({ item }) {
       priority: !toggleMenu.priority,
     });
   };
+  const {projets} = useContext(ProjectContext)
   return (
     <div
       ref={drag}
@@ -55,7 +57,7 @@ export function TaskComponent({ item }) {
           {item.priority == "hight" && <MdOutlineSignalCellularAlt />}
         </span>
         <span className="text-xs opacity-50 inline-block ml-8 font-bold">
-          Project name
+          {projets.name}
         </span>
         <span
           onClick={handleToggleStatus}

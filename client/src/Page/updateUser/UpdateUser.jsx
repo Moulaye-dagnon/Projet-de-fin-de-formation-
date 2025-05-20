@@ -70,14 +70,15 @@ export default function UpdateUser() {
     })
       .then((req) => req.json())
       .then((res) => {
+        console.log(res)
         setFields({
           ...fields,
-          nom: res[0].nom,
-          prenom: res[0].prenom,
-          email: res[0].email,
-          username: res[0].username,
-          poste: res[0].poste,
-          telephone: res[0].telephone,
+          nom: res.nom,
+          prenom: res.prenom,
+          email: res.email,
+          username: res.username,
+          poste: res.poste,
+          telephone: res.telephone,
         });
       });
   }, []);

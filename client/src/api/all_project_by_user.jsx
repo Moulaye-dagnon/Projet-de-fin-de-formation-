@@ -9,6 +9,7 @@ export function All_user_project() {
   const { user, token } = useContext(UserContext);
 
   const [error, setError] = useState(null);
+  const [newProject, setNewProject] = useState("");
 
   useEffect(() => {
     async function FetchProjectUser() {
@@ -33,7 +34,6 @@ export function All_user_project() {
     }
 
     FetchProjectUser();
-  }, []);
-
-  return { UserProject, loading, error };
+  }, [newProject]);
+  return { UserProject, loading, error, setNewProject };
 }
