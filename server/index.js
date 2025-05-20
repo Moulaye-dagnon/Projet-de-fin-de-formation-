@@ -40,8 +40,16 @@ io.on("connection", (socket) => {
     io.emit("add-user", addUser)
   })
 
+  socket.on("new-project", newProject=>{
+    io.emit("new-project", newProject)
+  })
+
   socket.on("fetch-notif", notif=>{
     io.emit("fetch-notif", notif)
+  })
+
+  socket.on("new-notif", notif=>{ 
+    io.emit("new-notif", notif)
   })
 
   socket.on("disconnect", () => {

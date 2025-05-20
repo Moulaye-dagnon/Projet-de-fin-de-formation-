@@ -40,6 +40,13 @@ const userSchema = new Schema({
       },
     },
   ],
+  notifications: [
+    {
+      notification: {
+        type: Object,
+      },
+    },
+  ],
   authTokens: [
     {
       authToken: {

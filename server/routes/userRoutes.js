@@ -18,14 +18,17 @@ const {
   collaboratorAuth,
   adminAuth,
   userInviteAuth,
+  isMember,
 } = require("../middlewares/auth.js");
+const { sendMessage } = require("../Utils/sendMessage.js");
 
 connection();
 
-router.get("/", collaboratorAuth, async (req, res) => {
-  res.status(200).json("Bienvenue dans mon application...");
+router.get("/:projectID", async (req, res) => { 
+  const user = req.user
+  res.status(200).json(user);
 });
-
+ 
 router.get("/users/user/:id", async (req, res) => {
   const id = req.params.id;
   try {
@@ -155,9 +158,9 @@ router.post("/login", async (req, res) => {
             connected_at: date,
           },
           process.env.SECRET_TOKEN,
-          { expiresIn: "1h" }
+          { expiresIn: "24h" }
         );
-
+        findUser.authTokens.pop();
         findUser.authTokens.push({ authToken });
         findUser.last_connexion = date;
         findUser.save();
@@ -291,5 +294,16 @@ router.post("/set-new-password", authentification, async (req, res) => {
   user.save();
   res.status(200).json("Mot de passe réinitialisé avec succès");
 });
+
+router.post("/contactus", async (req, res) => {
+  const { nom, prenom, email, objet, message } = req.body;
+  try {
+    sendMessage(nom, prenom, email, objet, message)
+    res.status(200).json({ succes: "Message envoyé!" });
+  } catch (error) {
+      console.log(error)
+    res.status(500).json(error);
+  }
+});      
 
 module.exports = router;

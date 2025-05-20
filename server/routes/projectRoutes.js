@@ -8,6 +8,7 @@ const {
   collaboratorAuth,
   adminAuth,
   userInviteAuth,
+  isMember,
 } = require("../middlewares/auth");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
@@ -39,6 +40,8 @@ router.post("/project/:id/new", collaboratorAuth, async (req, res) => {
     description,
     owner: userId,
   });
+  newproject.menbres.push(new mongoose.Types.ObjectId(userId));
+  newproject.owners.push(new mongoose.Types.ObjectId(userId));
   await newproject.save();
   return res.status(201).json({ message: "new project created " });
 });
@@ -152,10 +155,10 @@ router.get("/project/:projectId/membre", async (req, res) => {
   }
 });
 
-router.post("/projet/users", async (req, res) => {
+router.post("/projet/:projectID/users", async (req, res) => {
   const usersIds = req.body;
-  try {
-    const users = await User.find({ _id: { $in: usersIds } });
+  try { 
+    const users = await User.find({ _id: { $in: usersIds } }, { password: 0 });
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: error });
@@ -184,10 +187,17 @@ router.post(
           _id: projectId,
           menbres: new mongoose.Types.ObjectId(findUser._id),
         });
-        if (memberExists) {
+        const isExists = await GuestUser.findOne({
+          email: newUserEmail,
+        });
+
+        if (memberExists || isExists) {
           return res
             .status(400)
-            .json({ message: "Le membre existe déjà dans le projet" });
+            .json({
+              message:
+                "L'email que vous avez fourni est déjà membre ou a déjà été invité au projet",
+            });
         } else {
           const newUser = await GuestUser.create({
             project_Id: new mongoose.Types.ObjectId(projectId),
@@ -300,37 +310,93 @@ router.post(
   }
 );
 
+// router.post("/new-notification", async (req, res) => {
+//   const idProject = req.body.idProject;
+//   const notifType = req.body.type;
+//   const message = req.body.message;
+//   try {
+//     const findProject = await project.findOne({
+//       _id: new mongoose.Types.ObjectId(idProject),
+//     });
+//     if (findProject) {
+//       findProject.notifications.push({
+//         notification: {
+//           type: notifType,
+//           message: message,
+//           isvew: false,
+//         },
+//       });
+//       await findProject.save();
+//     }
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+//   res.status(200).json("users");
+// });
+
 router.post("/new-notification", async (req, res) => {
-  const idProject = req.body.idProject;
+  const userMail = req.body.userMail;
   const notifType = req.body.type;
   const message = req.body.message;
+  const date = req.body.date;
   try {
-    const findProject = await project.findOne({
-      _id: new mongoose.Types.ObjectId(idProject),
+    const findUser = await User.findOne({
+      email: userMail,
     });
-    if (project) {
-      findProject.notifications.push({
+    if (findUser) {
+      findUser.notifications.push({
         notification: {
           type: notifType,
           message: message,
-          isvew: false,
+          date: date,
+          isView: false,
         },
       });
-      await findProject.save();
+      await findUser.save();
+      res.status(200).json("users");
     }
   } catch (error) {
     res.status(500).json(error);
   }
-  res.status(200).json("users");
 });
 
-router.get("/notifications/:userId", async (req, res) => {
+// router.get("/notifications/:projectId", async (req, res) => {
+//   const projectId = req.params.projectId;
+//   try {
+//     const notifs = await project.findOne(
+//       { _id: new mongoose.Types.ObjectId(projectId) },
+//       { _id: 0, notifications: 1 }
+//     );
+//     res.status(200).json({ notifs: notifs });
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
+
+router.post("/notifications/:projectId", async (req, res) => {
+  const userMail = req.body.userMail;
+  try {
+    const notifs = await User.findOne(
+      { email: userMail },
+      { _id: 0, notifications: 1 }
+    );
+    if (notifs) {
+      res.status(200).json({ notifs: notifs });
+    } else {
+      res.status(500).json({ erreur: "erreur" });
+    }
+  } catch (error) {
+    res.status(500).json("error");
+  }
+});
+
+router.post("/view-notifications/:userId", async (req, res) => {
   const userId = req.params.userId;
-  const notifs = await User.findOne(
+  const user = await User.updateOne(
     { _id: new mongoose.Types.ObjectId(userId) },
-    { _id: 0, notifications: 1 }
+    { $set: { "notifications.$[].notification.isView": true } }
   );
-  res.status(200).json({ notifs: notifs });
+  res.status(200).json(user);
 });
 
 module.exports = router;

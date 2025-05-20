@@ -11,13 +11,13 @@ router.post("/task/:userId/new", async (req, res) => {
     projectId,
     name,
     description,
-    assignToId,
+    assignTo,
     status,
     priority,
     dueDate,
     files,
   } = req.body;
-
+  console.log(assignTo)
   const project = await Project.findOne({
     _id: new mongoose.Types.ObjectId(projectId),
     // owner: new mongoose.Types.ObjectId(userId),
@@ -39,7 +39,7 @@ router.post("/task/:userId/new", async (req, res) => {
     description,
     status: status || "todo",
     priority: priority || "medium",
-    assignTo: new mongoose.Types.ObjectId(assignToId),
+    assignTo: new mongoose.Types.ObjectId(assignTo),
     order: newOrder,
     project: new mongoose.Types.ObjectId(project._id),
     dueDate: dueDate ? new Date(dueDate) : null,
