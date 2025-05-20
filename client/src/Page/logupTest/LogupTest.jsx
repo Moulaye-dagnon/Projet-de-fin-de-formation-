@@ -74,7 +74,6 @@ export default function LogupTest() {
       champ: 7,
       url: "/img2.avif",
     },
-    
   ];
 
   const [canSubmit, setCanSubmit] = useState("");
@@ -128,13 +127,13 @@ export default function LogupTest() {
     setCurrent(current - 1);
   }
   return (
-    <div className="box lg:flex">
-      <div className="left-box flex-grow-1 p-20 bg-gray-100 h-screen">
+    <div className="box  md:flex h-screen overflow-hidden">
+      <div className="left-box flex-grow-1 p-4 sm:p-6 md:p-8 bg-gray-100 min-h-screen md:min-h-0 md:flex md:flex-col md:justify-center">
         <p className="text-start sm:mb-30 mb-16 sm:text-xl text-sm">
           <strong className="font-bold">GPC</strong> Gestion de Projet
           Collaboratif
         </p>
-        <h1 className="text-start text-black sm:text-3xl font-bold ">
+        <h1 className="text-start text-black sm:text-2xl font-bold ">
           Inscrivez-vous sur GPC
         </h1>
         <p className="mb-10 text-start text-gray-400">
@@ -190,9 +189,9 @@ export default function LogupTest() {
         )}
       </div>
 
-      <div className="right-box w-52 flex-grow-1 hidden lg:block h-screen">
+      <div className="right-box w-full md:w-1/5 flex-grow-1 hidden md:block h-full">
         <img
-          className="h-screen w-screen"
+          className="object-cover w-full h-full"
           src={
             current
               ? filter.find((field) => field.champ === current)?.url

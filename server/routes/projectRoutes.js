@@ -21,7 +21,7 @@ router.post("/project/:id", collaboratorAuth, async (req, res) => {
     {
       $match: {
         $or: [
-          { owner: new mongoose.Types.ObjectId(userId) },
+          { owners: { $in: [new mongoose.Types.ObjectId(userId)] } },
           { menbres: { $in: [new mongoose.Types.ObjectId(userId)] } },
         ],
       },
@@ -37,7 +37,7 @@ router.post("/project/:id/new", collaboratorAuth, async (req, res) => {
   const newproject = new project({
     name,
     description,
-    owner: userId,
+     owners: [userId],
   });
   await newproject.save();
   return res.status(201).json({ message: "new project created " });
@@ -47,7 +47,10 @@ router.post("/project/:id/new", collaboratorAuth, async (req, res) => {
 async function checkProjectOwnership(req, res, next) {
   const userId = req.params.id;
   const projectID = req.params.idproject;
-  const projectC = await project.findOne({ _id: projectID, owners: userId });
+  const projectC = await project.findOne({
+    _id: projectID,
+    owners: { $in: { userId } },
+  });
   if (!projectC) {
     return res.status(401).json({
       message: "L'utilisateur n'a pas le droit d'ajouter à ce projet",

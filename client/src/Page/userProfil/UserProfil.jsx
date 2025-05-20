@@ -93,7 +93,6 @@ export default function UserProfil() {
     taskDone = 0;
     pourcentage = 0;
   }
-
   const isAdmin = projets.owners.find((owner) => owner === userData?._id);
   return (
     userData && (

@@ -41,6 +41,7 @@ body {
 button {
   background-color: #76b1a6;
   transition: all 0.5s;
+  border-color: #76b1a6;
 }
 button:hover {
   background-color: #50b1a1;

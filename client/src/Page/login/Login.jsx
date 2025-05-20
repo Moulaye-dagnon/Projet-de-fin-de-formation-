@@ -36,13 +36,13 @@ export default function Login() {
   }
 
   return (
-    <div className="box lg:flex">
-      <div className="left-box flex-grow-1 p-20 bg-gray-100 h-full">
-        <p className="text-start sm:mb-30 mb-16 sm:text-xl text-sm">
+    <div className="box md:flex h-screen overflow-hidden">
+      <div className="left-box flex-grow-1 p-4 md:p6 bg-gray-100 min-h-screen md:min-h-0 md:flex md:flex-col md:justify-center">
+        <p className="text-start sm:mb-10 mb-16 sm:text-xl text-sm">
           <strong className="font-bold">GPC</strong> Gestion de Projet
           Collaboratif
         </p>
-        <h1 className="text-start text-black sm:text-3xl font-bold">
+        <h1 className="text-start text-black sm:text-2xl font-bold">
           Connectez vous à votre compte GPC
         </h1>
         <form
@@ -71,14 +71,17 @@ export default function Login() {
           >
             Se connecter
           </button>
-          
         </form>
       </div>
 
-      <div className="right-box w-52 flex-grow-1 hidden lg:block h-screen">
-        <img className="h-screen w-screen" src="/img1.avif" alt="image" />
+      <div className="right-box w-full md:w-1/5 flex-grow-1 hidden md:block h-full">
+        <img
+          className="h-full w-full object-fill"
+          src="/img1.avif"
+          alt="image"
+        />
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }

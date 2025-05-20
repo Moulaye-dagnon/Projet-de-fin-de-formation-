@@ -1,14 +1,11 @@
 import { BoardItemComponent } from "../../Components/BoardItem/BoardItemComponent";
-import iconMenuPoint from "../../assets/menu-point.svg";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { base_url } from "../../api/config";
 import { UserContext } from "../../Context/UserContext";
-import iconPerson from "../../assets/person.svg";
 import { useParams } from "react-router-dom";
 import { AddTaskComponent } from "../../Components/addTaskComponent/AddTaskComponent";
 import { Patch_api } from "../../api/api";
-import { useDragLayer } from "react-dnd";
 import {
   AllTasksContextProvider,
   UseAllTasksContext,
@@ -17,6 +14,8 @@ import { FiSidebar } from "react-icons/fi";
 
 import Dashboard from "../dashboard/Dashboard";
 import { Header } from "../../Components/header/header";
+import { SortByPriorityAndOrder } from "../../Utils/getTryByPriority";
+import { CustomDragLayer } from "../../Components/CustomDraglayer/CustomDraglayer";
 export function ProjectDetail() {
   const [activeTask, setActiveTask] = useState(null);
   const [showAddTask, setShowAddTask] = useState(false);
@@ -48,28 +47,28 @@ export function ProjectDetail() {
   }, [projectId, token]);
   const handlerIconPlus = (e) => {
     e.preventDefault();
+
     setActiveTask((c) => true);
   };
-  const todo = alltasks
-    .filter((task) => task.status === "todo")
-    .sort((a, b) => a.order - b.order);
-  const doing = alltasks
-    .filter((task) => task.status === "doing")
-    .sort((a, b) => a.order - b.order);
-  const done = alltasks
-    .filter((task) => task.status === "done")
-    .sort((a, b) => a.order - b.order);
-  const columns = ["todo", "doing", "done"];
+  const todo = SortByPriorityAndOrder(
+    alltasks.filter((task) => task.status === "todo")
+  );
+  const doing = SortByPriorityAndOrder(
+    alltasks.filter((task) => task.status === "doing")
+  );
+  const done = SortByPriorityAndOrder(
+    alltasks.filter((task) => task.status === "done")
+  );
   return (
     <>
       {data ? (
         <>
-          {/* <Dashboard task={tasks} /> */}
-          <div className=" w-full overflow-hidden  flex items-center flex-col h-full min-w-3xl ">
-            <Header />
-            <div className="h-[calc(100svh - 80px)] lg:h-[calc(100svh-96px)]  w-full   overflow-auto">
+          <CustomDragLayer />
+          <div className=" w-full overflow-hidden overflow-x-auto flex-1    flex items-center flex-col h-full  ">
+            {/* <Header /> */}
+            <div className="h-[calc(100svh - 80px)] lg:h-[calc(100svh-96px)]  w-full h-full ">
               <div className="w-full h-full overflow-x-auto ">
-                <div className="flex h-full overflow-x-auto gap-3 px-2 min-w-max">
+                <div className="flex h-full overflow-x-auto gap-3 px-2 min-w-0">
                   <BoardItemComponent
                     title={"À faire"}
                     tasks={todo}
@@ -100,7 +99,6 @@ export function ProjectDetail() {
               </div>
             </div>
           </div>
-          <CustomDragLayer />
           {activeTask && <AddTaskComponent setToggle={setActiveTask} />}
         </>
       ) : (
@@ -109,59 +107,3 @@ export function ProjectDetail() {
     </>
   );
 }
-
-const CustomDragLayer = () => {
-  const { isDragging, item, currentOffset } = useDragLayer((monitor) => ({
-    isDragging: monitor.isDragging(),
-    item: monitor.getItem(),
-    currentOffset: monitor.getSourceClientOffset(),
-  }));
-
-  if (!isDragging) {
-    return null;
-  }
-
-  return (
-    <div
-      style={{
-        position: "absolute",
-        pointerEvents: "none",
-        left: 0,
-        top: 0,
-        transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
-        width: "282px",
-      }}
-    >
-      <div
-        className={`bg-white w-full p-5 rounded-2xl m-3 absolute cursor-move isdragging `}
-      >
-        <div className="relative ">
-          <span className="text-[8px]">Project name</span>
-          <span className=" cursor-pointer">
-            <img
-              className=" absolute top-2 right-0"
-              src={iconMenuPoint}
-              alt=""
-            />
-          </span>
-        </div>
-        <div className="my-4">
-          <div className="text-[15px]">{item.name}</div>
-          <div className="text-[11px]">
-            {item.description || "Sans description"}
-          </div>
-        </div>
-        <div className="flex justify-between items-center">
-          {item.dueDate && (
-            <p className="text-xs text-gray-500">
-              Échéance: {new Date(item.dueDate).toLocaleDateString()}
-            </p>
-          )}
-          <span>
-            <img src={iconPerson} alt="" />
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};

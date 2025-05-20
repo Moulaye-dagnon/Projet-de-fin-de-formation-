@@ -3,7 +3,7 @@ const projectShema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   owners: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
+    { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   ],
   menbres: [
     { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -15,6 +15,7 @@ const projectShema = new mongoose.Schema({
       },
     },
   ],
+  dueDate: { type: Date, default: null },
   createdAt: { type: Date, default: Date.now },
 });
 

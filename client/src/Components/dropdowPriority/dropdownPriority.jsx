@@ -27,9 +27,11 @@ export default function DropdownPriority({ task, setToggleMenu }) {
   }, []);
   const changePriority = async (priority) => {
     const result = await updateTask(task._id, "priority", priority);
+
     if (!result.success) {
       console.log(result.error);
     }
+    setToggleMenu(false);
   };
   return (
     <div

@@ -6,7 +6,7 @@ import { DropdownMenuList } from "../dropdownMenu/DropdownComponentMenuList";
 export function NavComponent({ toggleNav }) {
   return (
     <div
-      className={`flex-none overflow-hidden absolute transition-all duration-300 w-50 h-svh  bg-gray-100 shadow-lg rounded-2xl py-1 1 ${
+      className={`flex-none overflow-hidden fixed transition-all duration-300 w-50 h-svh  bg-gray-100 shadow-lg rounded-2xl py-1 1 ${
         toggleNav
           ? "opacity-100 translate-x-0"
           : "opacity-0 translate-x-[-100%]"
@@ -47,21 +47,6 @@ export function NavComponent({ toggleNav }) {
                   <span className="flex-grow text-md">Projects</span>
                 </NavLink>
               </li>
-              {/* <li className="w-full">
-                <NavLink
-                  to={"/Teams"}
-                  className={({ isActive }) =>
-                    `flex items-center w-full p-2 rounded-lg transition-all ${
-                      isActive ? "bg-gray-200 shadow-lg" : "bg-gray-100"
-                    } hover:bg-gray-200 hover:shadow-lg`
-                  }
-                >
-                  <span className="w-4.5 inline-block mr-2">
-                    <img src={iconDashoard} alt="Membre Icon" />
-                  </span>
-                  <span className="flex-grow">Membres</span>
-                </NavLink>
-              </li> */}
             </ul>
           </div>
         </div>
@@ -71,6 +56,7 @@ export function NavComponent({ toggleNav }) {
           </div>
           <DropdownMenuList />
         </div>
+        <div></div>
       </div>
     </div>
   );

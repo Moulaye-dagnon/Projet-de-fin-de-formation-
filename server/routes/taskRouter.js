@@ -11,22 +11,54 @@ router.post("/task/:userId/new", async (req, res) => {
     projectId,
     name,
     description,
-    assignToId,
+    assignTo,
     status,
     priority,
     dueDate,
     files,
   } = req.body;
+  if (!mongoose.Types.ObjectId.isValid(projectId)) {
+    return res.status(400).json({ message: "projectId invalide" });
+  }
+  if (!mongoose.Types.ObjectId.isValid(assignTo)) {
+    return res.status(400).json({ message: "assignTo invalide" });
+  }
+  if (!name || typeof name !== "string" || name.trim() === "") {
+    return res.status(400).json({ message: "Le nom de la tâche est requis" });
+  }
+  const validStatuses = ["todo", "doing", "done"];
+  if (status && !validStatuses.includes(status)) {
+    return res.status(400).json({ message: "Statut invalide" });
+  }
+  const validPriorities = ["high", "medium", "low"];
+  if (priority && !validPriorities.includes(priority)) {
+    return res.status(400).json({ message: "Priorité invalide" });
+  }
+  let parsedDueDate;
+  if (dueDate) {
+    parsedDueDate = new Date(dueDate);
+    if (isNaN(parsedDueDate)) {
+      return res.status(400).json({ message: "Date d'échéance invalide" });
+    }
+  }
 
   const project = await Project.findOne({
     _id: new mongoose.Types.ObjectId(projectId),
-    // owner: new mongoose.Types.ObjectId(userId),
+    $or: [
+      { owners: { $in: [new mongoose.Types.ObjectId(userId)] } },
+      { assignTo: new mongoose.Types.ObjectId(userId) },
+    ],
   });
   if (!project) {
     console.log("pas de project");
     return res.status(404).json({
       message:
         "L'utilisateur n'a pas de projet dans lequel il a droit de création",
+    });
+  }
+  if (parsedDueDate && parsedDueDate > project.dueDate) {
+    return res.status(401).json({
+      message: "la date de cette tache peux pas depasser celle du project ",
     });
   }
   const lastTask = await Task.findOne({
@@ -39,10 +71,10 @@ router.post("/task/:userId/new", async (req, res) => {
     description,
     status: status || "todo",
     priority: priority || "medium",
-    assignTo: new mongoose.Types.ObjectId(assignToId),
+    assignTo: new mongoose.Types.ObjectId(assignTo),
     order: newOrder,
     project: new mongoose.Types.ObjectId(project._id),
-    dueDate: dueDate ? new Date(dueDate) : null,
+    dueDate: dueDate ? new Date(dueDate) : project.dueDate,
     files: files || [],
   });
   await newTask.save();
@@ -71,7 +103,7 @@ router.patch("/task/reorder/:userid", async (req, res) => {
       await tasks.map(async (task) => {
         await Task.findByIdAndUpdate(
           new mongoose.Types.ObjectId(task._id),
-          { status: task.status, priority: task.priority },
+          { status: task.status, priority: task.priority, order: task.order },
           { new: true }
         );
       })
@@ -93,7 +125,7 @@ router.delete("/task/:id/:userId", async (req, res) => {
 
   const project = await Project.findOne({
     _id: new mongoose.Types.ObjectId(projectId),
-    owner: new mongoose.Types.ObjectId(userId),
+    owner: { $in: [new mongoose.Types.ObjectId(userId)] },
   });
 
   if (!project) {

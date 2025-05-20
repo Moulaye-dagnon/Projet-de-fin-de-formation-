@@ -13,7 +13,7 @@ import {
 } from "react-icons/md";
 import DropdownStatus from "../dropdowmStatus/DropdownStatus";
 import DropdownPriority from "../dropdowPriority/dropdownPriority";
-
+import { motion } from "motion/react";
 export function TaskComponent({ item }) {
   const [toggleMenu, setToggleMenu] = useState({
     status: false,
@@ -38,8 +38,21 @@ export function TaskComponent({ item }) {
       priority: !toggleMenu.priority,
     });
   };
+  const cardVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    dragging: { scale: 1.05, boxShadow: "0 4px 8px rgba(0,0,0,0.2)" },
+  };
   return (
-    <div
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      variants={cardVariants}
+      initial="initial"
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      animate={isDragging ? "dragging" : "animate"}
+      exit="exit"
+      layout
       ref={drag}
       className={`bg-white p-4 w-72 rounded-2xl mx-auto relative  ${
         isDragging ? "opacity-50" : "opacity-100"
@@ -94,6 +107,6 @@ export function TaskComponent({ item }) {
           <img src={iconPerson} alt="" />
         </span>
       </div>
-    </div>
+    </motion.div>
   );
 }

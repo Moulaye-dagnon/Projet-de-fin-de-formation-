@@ -8,6 +8,7 @@ import { fetchAuth } from "../../api/fetchAuth";
 import TopBar from "../topBarComponent/TopBar";
 import { fetchProjet } from "../../api/fetchProjet";
 import { io } from "socket.io-client";
+import { Header } from "../header/header";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 export function LayoutComponent() {
   const { user, token, logout, setToken } = useContext(UserContext);
@@ -30,15 +31,15 @@ export function LayoutComponent() {
   };
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className=" flex w-full flex-col relative  ">
-        <TopBar />
-
+      <div className=" flex   relative min-h-screen ">
         <NavComponent toggleNav={toggleNav} />
+
         <div
-          className={` transition-all duration-300 flex-1 mx-2 border-bg-todo min-w-3xl h-svh overflow-hidden w-full border rounded-md ${
+          className={` transition-all duration-300 flex-1 flex flex-col   mx-2 border-bg-todo  h-svh overflow-hidden w-full border rounded-md ${
             toggleNav ? "ml-52" : ""
           }`}
         >
+          <Header handleToggleNav={handleToggleNav} />
           <Outlet context={[handleToggleNav]} />
         </div>
       </div>

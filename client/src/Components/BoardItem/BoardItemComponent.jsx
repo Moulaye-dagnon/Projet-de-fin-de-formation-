@@ -1,6 +1,6 @@
 import { TaskComponent } from "../Task/TaskComponent";
 import iconPlus from "../../assets/plus.svg";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { RiProgress1Line, RiProgress3Line } from "react-icons/ri";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { useDrop } from "react-dnd";
@@ -12,7 +12,9 @@ import { base_url } from "../../api/config";
 import { UseAllTasksContext } from "../../Context/AllTaskContext";
 import { LuCircleDashed } from "react-icons/lu";
 import { OrderedFunction } from "../../../../server/Utils/orderdedFunction";
-
+import { ProjectContext } from "../../Context/ProjectContext";
+import { SortByPriorityAndOrder } from "../../Utils/getTryByPriority";
+import { motion, AnimatePresence } from "motion/react";
 export function BoardItemComponent({
   title,
   status,
@@ -25,6 +27,8 @@ export function BoardItemComponent({
   const { user } = useContext(UserContext);
   const { alltasks, setAllTasks } = UseAllTasksContext();
   const { projectId } = useParams();
+  const { projets } = useContext(ProjectContext);
+  const ref = useRef();
 
   const [{ isOver }, drop] = useDrop({
     accept: "task",
@@ -34,20 +38,22 @@ export function BoardItemComponent({
     }),
   });
   const handleDrap = async (item) => {
+    const taskInColumn = alltasks.filter((t) => t.status == columnid);
+    const newOrder = taskInColumn.length + 1;
     const updateTasks = alltasks.map((task) => {
       if (task._id === item._id) {
-        return { ...task, status: columnid };
+        return { ...task, status: columnid, order: newOrder };
       }
       return task;
     });
-
-    const orderedTask = OrderedFunction(updateTasks);
+    const orderedTask = SortByPriorityAndOrder(updateTasks);
     try {
       await axios.patch(`${base_url}/task/reorder/${user._id}`, {
         tasks: orderedTask.map((task) => ({
           _id: task._id,
           status: task.status,
           priority: task.priority,
+          order: task.order,
         })),
         projectId,
       });
@@ -56,7 +62,6 @@ export function BoardItemComponent({
       console.log(err);
     }
   };
-
   return (
     <div
       ref={drop}
@@ -85,11 +90,36 @@ export function BoardItemComponent({
           <img src={iconPlus} alt="" />
         </span>
       </div>
+
       <div
-        className={`flex-1 h-full p-2   space-y-2 overflow-y-auto ${
-          isOver ? "bg-slate-200" : ""
-        }`}
+        ref={ref}
+        className=" flex-1 p-2 space-y-2 overflow-y-auto relative h-full"
       >
+        <AnimatePresence>
+          {isOver && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              className=" backdrop-blur-md fixed bg-white/50 flex-1 inset-0 flex justify-center items-center z-10  "
+              style={{
+                width: ref.current?.getBoundingClientRect().width || "100%",
+                height: ref.current?.getBoundingClientRect().higth || "100%",
+                transform: `translate(${
+                  ref.current?.getBoundingClientRect().left || 0
+                }px, ${ref.current?.getBoundingClientRect().top || 0}px)`,
+              }}
+            >
+              <div className=" bg-white py-2 px-3 border font-bold border-white rounded-md shadow-md max-w-[90%]">
+                <p className=" text-sm font-medium text-center">
+                  Ordonner par priorité
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {tasks.map((task) => (
           <TaskComponent key={task._id} item={task} />
         ))}

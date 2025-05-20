@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { base_url } from "./config";
 import { OrderedFunction } from "../../../server/Utils/orderdedFunction";
+import { SortByPriorityAndOrder } from "../Utils/getTryByPriority";
 
 const useUpdateTask = () => {
   const { alltasks, setAllTasks } = UseAllTasksContext();
@@ -20,8 +21,7 @@ const useUpdateTask = () => {
       const updatedTasks = alltasks.map((item) =>
         item._id === taskId ? { ...item, [property]: value } : item
       );
-      const orderedTask = OrderedFunction(updatedTasks);
-
+      const orderedTask = SortByPriorityAndOrder(updatedTasks);
       await axios.patch(`${base_url}/task/reorder/${user._id}`, {
         tasks: orderedTask.map((task) => ({
           _id: task._id,

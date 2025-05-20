@@ -10,8 +10,7 @@ import { ProjectContext } from "../../Context/ProjectContext";
 
 export function AddTaskComponent({ setToggle }) {
   const { projectUsers } = useContext(ProjectContext);
-  console.log(projectUsers);
-  // Définir les options pour chaque dropdown
+
   const statusOptions = [
     { value: "todo", label: "À faire" },
     { value: "doing", label: "En cours" },
@@ -30,13 +29,23 @@ export function AddTaskComponent({ setToggle }) {
   const { projectId } = useParams();
   const { alltasks, setAllTasks } = UseAllTasksContext();
   const { user } = useContext(UserContext);
+  const { projets } = useContext(ProjectContext);
   const [AddTask, setAddTask] = useState({
     name: "",
     description: "",
     status: "",
     priority: "",
     assignTo: "",
+    dueDate: "",
   });
+
+  const isFormValid =
+    AddTask.name &&
+    AddTask.description &&
+    AddTask.status &&
+    AddTask.priority &&
+    AddTask.assignTo &&
+    AddTask.dueDate;
   const handleOnchange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -44,18 +53,24 @@ export function AddTaskComponent({ setToggle }) {
   };
   const handlesubmit = (e) => {
     e.preventDefault();
-    AddTaskApi({
-      data: AddTask,
-      alltasks: alltasks,
-      setAllTasks: setAllTasks,
-      userId: user.id,
-      projectId: projectId,
-    });
-    setToggle(false);
+    if (!isFormValid) {
+      return;
+    } else {
+      console.log(AddTask);
+      AddTaskApi({
+        data: AddTask,
+        alltasks: alltasks,
+        setAllTasks: setAllTasks,
+        userId: user.id,
+        projectId: projectId,
+      });
+      setToggle(false);
+    }
   };
-
+  const createdAt = new Date(projets.createdAt);
+  const minDate = createdAt.toISOString().split("T")[0];
   return (
-    <div className=" absolute p-5 top-0 right-0 left-0 bottom-0 bg-black/50 backdrop-blur-xs">
+    <div className=" absolute z-30 p-5 inset-0 bg-black/50 backdrop-blur-xs">
       <div className=" w-full py-3 lg:w-3xl rounded-2xl mx-auto bg-slate-50">
         <div className="flex items-center justify-between">
           <span className="  ml-3  w-20 flex items-center border rounded-2xl  ">
@@ -114,12 +129,23 @@ export function AddTaskComponent({ setToggle }) {
                 options={assignToOptions}
                 placeholder="Assigner à"
               />
+              <input
+                name="dueDate"
+                onChange={handleOnchange}
+                value={AddTask.dueDate}
+                type="date"
+                min={minDate}
+                // max={}
+              />
             </div>
             <hr className="my-4" />
             <div className="flex justify-end">
               <button
+                id="CreateTask"
                 type="submit"
-                className="px-3 py-2 border border-slate-500 bg-slate-500 text-slate-50 hover:text-slate-500 hover:bg-slate-50 rounded-2xl"
+                disabled={!isFormValid}
+                className={`px-3 py-2  text-slate-50 hover:text-slate-500 rounded-2xl  transition-colors
+                ${isFormValid ? "" : "bg-red-300 cursor-not-allowed"}`}
               >
                 Cree la tache
               </button>
