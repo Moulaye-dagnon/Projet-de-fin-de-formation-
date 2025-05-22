@@ -21,14 +21,14 @@ const {
   isMember,
 } = require("../middlewares/auth.js");
 const { sendMessage } = require("../Utils/sendMessage.js");
-
+const cloudinary = require("../Utils/cloudinaryConfig.js");
 connection();
 
-router.get("/:projectID", async (req, res) => { 
-  const user = req.user
+router.get("/:projectID", async (req, res) => {
+  const user = req.user;
   res.status(200).json(user);
 });
- 
+
 router.get("/users/user/:id", async (req, res) => {
   const id = req.params.id;
   try {
@@ -45,19 +45,25 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
   const findUser = await User.findOne({ email: email });
 
   if (findUser) {
-    res.status(409).json("Cet utilisateur existe déjà...");
-  } else {
-    const hashedPassword = await bcrypt
-      .hash(password, 10)
-      .then((hashed) => {
-        return hashed;
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
-    const photoProfil = req.file ? req.file.filename : null;
-    const date = new Date();
+    return res.status(409).json("Cet utilisateur existe déjà...");
+  }
+  const hashedPassword = await bcrypt
+    .hash(password, 10)
+    .then((hashed) => {
+      return hashed;
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
+  if (req.file) {
     try {
+      const cloudinaryUploadResponse = await cloudinary.uploader.upload(
+        req.file.path,
+        {
+          resource_type: "auto",
+        }
+      );
+      const date = new Date();
       const user = await User.create({
         nom,
         prenom,
@@ -66,13 +72,33 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
         email,
         password: hashedPassword,
         poste,
-        photoProfil: photoProfil,
+        photoProfil: {
+          public_id: cloudinaryUploadResponse.public_id,
+          url: cloudinaryUploadResponse.secure_url,
+        },
         created_At: date,
       });
-      res.status(201).json({ "Utilisateur crée avec succès": user });
+      return res.status(201).json({ "Utilisateur crée avec succès": user });
     } catch (error) {
-      res.status(500).json({ error: "Une erreur est survenue" });
+      return res.status(500).json({ error: "Une erreur est survenue" });
     }
+  }
+  try {
+    const date = new Date();
+    const user = await User.create({
+      nom,
+      prenom,
+      username,
+      telephone: tel,
+      email,
+      password: hashedPassword,
+      poste,
+      photoProfil: null,
+      created_At: date,
+    });
+    return res.status(201).json({ "Utilisateur crée avec succès": user });
+  } catch (error) {
+    return res.status(500).json({ error: "Une erreur est survenue" });
   }
 });
 
@@ -160,7 +186,7 @@ router.post("/login", async (req, res) => {
           process.env.SECRET_TOKEN,
           { expiresIn: "24h" }
         );
-        findUser.authTokens.pop();
+        findUser.authTokens = [];
         findUser.authTokens.push({ authToken });
         findUser.last_connexion = date;
         findUser.save();
@@ -298,12 +324,12 @@ router.post("/set-new-password", authentification, async (req, res) => {
 router.post("/contactus", async (req, res) => {
   const { nom, prenom, email, objet, message } = req.body;
   try {
-    sendMessage(nom, prenom, email, objet, message)
+    sendMessage(nom, prenom, email, objet, message);
     res.status(200).json({ succes: "Message envoyé!" });
   } catch (error) {
-      console.log(error)
+    console.log(error);
     res.status(500).json(error);
   }
-});      
+});
 
 module.exports = router;

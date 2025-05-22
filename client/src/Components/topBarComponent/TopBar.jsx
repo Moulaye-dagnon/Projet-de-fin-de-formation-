@@ -6,7 +6,7 @@ import { ProjectContext } from "../../Context/ProjectContext";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 import { dateFormat } from "../../Utils/dateFormat";
 import { toast } from "react-toastify";
-
+import avatar from "../../assets/profil.jpg";
 export default function TopBar() {
   const { user, logout, login } = useContext(UserContext);
   const { projets } = useContext(ProjectContext);
@@ -91,7 +91,7 @@ export default function TopBar() {
   );
   return (
     <>
-      {user && 
+      {user && (
         <div className="flex-grow-0 w-full bg-gray-200 p-1 shadow-md flex items-center">
           <div className="text-2xl ">
             <NavLink to={"/dashboard"}>
@@ -122,7 +122,7 @@ export default function TopBar() {
             </p>
             {user.photoProfil ? (
               <img
-                src={`http://localhost:4000/images/${user.photoProfil}`}
+                src={user.photoProfil.url}
                 alt=""
                 className="w-10 h-10 rounded-full sm:ml-10 cursor-pointer"
                 onClick={() => setOpenModal(!openModal)}
@@ -191,7 +191,7 @@ export default function TopBar() {
             </div>
           )}
         </div>
-      }
+      )}
     </>
   );
 }
