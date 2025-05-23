@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const GuestUser = require("../models/guestUser");
+const Project = require("../models/project");
+const { default: mongoose } = require("mongoose");
 
 const authentification = async (req, res, next) => {
   if (req.headers.authorization) {
@@ -100,9 +102,42 @@ const userInviteAuth = async (req, res, next) => {
   }
 };
 
+const isMember = async (req, res, next) => {
+  if (req.headers.authorization) {
+    const token = req.headers.authorization.split(" ")[1];
+    if (token) {
+      const decode = jwt.verify(token, process.env.SECRET_TOKEN);
+      const user = await User.findOne({ email: decode.email });
+      if (user) {
+        const isMembers = await Project.aggregate([
+          {
+            $match: {
+              _id: new mongoose.Types.ObjectId(req.params.projectID),
+              menbres: new mongoose.Types.ObjectId(user._id),
+            },
+          },
+        ]);
+        if (isMembers) {
+          console.log("first")
+          next();
+        } else {
+              res
+            .status(401)
+            .json({ error: "Vous n'etes pas membre de ce projet!" });
+        }
+      } else {
+        res.status(409).json({ error: "Utilisateur introuvable!" });
+      }
+    }
+  } else {
+    res.status(401).json({ error: "Connectez vous" });
+  }
+};
+
 module.exports = {
   authentification,
   collaboratorAuth,
   adminAuth,
   userInviteAuth,
+  isMember,
 };

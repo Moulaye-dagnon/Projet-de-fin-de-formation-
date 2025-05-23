@@ -10,6 +10,7 @@ export async function AddTaskApi({
   userId,
   projectId,
 }) {
+  console.log(data.assignTo)
   try {
     const response = await axios.post(
       `http://localhost:4000/task/${userId}/new`,

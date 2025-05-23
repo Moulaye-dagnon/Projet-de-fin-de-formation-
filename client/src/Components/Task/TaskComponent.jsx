@@ -1,7 +1,7 @@
 import { useDrag } from "react-dnd";
 import iconMenuPoint from "../../assets/menu-point.svg";
 import iconPerson from "../../assets/person.svg";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { RiProgress1Line, RiProgress3Line } from "react-icons/ri";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaRegCircle } from "react-icons/fa";
@@ -14,7 +14,12 @@ import {
 import DropdownStatus from "../dropdowmStatus/DropdownStatus";
 import DropdownPriority from "../dropdowPriority/dropdownPriority";
 import { motion } from "motion/react";
+import { ProjectContext } from "../../Context/ProjectContext";
+import { isCanChagetStatusOrPriority } from "../../Utils/isCanChagetStatusOrPriority";
+import { UserContext } from "../../Context/UserContext";
 export function TaskComponent({ item }) {
+  const { projets } = useContext(ProjectContext);
+  const { user } = useContext(UserContext);
   const [toggleMenu, setToggleMenu] = useState({
     status: false,
     priority: false,
@@ -22,6 +27,11 @@ export function TaskComponent({ item }) {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "task",
     item: item,
+    canDrag: isCanChagetStatusOrPriority({
+      isAssigneTo: { item },
+      user,
+      projets,
+    }),
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -44,6 +54,7 @@ export function TaskComponent({ item }) {
     exit: { opacity: 0 },
     dragging: { scale: 1.05, boxShadow: "0 4px 8px rgba(0,0,0,0.2)" },
   };
+
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
@@ -68,7 +79,7 @@ export function TaskComponent({ item }) {
           {item.priority == "hight" && <MdOutlineSignalCellularAlt />}
         </span>
         <span className="text-xs opacity-50 inline-block ml-8 font-bold">
-          Project name
+          {projets.name}
         </span>
         <span
           onClick={handleToggleStatus}
@@ -81,16 +92,18 @@ export function TaskComponent({ item }) {
           )}
         </span>
       </div>
-      {toggleMenu.status ? (
-        <DropdownStatus setToggleMenu={setToggleMenu} task={item} />
-      ) : (
-        <></>
-      )}
-      {toggleMenu.priority ? (
-        <DropdownPriority setToggleMenu={setToggleMenu} task={item} />
-      ) : (
-        <></>
-      )}
+      {toggleMenu.status &&
+        isCanChagetStatusOrPriority({
+          isAssigneTo: { item },
+          user,
+          projets,
+        }) && <DropdownStatus setToggleMenu={setToggleMenu} task={item} />}
+      {toggleMenu.priority &&
+        isCanChagetStatusOrPriority({
+          isAssigneTo: { item },
+          user,
+          projets,
+        }) && <DropdownPriority setToggleMenu={setToggleMenu} task={item} />}
       <div className="my-4">
         <div className="text-[15px] font-bold">{item.name}</div>
         <div className="text-[11px]">

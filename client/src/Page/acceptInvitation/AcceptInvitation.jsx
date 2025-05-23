@@ -96,7 +96,7 @@ export default function AcceptInvitation() {
         if (res.status === 401) {
           navigate("*");
         } else if (res.status === 200) {
-          socket.emit("add-user")
+          socket.emit("add-user");
           navigate("/login");
         }
         return res.json();
@@ -131,15 +131,14 @@ export default function AcceptInvitation() {
       }).then((req) => {
         if (req.status === 201) {
           toast.success("Compte créer avec succès!");
-          socket.emit("add-user")
+          socket.emit("add-user");
           setTimeout(() => {
             navigate("/login");
           }, 3000);
-
-        }else{
-          toast.error("Une erreur est survenue!")
+        } else {
+          toast.error("Une erreur est survenue!");
         }
-        return req.json()
+        return req.json();
       });
     }
   }
@@ -152,7 +151,6 @@ export default function AcceptInvitation() {
   function handlePrevious() {
     setCurrent(current - 1);
   }
-  console.log(fields)
   return (
     <div className="box lg:flex">
       <div className="left-box flex-grow-1 p-20 bg-gray-100 h-screen">

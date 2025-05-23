@@ -11,6 +11,7 @@ import { ProjectContext } from "../../Context/ProjectContext";
 export function AddTaskComponent({ setToggle }) {
   const { projectUsers } = useContext(ProjectContext);
 
+  // Définir les options pour chaque dropdown
   const statusOptions = [
     { value: "todo", label: "À faire" },
     { value: "doing", label: "En cours" },

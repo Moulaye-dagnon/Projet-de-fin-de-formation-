@@ -31,12 +31,24 @@ const userSchema = new Schema({
     require: true,
   },
   photoProfil: {
-    type: String,
+    public_id: {
+      type: String,
+    },
+    url: {
+      type: String,
+    },
   },
   projets: [
     {
       projet: {
         type: String,
+      },
+    },
+  ],
+  notifications: [
+    {
+      notification: {
+        type: Object,
       },
     },
   ],

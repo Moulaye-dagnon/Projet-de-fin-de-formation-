@@ -6,14 +6,23 @@ import { ProjectContext } from "../../Context/ProjectContext";
 import { UserContext } from "../../Context/UserContext";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
+const socket = io("http://localhost:4000/", { transports: ["websocket"] });
+import { fetchNotif } from "../../api/fetchNotif";
 
 export default function AddUser() {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { projets } = useContext(ProjectContext);
   const [data, setData] = useState({
     email: "",
     role: "",
   });
-  const { projets } = useContext(ProjectContext);
+  const notifData = {
+    userMail: data.email,
+    type: "invite-user",
+    message: "Vous avez été invité à un nouveau projet, veuillez vérifier votre boite mail!",
+    date: Date.now()
+  };
   const { user } = useContext(UserContext);
 
   function handleSubmit(e) {
@@ -23,21 +32,24 @@ export default function AddUser() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ newUserEmail: data.email, role: data.role}),
+      body: JSON.stringify({ newUserEmail: data.email, role: data.role }),
     })
       .then((req) => {
-        if(req.status === 200){
-            toast.success("Membre ajouté avec succès!")
-            setTimeout(() => {
-                navigate(-1)
-            }, 3000);
-        }else if(req.status === 400){
-            toast.error("Ce membre existe déjà!")
+        if (req.status === 200) {
+          toast.success("Membre ajouté avec succès!");
+          fetchNotif(notifData);
+          socket.emit("fetch-notif");
+          setTimeout(() => {
+            navigate(-1);
+          }, 3000);
+        } else if (req.status === 400) {
+          toast.error("L'email que vous avez fourni est déjà membre ou a déjà été invité au projet!");
         }
-        return req.json()
-      }).catch(e=>{
-        toast.error("Une erreur est survenue!")
+        return req.json();
       })
+      .catch((e) => {
+        toast.error("Une erreur est survenue!");
+      });
   }
   return (
     <div className="text-center pt-5">
@@ -49,7 +61,7 @@ export default function AddUser() {
           Ajouter
         </button>
       </form>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }

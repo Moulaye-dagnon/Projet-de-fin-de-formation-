@@ -11,7 +11,7 @@ const projectShema = new mongoose.Schema({
   notifications: [
     {
       notification: {
-        type: Object,
+        type: Object, 
       },
     },
   ],

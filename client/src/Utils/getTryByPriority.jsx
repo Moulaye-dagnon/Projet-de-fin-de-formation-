@@ -17,10 +17,7 @@ const getPriorityNumber = (priority) => {
 export const SortByPriorityAndOrder = (tasks) => {
   return tasks.sort((a, b) => {
     const priorityA = getPriorityNumber(a.priority);
-    console.log("piority A: ", priorityA);
     const priorityB = getPriorityNumber(b.priority);
-    console.log("piority B: ", priorityB);
-
     if (priorityA != priorityB) {
       return priorityB - priorityA;
     }

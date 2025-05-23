@@ -71,7 +71,7 @@ export default function Users() {
 
   const isAdmin = projets.owners?.find((owner) => owner === user.id);
   return (
-    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10 place-items-center mt-4 mb-4 sm:h-[calc(90svh-90px)] ">
+    <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10 place-items-center mt-4 mb-4 sm:h-[calc(90svh-90px)] overflow-auto">
       {projets && (
         <>
           {projectUsers.map((user) => (

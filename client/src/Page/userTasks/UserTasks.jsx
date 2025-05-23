@@ -1,31 +1,30 @@
 import { BoardItemComponent } from "../../Components/BoardItem/BoardItemComponent";
+import iconMenuPoint from "../../assets/menu-point.svg";
 import axios from "axios";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { base_url } from "../../api/config";
 import { UserContext } from "../../Context/UserContext";
+import iconPerson from "../../assets/person.svg";
 import { useParams } from "react-router-dom";
 import { AddTaskComponent } from "../../Components/addTaskComponent/AddTaskComponent";
 import { Patch_api } from "../../api/api";
+import { useDragLayer } from "react-dnd";
 import {
   AllTasksContextProvider,
   UseAllTasksContext,
 } from "../../Context/AllTaskContext";
 import { FiSidebar } from "react-icons/fi";
+
 import Dashboard from "../dashboard/Dashboard";
 import { Header } from "../../Components/header/header";
-import { SortByPriorityAndOrder } from "../../Utils/getTryByPriority";
-import { CustomDragLayer } from "../../Components/CustomDraglayer/CustomDraglayer";
-import { isAdmin } from "../../Utils/isCanChagetStatusOrPriority";
-import { ProjectContext } from "../../Context/ProjectContext";
-export function ProjectDetail() {
+export default function UserTasks() {
   const [activeTask, setActiveTask] = useState(null);
   const [showAddTask, setShowAddTask] = useState(false);
-  const { projectId } = useParams();
+  const { projectId,userId } = useParams();
+
   const [data, setData] = useState(null);
   const { token } = useContext(UserContext);
   const { alltasks, setAllTasks } = UseAllTasksContext();
-  const { projets } = useContext(ProjectContext);
-  const { user } = useContext(UserContext);
   useEffect(() => {
     async function fetchProject() {
       try {
@@ -40,7 +39,8 @@ export function ProjectDetail() {
             allTasks.push({ ...task, status: group._id });
           });
         });
-        setAllTasks(allTasks);
+        const userTasks = allTasks.filter(t=> t.assignTo === userId)
+        setAllTasks(userTasks);
       } catch (error) {
         console.log("Erreur:", error);
       }
@@ -49,33 +49,25 @@ export function ProjectDetail() {
   }, [projectId, token]);
   const handlerIconPlus = (e) => {
     e.preventDefault();
-
     setActiveTask((c) => true);
   };
-  const todo = useMemo(
-    () =>
-      SortByPriorityAndOrder(alltasks.filter((task) => task.status === "todo")),
-    [alltasks]
-  );
-  const doing = useMemo(
-    () =>
-      SortByPriorityAndOrder(
-        alltasks.filter((task) => task.status === "doing")
-      ),
-    [alltasks]
-  );
-  const done = useMemo(
-    () =>
-      SortByPriorityAndOrder(alltasks.filter((task) => task.status === "done")),
-    [alltasks]
-  );
+  const todo = alltasks
+    .filter((task) => task.status === "todo")
+    .sort((a, b) => a.order - b.order);
+  const doing = alltasks
+    .filter((task) => task.status === "doing")
+    .sort((a, b) => a.order - b.order);
+  const done = alltasks
+    .filter((task) => task.status === "done")
+    .sort((a, b) => a.order - b.order);
+  const columns = ["todo", "doing", "done"];
+
+
   return (
     <>
       {data ? (
         <>
-          <CustomDragLayer />
-
-          <div className="flex items-center flex-col h-full w-full">
+          <div className=" w-full overflow-hidden  flex items-center flex-col h-full">
             <div className="h-full w-full overflow-auto">
               <div className="w-full h-full overflow-x-auto">
                 <div className="flex h-full overflow-x-auto gap-3 px-2 min-w-max">
@@ -109,10 +101,8 @@ export function ProjectDetail() {
               </div>
             </div>
           </div>
-
-          {activeTask && isAdmin({ user, projets }) && (
-            <AddTaskComponent setToggle={setActiveTask} />
-          )}
+          <CustomDragLayer />
+          {activeTask && <AddTaskComponent setToggle={setActiveTask} />}
         </>
       ) : (
         <h1>Chargement...</h1>
@@ -120,3 +110,59 @@ export function ProjectDetail() {
     </>
   );
 }
+
+const CustomDragLayer = () => {
+  const { isDragging, item, currentOffset } = useDragLayer((monitor) => ({
+    isDragging: monitor.isDragging(),
+    item: monitor.getItem(),
+    currentOffset: monitor.getSourceClientOffset(),
+  }));
+
+  if (!isDragging) {
+    return null;
+  }
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        pointerEvents: "none",
+        left: 0,
+        top: 0,
+        transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
+        width: "282px",
+      }}
+    >
+      <div
+        className={`bg-white w-full p-5 rounded-2xl m-3 absolute cursor-move isdragging `}
+      >
+        <div className="relative ">
+          <span className="text-[8px]">Project name</span>
+          <span className=" cursor-pointer">
+            <img
+              className=" absolute top-2 right-0"
+              src={iconMenuPoint}
+              alt=""
+            />
+          </span>
+        </div>
+        <div className="my-4">
+          <div className="text-[15px]">{item.name}</div>
+          <div className="text-[11px]">
+            {item.description || "Sans description"}
+          </div>
+        </div>
+        <div className="flex justify-between items-center">
+          {item.dueDate && (
+            <p className="text-xs text-gray-500">
+              Échéance: {new Date(item.dueDate).toLocaleDateString()}
+            </p>
+          )}
+          <span>
+            <img src={iconPerson} alt="" />
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};

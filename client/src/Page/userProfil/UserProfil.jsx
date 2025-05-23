@@ -96,11 +96,12 @@ export default function UserProfil() {
   const isAdmin = projets.owners.find((owner) => owner === userData?._id);
   return (
     userData && (
-      <div className="h-full sm:h-[calc(100svh-90px)] flex items-center justify-center px-4">
+      <div className="h-full sm:h-[calc(100svh-90px)] overflow-auto flex items-center justify-center px-4">
         <div className="bg-white shadow-lg rounded-2xl p-8 max-w-3xl w-full">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <img
               src={
+
                 userData?.photoProfil
                   ? `http://localhost:4000/images/${userData.photoProfil}`
                   : "/profil.jpg"
