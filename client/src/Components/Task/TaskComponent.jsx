@@ -14,8 +14,12 @@ import {
 import DropdownStatus from "../dropdowmStatus/DropdownStatus";
 import DropdownPriority from "../dropdowPriority/dropdownPriority";
 import { ProjectContext } from "../../Context/ProjectContext";
+import { isCanChagetStatusOrPriority } from "../../Utils/isCanChagetStatusOrPriority";
+import { UserContext } from "../../Context/UserContext";
 
 export function TaskComponent({ item }) {
+  const { projets } = useContext(ProjectContext);
+  const { user } = useContext(UserContext);
   const [toggleMenu, setToggleMenu] = useState({
     status: false,
     priority: false,
@@ -23,6 +27,11 @@ export function TaskComponent({ item }) {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "task",
     item: item,
+    canDrag: isCanChagetStatusOrPriority({
+      isAssigneTo: { item },
+      user,
+      projets,
+    }),
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -39,7 +48,7 @@ export function TaskComponent({ item }) {
       priority: !toggleMenu.priority,
     });
   };
-  const {projets} = useContext(ProjectContext)
+
   return (
     <div
       ref={drag}
@@ -70,16 +79,18 @@ export function TaskComponent({ item }) {
           )}
         </span>
       </div>
-      {toggleMenu.status ? (
-        <DropdownStatus setToggleMenu={setToggleMenu} task={item} />
-      ) : (
-        <></>
-      )}
-      {toggleMenu.priority ? (
-        <DropdownPriority setToggleMenu={setToggleMenu} task={item} />
-      ) : (
-        <></>
-      )}
+      {toggleMenu.status &&
+        isCanChagetStatusOrPriority({
+          isAssigneTo: { item },
+          user,
+          projets,
+        }) && <DropdownStatus setToggleMenu={setToggleMenu} task={item} />}
+      {toggleMenu.priority &&
+        isCanChagetStatusOrPriority({
+          isAssigneTo: { item },
+          user,
+          projets,
+        }) && <DropdownPriority setToggleMenu={setToggleMenu} task={item} />}
       <div className="my-4">
         <div className="text-[15px] font-bold">{item.name}</div>
         <div className="text-[11px]">

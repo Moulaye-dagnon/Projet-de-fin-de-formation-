@@ -17,6 +17,8 @@ import { FiSidebar } from "react-icons/fi";
 
 import Dashboard from "../dashboard/Dashboard";
 import { Header } from "../../Components/header/header";
+import { isAdmin } from "../../Utils/isCanChagetStatusOrPriority";
+import { ProjectContext } from "../../Context/ProjectContext";
 export function ProjectDetail() {
   const [activeTask, setActiveTask] = useState(null);
   const [showAddTask, setShowAddTask] = useState(false);
@@ -25,6 +27,8 @@ export function ProjectDetail() {
   const [data, setData] = useState(null);
   const { token } = useContext(UserContext);
   const { alltasks, setAllTasks } = UseAllTasksContext();
+  const { projets } = useContext(ProjectContext);
+  const { user } = useContext(UserContext);
   useEffect(() => {
     async function fetchProject() {
       try {
@@ -99,7 +103,9 @@ export function ProjectDetail() {
             </div>
           </div>
           <CustomDragLayer />
-          {activeTask && <AddTaskComponent setToggle={setActiveTask} />}
+          {activeTask && isAdmin({ user, projets }) && (
+            <AddTaskComponent setToggle={setActiveTask} />
+          )}
         </>
       ) : (
         <h1>Chargement...</h1>
