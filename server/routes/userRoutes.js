@@ -40,50 +40,42 @@ router.get("/users/user/:id", async (req, res) => {
 });
 
 router.post("/logup", upload.single("photoProfil"), async (req, res) => {
-  const { nom, prenom, username, tel, email, password, poste, photoProfile } =
-    req.body;
-  const findUser = await User.findOne({ email: email });
+  try {
+    const { nom, prenom, username, tel, email, password, poste } = req.body;
+    const findUser = await User.findOne({ email });
 
-  if (findUser) {
-    return res.status(409).json("Cet utilisateur existe déjà...");
-  }
-  const hashedPassword = await bcrypt
-    .hash(password, 10)
-    .then((hashed) => {
-      return hashed;
-    })
-    .catch((error) => {
-      throw new Error(error);
-    });
-  if (req.file) {
-    try {
-      const cloudinaryUploadResponse = await cloudinary.uploader.upload(
-        req.file.path,
-        {
-          resource_type: "auto",
-        }
-      );
-      const date = new Date();
-      const user = await User.create({
-        nom,
-        prenom,
-        username,
-        telephone: tel,
-        email,
-        password: hashedPassword,
-        poste,
-        photoProfil: {
+    if (findUser) {
+      return res.status(409).json({ error: "Cet utilisateur existe déjà..." });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    let photoProfil = null;
+
+    if (req.file) {
+      try {
+        const cloudinaryUploadResponse = await new Promise(
+          (resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+              { folder: "user_profiles", resource_type: "auto" },
+              (error, result) => {
+                if (error) return reject(error);
+                resolve(result);
+              }
+            );
+            stream.end(req.file.buffer);
+          }
+        );
+        photoProfil = {
           public_id: cloudinaryUploadResponse.public_id,
           url: cloudinaryUploadResponse.secure_url,
-        },
-        created_At: date,
-      });
-      return res.status(201).json({ "Utilisateur crée avec succès": user });
-    } catch (error) {
-      return res.status(500).json({ error: "Une erreur est survenue" });
+        };
+      } catch (uploadError) {
+        return res
+          .status(500)
+          .json({ error: "Erreur lors de l'upload Cloudinary" });
+      }
     }
-  }
-  try {
+
     const date = new Date();
     const user = await User.create({
       nom,
@@ -93,10 +85,13 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
       email,
       password: hashedPassword,
       poste,
-      photoProfil: null,
+      photoProfil,
       created_At: date,
     });
-    return res.status(201).json({ "Utilisateur crée avec succès": user });
+
+    return res
+      .status(201)
+      .json({ message: "Utilisateur créé avec succès", user });
   } catch (error) {
     return res.status(500).json({ error: "Une erreur est survenue" });
   }
@@ -186,8 +181,7 @@ router.post("/login", async (req, res) => {
           process.env.SECRET_TOKEN,
           { expiresIn: "24h" }
         );
-        findUser.authTokens = [];
-        findUser.authTokens.push({ authToken });
+        findUser.authTokens = [{ authToken }];
         findUser.last_connexion = date;
         findUser.save();
         res.status(200).json({
