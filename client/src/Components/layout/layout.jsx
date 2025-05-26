@@ -62,7 +62,6 @@ export function LayoutComponent() {
           className={` transition-all duration-300 flex-1 mx-2 border-bg-todo h-svh overflow-hidden border rounded-md`}
         >
           <Header handleToggleNav={handleToggleNav}/>
-
           <Outlet context={[handleToggleNav]} />
         </div>
         {openAddProject && (

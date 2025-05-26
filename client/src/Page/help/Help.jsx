@@ -1,6 +1,6 @@
 export default function Help() {
   return (
-    <div className="overflow-auto h-screen ">
+    <div className="overflow-auto h-screen py-4">
       <h1 className="text-center font-bold text-2 sm:text-sm md:text-md lg:text-2xl">
         🔰 Guide d’utilisation de l’application
       </h1>
