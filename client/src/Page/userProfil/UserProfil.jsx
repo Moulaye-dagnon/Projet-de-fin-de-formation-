@@ -93,7 +93,7 @@ export default function UserProfil() {
     taskDone = 0;
     pourcentage = 0;
   }
-  const isAdmin = projets.owners.find((owner) => owner === userData?._id);
+  const isAdmin = projets?.owners?.find((owner) => owner === userData?._id);
   return (
     userData && (
       <div className="h-full sm:h-[calc(100svh-90px)] overflow-auto flex items-center justify-center px-4">
@@ -101,7 +101,6 @@ export default function UserProfil() {
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <img
               src={
-
                 userData?.photoProfil
                   ? `http://localhost:4000/images/${userData.photoProfil}`
                   : "/profil.jpg"

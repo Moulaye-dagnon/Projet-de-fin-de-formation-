@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { fetchAuth } from "../api/fetchAuth";
 
 export const UserContext = createContext();
 
@@ -23,6 +24,10 @@ export function UserProvider({ children }) {
     setUser("");
     setToken("");
   }
+
+  useEffect(()=>{
+    
+  },[])
 
   return (
     <UserContext.Provider value={{ user, token, logout, login,setToken }}>

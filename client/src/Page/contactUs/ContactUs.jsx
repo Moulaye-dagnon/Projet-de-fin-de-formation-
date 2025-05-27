@@ -18,15 +18,13 @@ export default function ContactUs() {
     fetchContact(data);
   }
   return (
-    <div className="py-1">
+
+    <div className="h-full py-20">
       <h1 className="text-sm sm:text-2xl font-bold text-center">
         Contacter l'équipe GPC
       </h1>
-      <div className="mt-5 overflow-y-auto">
-        <form
-          className="flex flex-col gap-3 overflow-y-auto"
-          onSubmit={handleSubmit}
-        >
+      <div className="mt-8 overflow-auto h-4/5 py-10">
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <Nom data={data} setData={setData} />
           <Prenom data={data} setData={setData} />
           <Email data={data} setData={setData} />

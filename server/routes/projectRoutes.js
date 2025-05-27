@@ -38,7 +38,7 @@ router.post("/project/:id/new", collaboratorAuth, async (req, res) => {
   const newproject = new project({
     name,
     description,
-     owners: [userId],
+    owners: [userId],
   });
   newproject.menbres.push(new mongoose.Types.ObjectId(userId));
   newproject.owners.push(new mongoose.Types.ObjectId(userId));
@@ -76,7 +76,7 @@ router.post(
 
       const memberExists = await project.findOne({
         _id: req.params.idproject,
-        menbres: new mongoose.Types.ObjectId(membreId),
+        menbres: { $in: [new mongoose.Types.ObjectId(membreId)] },
       });
 
       if (memberExists) {
@@ -160,7 +160,7 @@ router.get("/project/:projectId/membre", async (req, res) => {
 
 router.post("/projet/:projectID/users", async (req, res) => {
   const usersIds = req.body;
-  try { 
+  try {
     const users = await User.find({ _id: { $in: usersIds } }, { password: 0 });
     res.status(200).json(users);
   } catch (error) {
@@ -174,7 +174,7 @@ router.post(
   checkProjectOwnership,
   async (req, res) => {
     const projectId = req.params.idproject;
-    const adminId = req.params.adminId;
+    const adminId = req.params.id;
     const { newUserEmail, role } = req.body;
 
     try {
@@ -188,19 +188,16 @@ router.post(
       if (findUser) {
         const memberExists = await project.findOne({
           _id: projectId,
-          menbres: new mongoose.Types.ObjectId(findUser._id),
+          menbres: { $in: [new mongoose.Types.ObjectId(findUser._id)] },
         });
         const isExists = await GuestUser.findOne({
           email: newUserEmail,
         });
-
         if (memberExists || isExists) {
-          return res
-            .status(400)
-            .json({
-              message:
-                "L'email que vous avez fourni est déjà membre ou a déjà été invité au projet",
-            });
+          return res.status(400).json({
+            message:
+              "L'email que vous avez fourni est déjà membre ou a déjà été invité au projet",
+          });
         } else {
           const newUser = await GuestUser.create({
             project_Id: new mongoose.Types.ObjectId(projectId),
