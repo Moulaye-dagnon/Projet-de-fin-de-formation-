@@ -16,14 +16,15 @@ const nodemailer = require("nodemailer");
 const sendEmail = require("../Utils/sendMail.js");
 
 //Get all project by User
-router.post("/project/:id", collaboratorAuth, async (req, res) => {
+router.post("/project/:id", async (req, res) => {
   const userId = req.params.id;
+  console.log(userId)
   const getProjectAll = await project.aggregate([
     {
       $match: {
         $or: [
-          { owners: { $in: [new mongoose.Types.ObjectId(userId)] } },
-          { menbres: { $in: [new mongoose.Types.ObjectId(userId)] } },
+          { owners: new mongoose.Types.ObjectId(userId)},
+          { menbres: new mongoose.Types.ObjectId(userId)},
         ],
       },
     },
@@ -52,7 +53,7 @@ async function checkProjectOwnership(req, res, next) {
   const projectID = req.params.idproject;
   const projectC = await project.findOne({
     _id: projectID,
-    owners: { $in: { userId } },
+    owners:  userId ,
   });
   if (!projectC) {
     return res.status(401).json({
@@ -188,7 +189,7 @@ router.post(
       if (findUser) {
         const memberExists = await project.findOne({
           _id: projectId,
-          menbres: { $in: [new mongoose.Types.ObjectId(findUser._id)] },
+          menbres: new mongoose.Types.ObjectId(findUser._id),
         });
         const isExists = await GuestUser.findOne({
           email: newUserEmail,
@@ -373,7 +374,7 @@ router.post("/new-notification", async (req, res) => {
 //   }
 // });
 
-router.post("/notifications/:projectId", async (req, res) => {
+router.post("/notifications", async (req, res) => {
   const userMail = req.body.userMail;
   try {
     const notifs = await User.findOne(
@@ -386,7 +387,7 @@ router.post("/notifications/:projectId", async (req, res) => {
       res.status(500).json({ erreur: "erreur" });
     }
   } catch (error) {
-    res.status(500).json("error");
+    res.status(500).json(error);
   }
 });
 

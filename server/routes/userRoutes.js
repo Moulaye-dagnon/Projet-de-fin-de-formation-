@@ -24,9 +24,20 @@ const { sendMessage } = require("../Utils/sendMessage.js");
 const cloudinary = require("../Utils/cloudinaryConfig.js");
 connection();
 
-router.get("/:projectID", async (req, res) => {
+router.get("/me", collaboratorAuth, async (req, res) => {
   const user = req.user;
-  res.status(200).json(user);
+  const data = {
+    id: user._id,
+    nom: user.nom,
+    prenom: user.prenom,
+    UserName: user.username, 
+    email: user.email,
+    photoProfil: user.photoProfil,
+    newNotif: user.notifications,
+  };
+  console.log("sorti")
+
+  res.status(200).json(data);
 });
 
 router.get("/users/user/:id", async (req, res) => {
@@ -179,11 +190,18 @@ router.post("/login", async (req, res) => {
             connected_at: date,
           },
           process.env.SECRET_TOKEN,
-          { expiresIn: "24h" }
+          { expiresIn: "1d" }
         );
         findUser.authTokens = [{ authToken }];
         findUser.last_connexion = date;
         findUser.save();
+        res.cookie("token", authToken, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "Lax",
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+
         res.status(200).json({
           result: "connexion reussie",
           data: {
@@ -208,6 +226,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "Lax",
+  });
+  res.status(200).json({ message: "Déconnecté avec succès" });
+});
+
+
 router.post(
   "/update-account",
   upload.single("photoProfil"),
@@ -227,7 +255,6 @@ router.post(
 
         const photoProfil = req.file ? req.file.filename : null;
         if (photoProfil) {
-          console.log(photoProfil);
           findUser.photoProfil = photoProfil;
         }
         findUser.username = username;
@@ -321,7 +348,6 @@ router.post("/contactus", async (req, res) => {
     sendMessage(nom, prenom, email, objet, message);
     res.status(200).json({ succes: "Message envoyé!" });
   } catch (error) {
-    console.log(error);
     res.status(500).json(error);
   }
 });

@@ -5,8 +5,8 @@ const Project = require("../models/project");
 const { default: mongoose } = require("mongoose");
 
 const authentification = async (req, res, next) => {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(" ")[1];
+  if (req.cookies.token) {
+    const token = req.cookies.token.split(" ")[1];
     if (!token) {
       res.status(401).json("Veuillez vous authentifier!!");
     } else {
@@ -25,14 +25,14 @@ const authentification = async (req, res, next) => {
 };
 
 const collaboratorAuth = async (req, res, next) => {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(" ")[1];
+    const token = req.cookies.token
     try {
       if (!token) {
         res.status(401).json("Veuillez vous authentifier1!!");
-      } else {
+      } else { 
         const decode = jwt.verify(token, process.env.SECRET_TOKEN);
         const user = await User.findOne({ email: decode.email });
+
         if (user) {
           req.user = user;
           next();
@@ -41,16 +41,14 @@ const collaboratorAuth = async (req, res, next) => {
         }
       }
     } catch (error) {
+      console.log(error)
       res.status(401).json("Vous n'etes pas autorisé!");
     }
-  } else {
-    res.status(401).json("Veuillez vous authentifier2!!");
-  }
 };
 
 const adminAuth = async (req, res, next) => {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(" ")[1];
+  if (req.cookies.token) {
+    const token = req.cookies.token
     try {
       if (!token) {
         res.status(401).json("Veuillez vous authentifier!!");
@@ -79,8 +77,8 @@ const adminAuth = async (req, res, next) => {
 };
 
 const userInviteAuth = async (req, res, next) => {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(" ")[1];
+  if (req.cookies.token) {
+    const token = req.cookies.token
     try {
       if (!token) {
         res.status(401).json("Veuillez vous authentifier1!!");
@@ -103,8 +101,8 @@ const userInviteAuth = async (req, res, next) => {
 };
 
 const isMember = async (req, res, next) => {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(" ")[1];
+  if (req.cookies.token) {
+    const token = req.cookies.token
     if (token) {
       const decode = jwt.verify(token, process.env.SECRET_TOKEN);
       const user = await User.findOne({ email: decode.email });
@@ -118,10 +116,10 @@ const isMember = async (req, res, next) => {
           },
         ]);
         if (isMembers) {
-          console.log("first")
+          console.log("first");
           next();
         } else {
-              res
+          res
             .status(401)
             .json({ error: "Vous n'etes pas membre de ce projet!" });
         }
