@@ -36,9 +36,9 @@ export function LayoutComponent() {
     };
   }, []);
   const projectID = projets._id;
-  useEffect(() => {
-    fetchAuth(token, logout, navigate, projectID);
-  }, [token]);
+  // useEffect(() => {
+  //   fetchAuth(token, logout, navigate, projectID);
+  // }, [token]);
   const [toggleNav, setToggleNav] = useState(true);
   const handleToggleNav = () => {
     setToggleNav((c) => !c);

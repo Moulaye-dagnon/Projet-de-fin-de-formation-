@@ -65,7 +65,7 @@ export function BoardItemComponent({
   return (
     <div
       ref={drop}
-      className=" flex flex-col overflow-hidden rounded-md shrink-0  w-[330px]   bg-bg-todo h-full "
+      className=" flex flex-col overflow-hidden rounded-md shrink-0  w-[330px]   bg-bg-todo h-10/12 "
     >
       <div style={{ backgroundColor: `${color}` }} className="relative py-4 ">
         <div className="flex items-center ml-3 font-bold">
@@ -93,7 +93,7 @@ export function BoardItemComponent({
 
       <div
         ref={ref}
-        className=" flex-1 p-2 space-y-2 overflow-y-auto relative h-full"
+        className=" flex-1 p-2 space-y-2 overflow-y-auto pb-20 relative"
       >
         <AnimatePresence>
           {isOver && (

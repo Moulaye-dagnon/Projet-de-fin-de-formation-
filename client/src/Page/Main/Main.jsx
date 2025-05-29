@@ -22,7 +22,7 @@ import UserTasks from "../userTasks/UserTasks";
 import ContactUs from "../contactUs/ContactUs";
 
 export default function Main() {
-  const { user, token, logout } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   return (
     <>
       <Routes>
@@ -30,7 +30,7 @@ export default function Main() {
 
         <Route
           path="/dashboard/"
-          element={token ? <LayoutComponent /> : <Login />}
+          element={user ? <LayoutComponent /> : <Login />}
         >
           <Route path="project/:projectId" index element={<ProjectDetail />} />
           <Route path="users/:projectId" element={<Users />} />

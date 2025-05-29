@@ -2,6 +2,7 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { UserContext } from "../Context/UserContext";
 import { SortByPriorityAndOrder } from "../Utils/getTryByPriority";
+import { toast } from "react-toastify";
 
 export async function AddTaskApi({
   data,
@@ -10,7 +11,7 @@ export async function AddTaskApi({
   userId,
   projectId,
 }) {
-  console.log(data.assignTo)
+  console.log(data.assignTo);
   try {
     const response = await axios.post(
       `http://localhost:4000/task/${userId}/new`,
@@ -24,12 +25,11 @@ export async function AddTaskApi({
         projectId: projectId,
       }
     );
-    console.log(response.data.task);
     setAllTasks((prevTask) => {
       const updateTasks = [...prevTask, response.data.task];
       return SortByPriorityAndOrder(updateTasks);
     });
   } catch (error) {
-    console.error("Erreur:", error);
+    toast.error("Une erreur est survenue!");
   }
 }

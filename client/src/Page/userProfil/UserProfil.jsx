@@ -30,22 +30,22 @@ export default function UserProfil() {
     };
     return new Date(date).toLocaleDateString(undefined, options);
   };
-  useEffect(() => {
-    fetch("http://localhost:4000/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((req) => {
-      if (req.status === 401) {
-        logout();
-        navigate("/login");
-      } else {
-        return req.json();
-      }
-    });
-  }, [token]);
+  // useEffect(() => {
+  //   fetch("http://localhost:4000/", {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   }).then((req) => {
+  //     if (req.status === 401) {
+  //       logout();
+  //       navigate("/login");
+  //     } else {
+  //       return req.json();
+  //     }
+  //   });
+  // }, [token]);
   useEffect(() => {
     fetch(`http://localhost:4000/users/user/${params.id}`, {
       method: "GET",
@@ -96,9 +96,9 @@ export default function UserProfil() {
   const isAdmin = projets?.owners?.find((owner) => owner === userData?._id);
   return (
     userData && (
-      <div className="h-full sm:h-[calc(100svh-90px)] overflow-auto flex items-center justify-center px-4">
-        <div className="bg-white shadow-lg rounded-2xl p-8 max-w-3xl w-full">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+      <div className=" h-10/12 py-4 my-4 overflow-y-auto px-4 bg-white">
+        <div className="shadow-lg rounded-2xl p-8 max-w-3xl w-full m-auto">
+          <div className="h-full flex flex-col items-center sm:items-start gap-6">
             <img
               src={
                 userData?.photoProfil
@@ -109,7 +109,7 @@ export default function UserProfil() {
               className="w-32 h-32 rounded-full object-cover shadow-md border-4 border-white"
             />
 
-            <div className="flex-1 text-center sm:text-left">
+            <div className="h-full flex-1 text-center sm:text-left">
               <h2 className="text-2xl font-bold text-gray-800">
                 {userData.prenom} {userData.nom}
               </h2>
@@ -130,9 +130,8 @@ export default function UserProfil() {
                 </button>
               )}
             </div>
-          </div>
 
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
               <p className="text-sm text-gray-500">Rôle</p>
               <p className="text-lg font-medium text-gray-800">
@@ -183,6 +182,9 @@ export default function UserProfil() {
               </p>
             </div>
           </div>
+          </div>
+
+          
         </div>
       </div>
     )

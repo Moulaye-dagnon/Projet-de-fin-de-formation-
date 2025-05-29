@@ -14,7 +14,7 @@ import { fetchAuth } from "../../api/fetchAuth";
 export default function Dashboard({ task }) {
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const { user, token, logout, setToken } = useContext(UserContext);
+  const { user, logout, setToken } = useContext(UserContext);
   const {
     projets,
     setProjets,
@@ -27,18 +27,16 @@ export default function Dashboard({ task }) {
   } = useContext(ProjectContext);
 
   useEffect(() => {
-    if (!token || !user || token === null || user === null) {
+    if (!user || user === null) {
       return;
     } else {
-      fetchProjet(user, token, setProjets, removeTwo, removeData, projectId);
+      fetchProjet(user, setProjets, removeTwo, removeData, projectId);
     }
-  }, [user, token, projectId]);
+  }, [user, projectId]);
 
   useEffect(() => {
     if (
-      !token ||
       !user ||
-      token === null ||
       user === null ||
       projets === null ||
       !projets ||
@@ -46,7 +44,7 @@ export default function Dashboard({ task }) {
     ) {
       return;
     } else {
-      fetchTasks(projets, token, setTasks, removeData);
+      fetchTasks(projets, setTasks, removeData);
       fetchProjectUsers(projets, setProjectUsers, removeData);
     }
   }, [projets]);

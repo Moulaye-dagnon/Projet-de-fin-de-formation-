@@ -6,23 +6,24 @@ import { UserContext } from "../Context/UserContext";
 export function All_user_project() {
   const [UserProject, setUserProject] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { user, token } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const [error, setError] = useState(null);
   const [newProject, setNewProject] = useState("");
 
   useEffect(() => {
-    async function FetchProjectUser() {
+    if(user){
+      async function FetchProjectUser() {
       setLoading(true);
       setError(null);
       try {
         const response = await axios.post(
           `${base_url}/project/${user.id}`,
-          {},
+          {  },
           {
+            withCredentials: true,
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -34,6 +35,7 @@ export function All_user_project() {
     }
 
     FetchProjectUser();
-  }, [newProject]);
+    }
+  }, [user, newProject]);
   return { UserProject, loading, error, setNewProject };
 }

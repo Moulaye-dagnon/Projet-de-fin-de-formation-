@@ -1,4 +1,4 @@
-export const fetchTasks = async (projets, token, setTasks, removeData) => {
+export const fetchTasks = async (projets, setTasks, removeData) => {
   try {
     const res = await fetch(
       `http://localhost:4000/tasks/project/${projets._id}`,
@@ -6,16 +6,16 @@ export const fetchTasks = async (projets, token, setTasks, removeData) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
       }
     );
 
     const data = await res.json();
 
     if (!data.tasks) {
-      localStorage.removeItem("tasks")
-      setTasks([])
+      localStorage.removeItem("tasks");
+      setTasks([]);
     } else {
       setTasks(data.tasks);
       localStorage.setItem("tasks", JSON.stringify(data.tasks));

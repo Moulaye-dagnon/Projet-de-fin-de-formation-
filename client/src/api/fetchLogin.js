@@ -1,12 +1,12 @@
 import { toast } from "react-toastify";
 
 export const fetchLogin = (data, setError, login, navigate) => {
-	
   fetch("http://localhost:4000/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include", 
     body: JSON.stringify(data),
   })
     .then((req) => {
@@ -19,9 +19,7 @@ export const fetchLogin = (data, setError, login, navigate) => {
     })
     .then((res) => {
       if (res.token) {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("user", JSON.stringify(res.data));
-        login(res.data, res.token);
+        login(res.data);
         navigate("/dashboard");
       } else {
         setError(true);

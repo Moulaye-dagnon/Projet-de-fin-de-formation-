@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
 import { io } from "socket.io-client";
 import { ProjectContext } from "../../Context/ProjectContext";
@@ -8,6 +8,7 @@ import { dateFormat } from "../../Utils/dateFormat";
 import { toast } from "react-toastify";
 import avatar from "../../assets/profil.jpg";
 export default function TopBar() {
+  const navigate = useNavigate();
   const { user, logout, login } = useContext(UserContext);
   const { projets } = useContext(ProjectContext);
   const [openModal, setOpenModal] = useState("");
@@ -15,7 +16,7 @@ export default function TopBar() {
   const modalRef = useRef(null);
   const [newNotif, setNewNotif] = useState([]);
   useEffect(() => {
-    fetch(`http://localhost:4000/notifications/${projets._id}`, {
+    fetch(`http://localhost:4000/notifications`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -29,12 +30,12 @@ export default function TopBar() {
       .then((res) => {
         setNewNotif(res.notifs.notifications);
       })
-      .catch((e) => console.log("log"));
+      .catch((e) => console.log(e));
   }, []);
 
   useEffect(() => {
     socket.on("new-notif", async (updateRoleMessage) => {
-      fetch(`http://localhost:4000/notifications/${projets._id}`, {
+      fetch(`http://localhost:4000/notifications/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +84,8 @@ export default function TopBar() {
   }, [openModal, openNotif]);
   function handleLogout() {
     if (window.confirm("Voulez-vous vraiment vous déconnecter?")) {
-      logout();
+      logout()
+      navigate("/login");
     }
   }
   const notViewNotifs = newNotif.filter(

@@ -24,7 +24,7 @@ export default function Users() {
     removeData,
     removeTwo,
   } = useContext(ProjectContext);
-  const { user, token, logout } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const myId = user.id;
 
   const ids = projectUsers.map((u) => u._id);
@@ -45,18 +45,16 @@ export default function Users() {
   }, []);
 
   useEffect(() => {
-    if (!token || !user || token === null || user === null) {
+    if (!user || user === null) {
       return;
     } else {
-      fetchProjet(user, token, setProjets, removeTwo, removeData, projectId);
+      fetchProjet(user, setProjets, removeTwo, removeData, projectId);
     }
-  }, [user, token, projectId]);
+  }, [user, projectId]);
 
   useEffect(() => {
     if (
-      !token ||
       !user ||
-      token === null ||
       user === null ||
       projets === null ||
       !projets ||
@@ -64,7 +62,7 @@ export default function Users() {
     ) {
       return;
     } else {
-      fetchTasks(projets, token, setTasks, removeData);
+      fetchTasks(projets, setTasks, removeData);
       fetchProjectUsers(projets, setProjectUsers, removeData);
     }
   }, [projets]);

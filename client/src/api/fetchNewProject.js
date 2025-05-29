@@ -8,8 +8,8 @@ export const fetchNewProject = (userId, token, data, setOpenAddProject) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
     },
+    credentials: "include",
     body: JSON.stringify(data),
   })
     .then((req) => {

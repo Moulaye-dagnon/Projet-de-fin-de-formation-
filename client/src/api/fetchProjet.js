@@ -1,12 +1,12 @@
-export const fetchProjet = async (user, token, setProjets, removeTwo, removeData,projectId) => {
+export const fetchProjet = async (user, setProjets, removeTwo, removeData,projectId) => {
 
   try {
     const res = await fetch(`http://localhost:4000/project/${user.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
+      credentials: "include"
     });
 
     const data = await res.json();

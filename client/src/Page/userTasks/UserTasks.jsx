@@ -67,7 +67,7 @@ export default function UserTasks() {
     <>
       {data ? (
         <>
-          <div className=" w-full overflow-hidden  flex items-center flex-col h-full">
+          <div className="flex items-center flex-col h-full w-full">
             <div className="h-full w-full overflow-auto">
               <div className="w-full h-full overflow-x-auto">
                 <div className="flex h-full overflow-x-auto gap-3 px-2 min-w-max">

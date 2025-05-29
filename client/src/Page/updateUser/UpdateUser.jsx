@@ -41,27 +41,6 @@ export default function UpdateUser() {
   formData.append("poste", fields.poste);
   formData.append("photoProfil", fields.photoProfil);
   useEffect(() => {
-    try {
-      fetch("http://localhost:4000/", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-      }).then((req) => {
-        if (req.status === 401) {
-          logout();
-          navigate("/login");
-          return;
-        } else {
-          return req.json();
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, [token]);
-  useEffect(() => {
     fetch(`http://localhost:4000/users/user/${params.id}`, {
       method: "GET",
       headers: {
@@ -70,7 +49,6 @@ export default function UpdateUser() {
     })
       .then((req) => req.json())
       .then((res) => {
-        console.log(res)
         setFields({
           ...fields,
           nom: res.nom,
@@ -113,6 +91,7 @@ export default function UpdateUser() {
           setTimeout(() => {
             toast.dismiss();
             logout();
+            navigate("/login")
           }, 2000);
         })
         .catch((error) => {
@@ -121,7 +100,7 @@ export default function UpdateUser() {
     }
   }
   return (
-    <div className="max-w-2xl md:max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-md mt-10">
+    <div className="max-w-2xl md:max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-md mt-10 h-10/12 py-8 overflow-y-auto">
       <h2 className="text-2xl font-semibold mb-6 text-gray-800">
         Modifier mes informations
       </h2>

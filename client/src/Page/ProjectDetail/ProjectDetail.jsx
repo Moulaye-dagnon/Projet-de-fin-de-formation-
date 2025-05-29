@@ -17,12 +17,12 @@ import { SortByPriorityAndOrder } from "../../Utils/getTryByPriority";
 import { CustomDragLayer } from "../../Components/CustomDraglayer/CustomDraglayer";
 import { isAdmin } from "../../Utils/isCanChagetStatusOrPriority";
 import { ProjectContext } from "../../Context/ProjectContext";
+import { ToastContainer } from "react-toastify";
 export function ProjectDetail() {
   const [activeTask, setActiveTask] = useState(null);
   const [showAddTask, setShowAddTask] = useState(false);
   const { projectId } = useParams();
   const [data, setData] = useState(null);
-  const { token } = useContext(UserContext);
   const { alltasks, setAllTasks } = UseAllTasksContext();
   const { projets } = useContext(ProjectContext);
   const { user } = useContext(UserContext);
@@ -46,7 +46,7 @@ export function ProjectDetail() {
       }
     }
     fetchProject();
-  }, [projectId, token]);
+  }, [projectId]);
   const handlerIconPlus = (e) => {
     e.preventDefault();
 
@@ -76,9 +76,9 @@ export function ProjectDetail() {
           <CustomDragLayer />
 
           <div className="flex items-center flex-col h-full w-full">
-            <div className="h-full w-full overflow-auto">
-              <div className="w-full h-full overflow-x-auto">
-                <div className="flex h-full overflow-x-auto gap-3 px-2 min-w-max">
+            <div className="h-full w-full">
+              <div className="w-full h-full ">
+                <div className="flex gap-3 px-2 h-full min-w-max">
                   <BoardItemComponent
                     title={"À faire"}
                     tasks={todo}
@@ -117,6 +117,7 @@ export function ProjectDetail() {
       ) : (
         <h1>Chargement...</h1>
       )}
+      <ToastContainer/>
     </>
   );
 }

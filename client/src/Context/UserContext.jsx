@@ -4,33 +4,45 @@ import { fetchAuth } from "../api/fetchAuth";
 export const UserContext = createContext();
 
 export function UserProvider({ children }) {
+  const [user, setUser] = useState("");
 
-  const [user, setUser] = useState(() => {
-    return JSON.parse(localStorage.getItem("user"));
-  });
+  const [token, setToken] = useState("");
 
-  const [token, setToken] = useState(() => {
-    return localStorage.getItem("token");
-  });
-
-  function login(user, token) {
+  function login(user) {
     setUser(user);
-    setToken(token);
   }
 
-  function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  function logout(navigate) {
     setUser("");
     setToken("");
+    fetch("http://localhost:4000/logout", {
+      method: "GET",
+      credentials: "include",
+    });
   }
 
-  useEffect(()=>{
-    
-  },[])
+  useEffect(() => {
+    fetch(`http://localhost:4000/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((req) => {
+        if (req.status === 401) {
+          logout();
+        } else {
+          return req.json();
+        }
+      })
+      .then((res) => {
+        login(res);
+      });
+  }, []);
 
   return (
-    <UserContext.Provider value={{ user, token, logout, login,setToken }}>
+    <UserContext.Provider value={{ user, token, logout, login, setToken }}>
       {children}
     </UserContext.Provider>
   );
