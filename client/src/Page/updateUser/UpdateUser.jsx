@@ -83,15 +83,17 @@ export default function UpdateUser() {
           } else {
             toast.error("Une erreur s'est produite!");
             setValidate("");
+            console.log(req);
           }
           return req.json();
         })
         .then((res) => {
+          console.log(res);
           setLoading(false);
           setTimeout(() => {
             toast.dismiss();
             logout();
-            navigate("/login")
+            navigate("/login");
           }, 2000);
         })
         .catch((error) => {
