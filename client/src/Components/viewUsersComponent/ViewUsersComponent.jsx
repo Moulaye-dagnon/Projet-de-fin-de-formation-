@@ -5,7 +5,7 @@ import { ProjectContext } from "../../Context/ProjectContext";
 import { UserContext } from "../../Context/UserContext";
 export default function ViewUsersComponent() {
   const { user, token, logout } = useContext(UserContext);
-  const {projectId} = useParams()
+  const { projectId } = useParams();
 
   const {
     projets,
@@ -25,11 +25,7 @@ export default function ViewUsersComponent() {
         {showUsers.map((u) => (
           <div className="flex items-center" key={u._id}>
             <img
-              src={
-                u.photoProfil
-                  ? `http://localhost:4000/images/${u.photoProfil}`
-                  : "/src/assets/profil.jpg"
-              }
+              src={u.photoProfil ? u.photoProfil.url : "/src/assets/profil.jpg"}
               alt="k"
               className="w-12 h-12 rounded-[50%] inline m"
             />

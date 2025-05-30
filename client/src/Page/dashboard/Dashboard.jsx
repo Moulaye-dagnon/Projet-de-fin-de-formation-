@@ -49,14 +49,16 @@ export default function Dashboard({ task }) {
     }
   }, [projets]);
   return (
-    <div className="text-center max-w-xl m-auto sm:max-h-screen overflow-auto h-full">
-      {Object.keys(projets).length > 0 && tasks?.length >= 0 && (
-        <div className="h-full flex flex-col gap-20 items-center py-10">
-          <StatsComponent tasks={tasks} />
-          {projectUsers && <ViewUsersComponent />}
-        </div>
-      )}
-      <ToastContainer />
+    <div className="flex-1 overflow-y-auto  p-5 ">
+      <div className=" text-center mx-auto   ">
+        {Object.keys(projets).length > 0 && tasks?.length >= 0 && (
+          <div className="h-full flex flex-col gap-y-20 items-center py-10">
+            <StatsComponent tasks={tasks} />
+            {projectUsers && <ViewUsersComponent />}
+          </div>
+        )}
+        <ToastContainer />
+      </div>
     </div>
   );
 }

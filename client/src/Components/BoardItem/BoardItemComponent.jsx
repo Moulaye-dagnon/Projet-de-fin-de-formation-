@@ -65,7 +65,7 @@ export function BoardItemComponent({
   return (
     <div
       ref={drop}
-      className=" flex flex-col overflow-hidden rounded-md shrink-0  w-[330px]   bg-bg-todo h-10/12 "
+      className=" shrink flex flex-col overflow-hidden  rounded-md   w-[330px]   bg-bg-todo h-full"
     >
       <div style={{ backgroundColor: `${color}` }} className="relative py-4 ">
         <div className="flex items-center ml-3 font-bold">

@@ -124,6 +124,7 @@ export default function AcceptInvitation() {
     } else {
       fetch("http://localhost:4000/logup/acceptInvitation", {
         method: "POST",
+        credentials: true,
         headers: {
           authorization: `Bearer ${param.token}`,
         },

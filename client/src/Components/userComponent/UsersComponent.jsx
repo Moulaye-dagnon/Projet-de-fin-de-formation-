@@ -5,7 +5,6 @@ import { useState, useContext, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import { ProjectContext } from "../../Context/ProjectContext";
 
-
 export default function UsersComponent({ user, myId }) {
   const [openModal, setOpenModal] = useState("");
 
@@ -41,7 +40,7 @@ export default function UsersComponent({ user, myId }) {
           {user.photoProfil ? (
             <img
               className="w-24 h-24 rounded-full object-cover mx-auto"
-              src={`http://localhost:4000/images/${user.photoProfil}`}
+              src={user.photoProfil.url}
               alt="users-photodeProfil"
             />
           ) : (

@@ -75,37 +75,35 @@ export function ProjectDetail() {
         <>
           <CustomDragLayer />
 
-          <div className="flex items-center flex-col h-full w-full">
-            <div className="h-full w-full">
-              <div className="w-full h-full ">
-                <div className="flex gap-3 px-2 h-full min-w-max">
-                  <BoardItemComponent
-                    title={"À faire"}
-                    tasks={todo}
-                    project_name={data.Project}
-                    columnid="todo"
-                    handlerIconPlus={handlerIconPlus}
-                    color={"rgba(249, 115, 22, 0.063)"}
-                  />
+          <div className=" overflow-x-auto  flex-1 flex items-center flex-col h-[calc(100%-104px)] w-full ">
+            <div className="w-full h-full  ">
+              <div className="flex gap-3 px-2 h-full min-w-max ">
+                <BoardItemComponent
+                  title={"À faire"}
+                  tasks={todo}
+                  project_name={data.Project}
+                  columnid="todo"
+                  handlerIconPlus={handlerIconPlus}
+                  color={"rgba(249, 115, 22, 0.063)"}
+                />
 
-                  <BoardItemComponent
-                    title={"En cours"}
-                    tasks={doing}
-                    project_name={data.Project}
-                    columnid="doing"
-                    handlerIconPlus={handlerIconPlus}
-                    color={"rgba(250, 204, 21, 0.063)"}
-                  />
+                <BoardItemComponent
+                  title={"En cours"}
+                  tasks={doing}
+                  project_name={data.Project}
+                  columnid="doing"
+                  handlerIconPlus={handlerIconPlus}
+                  color={"rgba(250, 204, 21, 0.063)"}
+                />
 
-                  <BoardItemComponent
-                    title={"Terminé"}
-                    tasks={done}
-                    project_name={data.Project}
-                    columnid="done"
-                    handlerIconPlus={handlerIconPlus}
-                    color={"rgba(139, 92, 246, 0.063)"}
-                  />
-                </div>
+                <BoardItemComponent
+                  title={"Terminé"}
+                  tasks={done}
+                  project_name={data.Project}
+                  columnid="done"
+                  handlerIconPlus={handlerIconPlus}
+                  color={"rgba(139, 92, 246, 0.063)"}
+                />
               </div>
             </div>
           </div>
@@ -117,7 +115,7 @@ export function ProjectDetail() {
       ) : (
         <h1>Chargement...</h1>
       )}
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 }
