@@ -24,18 +24,18 @@ export default function Users() {
     removeData,
     removeTwo,
   } = useContext(ProjectContext);
-  const { user, logout } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const myId = user.id;
 
   const ids = projectUsers.map((u) => u._id);
 
   useEffect(() => {
     socket.on("update-role", (updateRoleMessage) => {
-      fetchProjet(user, token, setProjets, removeTwo, removeData, projectId);
+      fetchProjet(user, setProjets, removeTwo, removeData, projectId);
     });
 
     socket.on("delete-user", (deleteUser) => {
-      fetchProjet(user, token, setProjets, removeTwo, removeData, projectId);
+      fetchProjet(user, setProjets, removeTwo, removeData, projectId);
     });
 
     return () => {

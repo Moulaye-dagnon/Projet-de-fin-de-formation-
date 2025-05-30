@@ -27,7 +27,6 @@ export default function AcceptInvitation() {
     username: "",
     telephone: "",
     password: "",
-    role: "",
     poste: "",
     photoProfil: "",
   });
@@ -40,7 +39,6 @@ export default function AcceptInvitation() {
   formData.append("tel", fields.telephone);
   formData.append("email", fields.email);
   formData.append("password", fields.password);
-  formData.append("role", fields.role);
   formData.append("poste", fields.poste);
   formData.append("photoProfil", fields.photoProfil);
 
@@ -85,12 +83,12 @@ export default function AcceptInvitation() {
     },
   ];
   useEffect(() => {
-    fetch("http://localhost:4000/project/users/finduserinvite", {
-      method: "GET",
+    fetch(`http://localhost:4000/project/users/finduserinvite/${param.token}`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${param.token}`,
       },
+      credentials: "include",
     })
       .then((res) => {
         if (res.status === 401) {
@@ -105,7 +103,6 @@ export default function AcceptInvitation() {
         setFields({
           ...fields,
           email: data.email,
-          role: data.role,
         });
       })
       .catch((err) => console.error("Erreur:", err));
@@ -122,11 +119,11 @@ export default function AcceptInvitation() {
       }
       setCurrent(current + 1);
     } else {
-      fetch("http://localhost:4000/logup/acceptInvitation", {
+      fetch(`http://localhost:4000/logup/acceptInvitation/${param.token}`, {
         method: "POST",
         headers: {
-          authorization: `Bearer ${param.token}`,
         },
+        credentials: "include",
         body: formData,
       }).then((req) => {
         if (req.status === 201) {

@@ -45,11 +45,11 @@ export default function UserAction({
   }, [openModal]);
   return (
     <div
-      className={`absolute top-full left-0 mt-2 w-48 bg-white border rounded shadow-lg z-10`}
+      className={`absolute top-full  mt-2 w-48 bg-white border rounded shadow-lg z-10`}
       onClick={closeModal}
       ref={modalRef}
     >
-      <div className="bg-slate-200 w-75 h-20 rounded-md">
+      <div className="bg-slate-200 w-48 h-20 rounded-md">
         <p
           className="hover:bg-slate-300 p-1 rounded-md cursor-pointer"
           onClick={handleDelete}

@@ -19,7 +19,7 @@ export default function UsersComponent({ user, myId }) {
     <div className="rounded-3xl  0 w-70 flex flex-col gap-2 border-[#50b1a1] shadow-md hover:shadow-lg transition-all">
       {!isAdminn && isAdmin && (
         <div
-          className="header ml-auto cursor-pointer p-4 relative"
+          className="header cursor-pointer p-4 relative"
           onClick={() => setOpenModal(!openModal)}
         >
           <>
