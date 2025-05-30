@@ -30,12 +30,12 @@ router.get("/me", collaboratorAuth, async (req, res) => {
     id: user._id,
     nom: user.nom,
     prenom: user.prenom,
-    UserName: user.username, 
+    UserName: user.username,
     email: user.email,
     photoProfil: user.photoProfil,
     newNotif: user.notifications,
   };
-  console.log("sorti")
+  console.log("sorti");
 
   res.status(200).json(data);
 });
@@ -233,7 +233,6 @@ router.get("/logout", (req, res) => {
   res.status(200).json({ message: "Déconnecté avec succès" });
 });
 
-
 router.post(
   "/update-account",
   upload.single("photoProfil"),
@@ -250,11 +249,34 @@ router.post(
           });
           findUser.password = hashedPassword;
         }
-
-        const photoProfil = req.file ? req.file.filename : null;
-        if (photoProfil) {
+        // const photoProfil = req.file ? req.file.filename : null;
+        let photoProfil = null;
+        if (req.file) {
+          try {
+            const cloudinaryUploadResponse = await new Promise(
+              (resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                  { folder: "user_profiles", resource_type: "auto" },
+                  (error, result) => {
+                    if (error) return reject(error);
+                    resolve(result);
+                  }
+                );
+                stream.end(req.file.buffer);
+              }
+            );
+            photoProfil = {
+              public_id: cloudinaryUploadResponse.public_id,
+              url: cloudinaryUploadResponse.secure_url,
+            };
+          } catch (uploadError) {
+            return res
+              .status(500)
+              .json({ error: "Erreur lors de l'upload Cloudinary" });
+          }
           findUser.photoProfil = photoProfil;
         }
+
         findUser.username = username;
         findUser.nom = nom;
         findUser.prenom = prenom;
@@ -262,6 +284,7 @@ router.post(
         findUser.role = role;
         findUser.poste = poste;
         findUser.telephone = telephone;
+
         findUser.save();
         res.status(200).json({ "compte modifié avec succès": findUser });
       } catch (error) {

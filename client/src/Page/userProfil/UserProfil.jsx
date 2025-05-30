@@ -102,7 +102,7 @@ export default function UserProfil() {
             <img
               src={
                 userData?.photoProfil
-                  ? `http://localhost:4000/images/${userData.photoProfil}`
+                  ? userData.photoProfil.url
                   : "/profil.jpg"
               }
               alt="Photo de profil"
@@ -132,59 +132,59 @@ export default function UserProfil() {
             </div>
 
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Rôle</p>
-              <p className="text-lg font-medium text-gray-800">
-                {isAdmin ? "Administrateur" : "Collaborateur"}
-              </p>
-            </div>
-            <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Date d'inscription</p>
-              <p className="text-lg font-medium text-gray-800">
-                {dateFormat(userData.created_At)}
-              </p>
-            </div>
-            <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Dernière activité</p>
-              <p className="text-lg font-medium text-green-600">
-                {userData.last_connexion &&
-                  getLastConnexion(userData.last_connexion)}
-              </p>
-            </div>
-            <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Poste</p>
-              <p className="text-lg font-medium text-gray-800">
-                {userData.poste}
-              </p>
-            </div>
-            <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Taches à faire</p>
-              <p className="text-lg font-medium text-red-800">
-                {taskTodo ? taskTodo : "0"}
-              </p>
-            </div>
-            <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Taches en cours</p>
-              <p className="text-lg font-medium text-gray-800">
-                {taskDoing ? taskDoing : "0"}
-              </p>
-            </div>
-            <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Taches terminés</p>
-              <p className="text-lg font-medium text-green-800">
-                {taskDone ? taskDone : "0"}
-              </p>
-            </div>
-            <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
-              <p className="text-sm text-gray-500">Statut d'avancement</p>
-              <p className="text-lg font-medium text-gray-800">
-                {pourcentage <= 0 ? "Aucune tache terminé" : `${pourcentage}%`}
-              </p>
+              <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
+                <p className="text-sm text-gray-500">Rôle</p>
+                <p className="text-lg font-medium text-gray-800">
+                  {isAdmin ? "Administrateur" : "Collaborateur"}
+                </p>
+              </div>
+              <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
+                <p className="text-sm text-gray-500">Date d'inscription</p>
+                <p className="text-lg font-medium text-gray-800">
+                  {dateFormat(userData.created_At)}
+                </p>
+              </div>
+              <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
+                <p className="text-sm text-gray-500">Dernière activité</p>
+                <p className="text-lg font-medium text-green-600">
+                  {userData.last_connexion &&
+                    getLastConnexion(userData.last_connexion)}
+                </p>
+              </div>
+              <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
+                <p className="text-sm text-gray-500">Poste</p>
+                <p className="text-lg font-medium text-gray-800">
+                  {userData.poste}
+                </p>
+              </div>
+              <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
+                <p className="text-sm text-gray-500">Taches à faire</p>
+                <p className="text-lg font-medium text-red-800">
+                  {taskTodo ? taskTodo : "0"}
+                </p>
+              </div>
+              <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
+                <p className="text-sm text-gray-500">Taches en cours</p>
+                <p className="text-lg font-medium text-gray-800">
+                  {taskDoing ? taskDoing : "0"}
+                </p>
+              </div>
+              <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
+                <p className="text-sm text-gray-500">Taches terminés</p>
+                <p className="text-lg font-medium text-green-800">
+                  {taskDone ? taskDone : "0"}
+                </p>
+              </div>
+              <div className="bg-[#f9f9f9] p-4 rounded-xl shadow-sm">
+                <p className="text-sm text-gray-500">Statut d'avancement</p>
+                <p className="text-lg font-medium text-gray-800">
+                  {pourcentage <= 0
+                    ? "Aucune tache terminé"
+                    : `${pourcentage}%`}
+                </p>
+              </div>
             </div>
           </div>
-          </div>
-
-          
         </div>
       </div>
     )
