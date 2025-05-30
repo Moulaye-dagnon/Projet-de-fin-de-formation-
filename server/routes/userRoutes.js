@@ -109,7 +109,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
 });
 
 router.post(
-  "/logup/acceptInvitation",
+  "/logup/acceptInvitation/:token",
   userInviteAuth,
   upload.single("photoProfil"),
   async (req, res) => {
@@ -120,7 +120,6 @@ router.post(
       tel,
       email,
       password,
-      role,
       poste,
       photoProfile,
     } = req.body;
@@ -143,7 +142,6 @@ router.post(
         telephone: tel,
         email,
         password: hashedPassword,
-        role,
         poste,
         photoProfil: photoProfil,
         created_At: date,

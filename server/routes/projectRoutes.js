@@ -18,13 +18,13 @@ const sendEmail = require("../Utils/sendMail.js");
 //Get all project by User
 router.post("/project/:id", async (req, res) => {
   const userId = req.params.id;
-  console.log(userId)
+  console.log(userId);
   const getProjectAll = await project.aggregate([
     {
       $match: {
         $or: [
-          { owners: new mongoose.Types.ObjectId(userId)},
-          { menbres: new mongoose.Types.ObjectId(userId)},
+          { owners: new mongoose.Types.ObjectId(userId) },
+          { menbres: new mongoose.Types.ObjectId(userId) },
         ],
       },
     },
@@ -53,7 +53,7 @@ async function checkProjectOwnership(req, res, next) {
   const projectID = req.params.idproject;
   const projectC = await project.findOne({
     _id: projectID,
-    owners:  userId ,
+    owners: userId,
   });
   if (!projectC) {
     return res.status(401).json({
@@ -193,6 +193,7 @@ router.post(
         });
         const isExists = await GuestUser.findOne({
           email: newUserEmail,
+          project_Id: new mongoose.Types.ObjectId(projectId),
         });
         if (memberExists || isExists) {
           return res.status(400).json({
@@ -215,6 +216,7 @@ router.post(
       } else {
         const isExists = await GuestUser.findOne({
           email: newUserEmail,
+          project_Id: new mongoose.Types.ObjectId(projectId),
         });
 
         if (!isExists) {
@@ -237,13 +239,12 @@ router.post(
         }
       }
     } catch (error) {
-      console.log("first2");
       res.status(500).json(error);
     }
   }
 );
-router.get(
-  "/project/users/finduserinvite",
+router.post(
+  "/project/users/finduserinvite/:token",
   userInviteAuth,
   async (req, res) => {
     const guestUser = req.user;
@@ -267,6 +268,7 @@ router.get(
         await GuestUser.deleteOne({ email: guestUser.email });
         res.status(200).json(findUser);
       } else {
+        console.log(findUser);
         res.status(400).json(guestUser);
       }
     } catch (error) {}

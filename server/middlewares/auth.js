@@ -6,7 +6,7 @@ const { default: mongoose } = require("mongoose");
 
 const authentification = async (req, res, next) => {
   if (req.cookies.token) {
-    const token = req.cookies.token.split(" ")[1];
+    const token = req.cookies.token
     if (!token) {
       res.status(401).json("Veuillez vous authentifier!!");
     } else {
@@ -47,7 +47,6 @@ const collaboratorAuth = async (req, res, next) => {
 };
 
 const adminAuth = async (req, res, next) => {
-  if (req.cookies.token) {
     const token = req.cookies.token
     try {
       if (!token) {
@@ -71,14 +70,10 @@ const adminAuth = async (req, res, next) => {
     } catch (error) {
       res.status(401).json("Vous n'etes pas autorisé!");
     }
-  } else {
-    res.status(401).json("Veuillez vous authentifier!!");
   }
-};
 
 const userInviteAuth = async (req, res, next) => {
-  if (req.cookies.token) {
-    const token = req.cookies.token
+    const token = req.params.token
     try {
       if (!token) {
         res.status(401).json("Veuillez vous authentifier1!!");
@@ -95,13 +90,9 @@ const userInviteAuth = async (req, res, next) => {
     } catch (error) {
       res.status(401).json("Vous n'etes pas autorisé!");
     }
-  } else {
-    res.status(401).json("Veuillez vous authentifier2!!");
   }
-};
 
 const isMember = async (req, res, next) => {
-  if (req.cookies.token) {
     const token = req.cookies.token
     if (token) {
       const decode = jwt.verify(token, process.env.SECRET_TOKEN);
@@ -127,10 +118,7 @@ const isMember = async (req, res, next) => {
         res.status(409).json({ error: "Utilisateur introuvable!" });
       }
     }
-  } else {
-    res.status(401).json({ error: "Connectez vous" });
   }
-};
 
 module.exports = {
   authentification,
