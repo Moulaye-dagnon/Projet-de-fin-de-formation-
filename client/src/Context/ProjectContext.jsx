@@ -3,7 +3,6 @@ import { createContext, useState } from "react";
 export const ProjectContext = createContext();
 
 export function ProjectProvider({ children }) {
-  
   const [projets, setProjets] = useState(() => {
     return JSON.parse(localStorage.getItem("project")) || [];
   });
@@ -13,21 +12,20 @@ export function ProjectProvider({ children }) {
   const [projectUsers, setProjectUsers] = useState(() => {
     return JSON.parse(localStorage.getItem("projectUsers")) || [];
   });
-
   function removeData() {
     localStorage.removeItem("project");
     localStorage.removeItem("projectUsers");
     localStorage.removeItem("tasks");
-    setProjets([])
-    setProjectUsers([])
-    setTasks([])
+    setProjets([]);
+    setProjectUsers([]);
+    setTasks([]);
   }
 
   function removeTwo() {
     localStorage.removeItem("projectUsers");
     localStorage.removeItem("tasks");
-    setProjectUsers([])
-    setTasks([])
+    setProjectUsers([]);
+    setTasks([]);
   }
 
   return (
@@ -40,7 +38,7 @@ export function ProjectProvider({ children }) {
         projectUsers,
         setProjectUsers,
         removeData,
-        removeTwo
+        removeTwo,
       }}
     >
       {children}

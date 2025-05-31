@@ -4,25 +4,21 @@ import { widthPourcentage } from "../../Utils/widthPourcentage";
 import { dateFormat } from "../../Utils/dateFormat";
 import { ProjectContext } from "../../Context/ProjectContext";
 
-export default function StatsComponent({tasks}) {
-  const {
-    projets,
-    setProjets,
-    projectUsers,
-    setProjectUsers,
-  } = useContext(ProjectContext);
+export default function StatsComponent({ tasks }) {
+  const { projets, setProjets, projectUsers, setProjectUsers } =
+    useContext(ProjectContext);
   const { user, token, logout, login } = useContext(UserContext);
   let totalTaches = 0;
   let tasksDone = 0;
   let pourcentage = 0;
   if (tasks?.length > 0) {
-    totalTaches = tasks?.reduce((acc,item)=> acc += item.tasks?.length,0);
+    totalTaches = tasks?.reduce((acc, item) => (acc += item.tasks?.length), 0);
     tasksDone = tasks?.find((t) => t._id === "done")?.tasks?.length;
   }
   if (tasksDone > 0) {
     pourcentage = (tasksDone * 100) / totalTaches;
   } else {
-    console.log("first")
+    console.log("first");
     tasksDone = 0;
     pourcentage = 0;
   }
@@ -60,9 +56,7 @@ export default function StatsComponent({tasks}) {
         </div>
         <div className="flex-grow-1">
           <p className="font-bold text-xl">Echéance</p>
-          <p className="font-bold">
-            {projets && dateFormat(projets.createdAt)}
-          </p>
+          <p className="font-bold">{projets && dateFormat(projets.dueDate)}</p>
         </div>
       </div>
     </div>

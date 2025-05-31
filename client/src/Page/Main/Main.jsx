@@ -20,6 +20,7 @@ import ViewUsersComponent from "../../Components/viewUsersComponent/ViewUsersCom
 import Help from "../help/Help";
 import UserTasks from "../userTasks/UserTasks";
 import ContactUs from "../contactUs/ContactUs";
+import InfoGeneral from "../InfoGeneral/InfoGeneral";
 
 export default function Main() {
   const { user } = useContext(UserContext);
@@ -32,7 +33,9 @@ export default function Main() {
           path="/dashboard/"
           element={user ? <LayoutComponent /> : <Login />}
         >
-          <Route path="project/:projectId" index element={<ProjectDetail />} />
+          <Route index element={<InfoGeneral />} />
+
+          <Route path="project/:projectId" element={<ProjectDetail />} />
           <Route path="users/:projectId" element={<Users />} />
           <Route path=":projectId/userTasks/:userId" element={<UserTasks />} />
           <Route path="users/adduser" element={<AddUser />} />

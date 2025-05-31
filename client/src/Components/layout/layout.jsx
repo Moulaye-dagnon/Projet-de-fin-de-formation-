@@ -24,7 +24,6 @@ export function LayoutComponent() {
     socket.on("add-user", (addUser) => {
       console.log("first");
     });
-
     socket.on("new-project", (newProject) => {
       setNewProject((state) => !state);
     });
@@ -51,28 +50,48 @@ export function LayoutComponent() {
   }
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex relative">
-        <NavComponent
-          toggleNav={toggleNav}
-          handleToggleModal={handleToggleModal}
-          userProject={UserProject}
-          handleToggleNav={handleToggleNav}
-        />
-
-        <div
-          className={` transition-all duration-300 flex-1 mx-2 border-bg-todo h-svh overflow-hidden border rounded-md`}
-        >
-
-          <Header handleToggleNav={handleToggleNav}/>
-          <Outlet context={[handleToggleNav]} />
-        </div>
-        {openAddProject && (
-          <AddProjectModal
-            openAddProject={openAddProject}
-            setOpenAddProject={setOpenAddProject}
+      <div className=" h-screen w-full min-h-screen max-h-screen flex relative overflow-hidden">
+        {toggleNav && (
+          <div
+            className="absolute inset-0  backdrop-blur-xs z-10 lg:hidden"
+            onClick={handleToggleNav}
           />
         )}
+        <div
+          className={` transition-all duration-300 w-full h-full overflow-hidden  flex-1  grid grid-cols-1  ${
+            toggleNav ? "  lg:grid-cols-[200px_1fr]  gap-2" : "grid-cols-1"
+          } `}
+        >
+          <div
+            className={`h-full w-[200px] transition-all duration-300 ease-in-out  ${
+              toggleNav
+                ? "  inset-y-0 left-0 opacity-100 translate-x-0 z-20"
+                : " hidden -translate-x-full opacity-100 "
+            } absolute lg:static translate-none `}
+          >
+            <NavComponent
+              toggleNav={toggleNav}
+              handleToggleModal={handleToggleModal}
+              userProject={UserProject}
+              handleToggleNav={handleToggleNav}
+              handleLogOut={logout}
+            />
+          </div>
+          <div
+            className={` overflow-hidden  flex flex-col gap-y-2 h-screen w-full`}
+          >
+            <Header handleToggleNav={handleToggleNav} />
+            <Outlet />
+          </div>
+        </div>
       </div>
     </DndProvider>
   );
 }
+
+// {openAddProject && (
+// 	<AddProjectModal
+// 	  openAddProject={openAddProject}
+// 	  setOpenAddProject={setOpenAddProject}
+// 	/>
+//   )}

@@ -121,9 +121,9 @@ export default function AcceptInvitation() {
     } else {
       fetch(`http://localhost:4000/logup/acceptInvitation/${param.token}`, {
         method: "POST",
-        headers: {
-        },
+        headers: {},
         credentials: "include",
+
         body: formData,
       }).then((req) => {
         if (req.status === 201) {

@@ -18,13 +18,25 @@ import { CustomDragLayer } from "../../Components/CustomDraglayer/CustomDraglaye
 import { isAdmin } from "../../Utils/isCanChagetStatusOrPriority";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { ToastContainer } from "react-toastify";
+import { fetchProjet } from "../../api/fetchProjet";
+import { fetchTasks } from "../../api/fetchTasks";
+import { fetchProjectUsers } from "../../api/fetchProjectUsers";
 export function ProjectDetail() {
   const [activeTask, setActiveTask] = useState(null);
   const [showAddTask, setShowAddTask] = useState(false);
   const { projectId } = useParams();
   const [data, setData] = useState(null);
   const { alltasks, setAllTasks } = UseAllTasksContext();
-  const { projets } = useContext(ProjectContext);
+  const {
+    projets,
+    setProjets,
+    tasks,
+    setTasks,
+    projectUsers,
+    setProjectUsers,
+    removeData,
+    removeTwo,
+  } = useContext(ProjectContext);
   const { user } = useContext(UserContext);
   useEffect(() => {
     async function fetchProject() {
@@ -47,6 +59,30 @@ export function ProjectDetail() {
     }
     fetchProject();
   }, [projectId]);
+
+  useEffect(() => {
+    if (!user || user === null) {
+      return;
+    } else {
+      fetchProjet(user, setProjets, removeTwo, removeData, projectId);
+    }
+  }, [user, projectId]);
+
+  useEffect(() => {
+    if (
+      !user ||
+      user === null ||
+      projets === null ||
+      !projets ||
+      projets === undefined
+    ) {
+      return;
+    } else {
+      fetchTasks(projets, setTasks, removeData);
+      fetchProjectUsers(projets, setProjectUsers, removeData);
+    }
+  }, [projets]);
+
   const handlerIconPlus = (e) => {
     e.preventDefault();
 
@@ -75,37 +111,35 @@ export function ProjectDetail() {
         <>
           <CustomDragLayer />
 
-          <div className="flex items-center flex-col h-full w-full">
-            <div className="h-full w-full">
-              <div className="w-full h-full ">
-                <div className="flex gap-3 px-2 h-full min-w-max">
-                  <BoardItemComponent
-                    title={"À faire"}
-                    tasks={todo}
-                    project_name={data.Project}
-                    columnid="todo"
-                    handlerIconPlus={handlerIconPlus}
-                    color={"rgba(249, 115, 22, 0.063)"}
-                  />
+          <div className=" overflow-x-auto  flex-1 flex items-center flex-col h-[calc(100%-104px)] w-full ">
+            <div className="w-full h-full  ">
+              <div className="flex gap-3 px-2 h-full min-w-max ">
+                <BoardItemComponent
+                  title={"À faire"}
+                  tasks={todo}
+                  project_name={data.Project}
+                  columnid="todo"
+                  handlerIconPlus={handlerIconPlus}
+                  color={"rgba(249, 115, 22, 0.063)"}
+                />
 
-                  <BoardItemComponent
-                    title={"En cours"}
-                    tasks={doing}
-                    project_name={data.Project}
-                    columnid="doing"
-                    handlerIconPlus={handlerIconPlus}
-                    color={"rgba(250, 204, 21, 0.063)"}
-                  />
+                <BoardItemComponent
+                  title={"En cours"}
+                  tasks={doing}
+                  project_name={data.Project}
+                  columnid="doing"
+                  handlerIconPlus={handlerIconPlus}
+                  color={"rgba(250, 204, 21, 0.063)"}
+                />
 
-                  <BoardItemComponent
-                    title={"Terminé"}
-                    tasks={done}
-                    project_name={data.Project}
-                    columnid="done"
-                    handlerIconPlus={handlerIconPlus}
-                    color={"rgba(139, 92, 246, 0.063)"}
-                  />
-                </div>
+                <BoardItemComponent
+                  title={"Terminé"}
+                  tasks={done}
+                  project_name={data.Project}
+                  columnid="done"
+                  handlerIconPlus={handlerIconPlus}
+                  color={"rgba(139, 92, 246, 0.063)"}
+                />
               </div>
             </div>
           </div>
@@ -117,7 +151,7 @@ export function ProjectDetail() {
       ) : (
         <h1>Chargement...</h1>
       )}
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 }

@@ -4,8 +4,8 @@ import { UserContext } from "../../Context/UserContext";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { toast, ToastContainer } from "react-toastify";
 import { updateUserToAdmin } from "../../api/updateUserToAdmin";
-import {io} from "socket.io-client"
-const socket = io("http://localhost:4000/", { transports: ["websocket"] })
+import { io } from "socket.io-client";
+const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 
 export default function UserAction({
   closeModal,
@@ -45,7 +45,7 @@ export default function UserAction({
   }, [openModal]);
   return (
     <div
-      className={`absolute top-full  mt-2 w-48 bg-white border rounded shadow-lg z-10`}
+      className={`absolute top-10 left-10 mt-2 w-48 bg-white border rounded shadow-lg z-10`}
       onClick={closeModal}
       ref={modalRef}
     >
