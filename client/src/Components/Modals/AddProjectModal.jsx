@@ -16,11 +16,11 @@ export default function AddProjectModal({ openAddProject, setOpenAddProject }) {
   }
   return (
     <div
-      className="inset-0 fixed bg-black/50 z-90"
+      className="inset-0 absolute bg-black/50 z-90"
       onClick={() => setOpenAddProject(!openAddProject)}
     >
       <div
-        className="mx-4 h-96 bg-gray-200 rounded-lg m-auto mt-50 p-4"
+        className=" mx-4 h-9/12 bg-gray-200 rounded-lg m-auto mt-5 p-4"
         onClick={(e) => e.stopPropagation()}
       >
         <span

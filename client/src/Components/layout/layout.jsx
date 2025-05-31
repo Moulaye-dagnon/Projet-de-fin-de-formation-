@@ -84,14 +84,13 @@ export function LayoutComponent() {
             <Outlet />
           </div>
         </div>
+        {openAddProject && (
+          <AddProjectModal
+            openAddProject={openAddProject}
+            setOpenAddProject={setOpenAddProject}
+          />
+        )}
       </div>
     </DndProvider>
   );
 }
-
-// {openAddProject && (
-// 	<AddProjectModal
-// 	  openAddProject={openAddProject}
-// 	  setOpenAddProject={setOpenAddProject}
-// 	/>
-//   )}
