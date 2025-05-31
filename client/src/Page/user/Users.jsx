@@ -31,11 +31,11 @@ export default function Users() {
 
   useEffect(() => {
     socket.on("update-role", (updateRoleMessage) => {
-      fetchProjet(user, token, setProjets, removeTwo, removeData, projectId);
+      fetchProjet(user , setProjets, removeTwo, removeData, projectId);
     });
 
     socket.on("delete-user", (deleteUser) => {
-      fetchProjet(user, token, setProjets, removeTwo, removeData, projectId);
+      fetchProjet(user, setProjets, removeTwo, removeData, projectId);
     });
 
     return () => {

@@ -89,8 +89,8 @@ export default function AcceptInvitation() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${param.token}`,
       },
+      credentials: "include",
     })
       .then((res) => {
         if (res.status === 401) {
@@ -124,10 +124,8 @@ export default function AcceptInvitation() {
     } else {
       fetch("http://localhost:4000/logup/acceptInvitation", {
         method: "POST",
-        credentials: true,
-        headers: {
-          authorization: `Bearer ${param.token}`,
-        },
+        credentials: "include",
+        headers: {},
         body: formData,
       }).then((req) => {
         if (req.status === 201) {

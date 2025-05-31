@@ -71,7 +71,10 @@ export function AddTaskComponent({ setToggle }) {
   const createdAt = new Date(projets.createdAt);
   const minDate = createdAt.toISOString().split("T")[0];
   return (
-    <div className=" absolute z-30 p-5 inset-0 bg-black/50 backdrop-blur-xs">
+    <div
+      onClick={() => setToggle(false)}
+      className=" absolute z-30 p-5 inset-0 bg-black/50 backdrop-blur-xs"
+    >
       <div className=" w-full py-3 lg:w-3xl rounded-2xl mx-auto bg-slate-50">
         <div className="flex items-center justify-between">
           <span className="  ml-3  w-20 flex items-center border rounded-2xl  ">

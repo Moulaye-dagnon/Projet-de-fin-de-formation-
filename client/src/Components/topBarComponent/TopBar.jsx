@@ -11,7 +11,6 @@ export default function TopBar() {
   const navigate = useNavigate();
   const { user, logout, login } = useContext(UserContext);
   const { projets } = useContext(ProjectContext);
-  const [openModal, setOpenModal] = useState("");
   const [openNotif, setOpenNotif] = useState("");
   const modalRef = useRef(null);
   const [newNotif, setNewNotif] = useState([]);
@@ -69,22 +68,21 @@ export default function TopBar() {
   useEffect(() => {
     function handleClickOutside(e) {
       if (modalRef.current && !modalRef.current.contains(e.target)) {
-        setOpenModal(null);
         setOpenNotif(null);
       }
     }
 
-    if (openModal || openNotif) {
+    if (openNotif) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [openModal, openNotif]);
+  }, [openNotif]);
   function handleLogout() {
     if (window.confirm("Voulez-vous vraiment vous déconnecter?")) {
-      logout()
+      logout();
       navigate("/login");
     }
   }
@@ -122,52 +120,21 @@ export default function TopBar() {
               )}
               <i className="fas fa-bell cursor-pointer"></i>
             </p>
-            {user.photoProfil ? (
-              <img
-                src={user.photoProfil.url}
-                alt=""
-                className="w-10 h-10 rounded-full sm:ml-10 cursor-pointer"
-                onClick={() => setOpenModal(!openModal)}
-              />
-            ) : (
-              <span
-                className="w-10 h-10 rounded-full sm:ml-10 cursor-pointer bg-[#76b1a6] text-white text-lg flex justify-center items-center font-bold"
-                onClick={() => setOpenModal(!openModal)}
-              >
-                {user.prenom[0]}
-              </span>
-            )}
+            <Link to={`/dashboard/users/user/${user.id}`}>
+              {user.photoProfil ? (
+                <img
+                  src={user.photoProfil.url}
+                  alt=""
+                  className="w-10 h-10 rounded-full sm:ml-10 cursor-pointer"
+                />
+              ) : (
+                <span className="w-10 h-10 rounded-full sm:ml-10 cursor-pointer bg-[#76b1a6] text-white text-lg flex justify-center items-center font-bold">
+                  {user.prenom[0]}
+                </span>
+              )}
+            </Link>
           </div>
-          {openModal && (
-            <div
-              className="bg-gray-200 absolute right-0 top-18 h-70 w-70 p-5 rounded-xl flex flex-col gap-4 z-10"
-              ref={modalRef}
-            >
-              <div className="flex items-center gap-4">
-                <i className="fas fa-user"></i>
-                <p>
-                  {user.prenom} {user.nom}
-                </p>
-                <p></p>
-              </div>
 
-              <div className="flex items-center gap-4">
-                <i className="fas fa-sign-out-alt"></i>
-                <p className="cursor-pointer underline" onClick={handleLogout}>
-                  Se déconnecter
-                </p>
-              </div>
-
-              <div
-                className="text-center border-t mt-auto"
-                onClick={() => setOpenModal(!openModal)}
-              >
-                <Link to={`/dashboard/users/user/${user.id}`}>
-                  <p className="cursor-pointer">Voir mon profil</p>
-                </Link>
-              </div>
-            </div>
-          )}
           {openNotif && (
             <div
               className="bg-gray-200 absolute right-0 top-18 h-40 overflow-auto w-90 p-5 rounded-xl flex flex-col gap-4 z-10"

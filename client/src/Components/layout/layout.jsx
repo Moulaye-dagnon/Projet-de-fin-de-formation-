@@ -24,7 +24,6 @@ export function LayoutComponent() {
     socket.on("add-user", (addUser) => {
       console.log("first");
     });
-
     socket.on("new-project", (newProject) => {
       setNewProject((state) => !state);
     });
@@ -75,6 +74,7 @@ export function LayoutComponent() {
               handleToggleModal={handleToggleModal}
               userProject={UserProject}
               handleToggleNav={handleToggleNav}
+              handleLogOut={logout}
             />
           </div>
           <div
