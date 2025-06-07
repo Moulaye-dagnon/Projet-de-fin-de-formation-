@@ -19,7 +19,6 @@ const checkProjectCreator = require("../Utils/checkProjectCreator.js");
 //Get all project by User
 router.post("/project/:id", async (req, res) => {
   const userId = req.params.id;
-  console.log(userId);
   const getProjectAll = await project.aggregate([
     {
       $match: {
@@ -36,10 +35,11 @@ router.post("/project/:id", async (req, res) => {
 //create new projet
 router.post("/project/:id/new", collaboratorAuth, async (req, res) => {
   const userId = req.params.id;
-  const { name, description } = req.body;
+  const { name, description,date } = req.body;
   const newproject = new project({
     name,
     description,
+    dueDate: date,
     superAdmin: new mongoose.Types.ObjectId(userId),
   });
   newproject.menbres.push(new mongoose.Types.ObjectId(userId));

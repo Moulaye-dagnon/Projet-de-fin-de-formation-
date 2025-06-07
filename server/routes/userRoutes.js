@@ -35,7 +35,6 @@ router.get("/me", collaboratorAuth, async (req, res) => {
     photoProfil: user.photoProfil,
     newNotif: user.notifications,
   };
-  console.log("sorti");
 
   res.status(200).json(data);
 });
