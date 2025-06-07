@@ -2,10 +2,11 @@ import { useContext, useRef, useEffect } from "react";
 import { deleteUserFromProject } from "../../api/deleteUserFromProject";
 import { UserContext } from "../../Context/UserContext";
 import { ProjectContext } from "../../Context/ProjectContext";
-import { toast, ToastContainer } from "react-toastify";
+// import { toast, ToastContainer } from "react-toastify";
 import { updateUserToAdmin } from "../../api/updateUserToAdmin";
 import { io } from "socket.io-client";
-const socket = io("http://localhost:4000/", { transports: ["websocket"] });
+import { removeUserToAdmin } from "../../api/RemoveUserToAdmin";
+io("http://localhost:4000/", { transports: ["websocket"] });
 
 export default function UserAction({
   closeModal,
@@ -15,6 +16,11 @@ export default function UserAction({
 }) {
   const { user } = useContext(UserContext);
   const { projets } = useContext(ProjectContext);
+  const isAdminn = projets.owners?.includes(userId);
+
+  const SuperAdmin = projets.superAdmin === user.id;
+  console.log(isAdminn && SuperAdmin);
+
   function handleDelete() {
     if (
       window.confirm("Voulez-vous vraiment supprimer cet membre du projet?")
@@ -25,6 +31,11 @@ export default function UserAction({
   function handleUpdate() {
     if (window.confirm("Voulez-vous continuer?")) {
       updateUserToAdmin(projets._id, user.id, userId);
+    }
+  }
+  function handleRemoveToAdmin() {
+    if (window.confirm("Voulez-vous continuer?")) {
+      removeUserToAdmin(projets._id, user.id, userId);
     }
   }
   const modalRef = useRef(null);
@@ -42,14 +53,14 @@ export default function UserAction({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [openModal]);
+  });
   return (
     <div
-      className={`absolute top-10 left-10 mt-2 w-48 bg-white border rounded shadow-lg z-10`}
+      className={`absolute top-10 left-2 mt-2 w-full bg-white border rounded shadow-lg z-10`}
       onClick={closeModal}
       ref={modalRef}
     >
-      <div className="bg-slate-200 w-48 h-20 rounded-md">
+      <div className="bg-slate-200 w-full h-20 rounded-md">
         <p
           className="hover:bg-slate-300 p-1 rounded-md cursor-pointer"
           onClick={handleDelete}
@@ -58,9 +69,11 @@ export default function UserAction({
         </p>
         <p
           className="hover:bg-slate-300 p-1 rounded-md cursor-pointer"
-          onClick={handleUpdate}
+          onClick={isAdminn && SuperAdmin ? handleRemoveToAdmin : handleUpdate}
         >
-          Changer en administrateur
+          {isAdminn && SuperAdmin
+            ? "Supprimer de l'admin"
+            : "Changer en administrateur"}
         </p>
       </div>
     </div>

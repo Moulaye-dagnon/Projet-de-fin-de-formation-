@@ -1,7 +1,7 @@
-import { createPortal } from "react-dom";
+// import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import UserAction from "../Modals/UserAction";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { ToastContainer } from "react-toastify";
 import { ProjectContext } from "../../Context/ProjectContext";
 
@@ -9,17 +9,20 @@ export default function UsersComponent({ user, myId }) {
   const [openModal, setOpenModal] = useState("");
 
   const { projets } = useContext(ProjectContext);
-  const isAdmin = projets.owners?.find((owner) => owner === myId);
-  const isAdminn = projets.owners?.find((owner) => owner === user._id);
+  const isAdmin = projets.owners?.includes(myId);
+  const isAdminn = projets.owners?.includes(user._id);
+  const SuperAdmin = projets.superAdmin === myId;
+  const isSuperAdminProfile = projets.superAdmin === user._id;
   function closeModal() {
     setOpenModal(!openModal);
   }
+
   return (
-    <div className="rounded-3xl relative  0 w-70 flex flex-col gap-2 border-[#50b1a1] shadow-md hover:shadow-lg transition-all">
-      {!isAdminn && isAdmin && (
+    <div className="rounded-3xl relative   0 w-70 flex flex-col gap-2 border-[#50b1a1] shadow-md hover:shadow-lg transition-all">
+      {(SuperAdmin || (!isAdminn && isAdmin)) && !isSuperAdminProfile && (
         <div
           className="header ml-auto cursor-pointer p-4 "
-          onClick={() => setOpenModal(!openModal)}
+          onClick={() => setOpenModal((c) => !c)}
         >
           <>
             <i className="fas fa-ellipsis-v"></i>
