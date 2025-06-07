@@ -5,7 +5,6 @@ import { NavLink } from "react-router-dom";
 
 function InfoProjectItem({ item }) {
   const { user } = useContext(UserContext);
-  console.log(item);
   return (
     <section className="flex flex-col justify-center antialiased bg-white   p-4">
       <div className="h-full">

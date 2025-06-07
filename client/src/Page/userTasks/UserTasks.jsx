@@ -7,19 +7,13 @@ import { UserContext } from "../../Context/UserContext";
 import iconPerson from "../../assets/person.svg";
 import { useParams } from "react-router-dom";
 import { AddTaskComponent } from "../../Components/addTaskComponent/AddTaskComponent";
-import { Patch_api } from "../../api/api";
 import { useDragLayer } from "react-dnd";
 import {
-  AllTasksContextProvider,
   UseAllTasksContext,
 } from "../../Context/AllTaskContext";
-import { FiSidebar } from "react-icons/fi";
 
-import Dashboard from "../dashboard/Dashboard";
-import { Header } from "../../Components/header/header";
 export default function UserTasks() {
   const [activeTask, setActiveTask] = useState(null);
-  const [showAddTask, setShowAddTask] = useState(false);
   const { projectId,userId } = useParams();
 
   const [data, setData] = useState(null);

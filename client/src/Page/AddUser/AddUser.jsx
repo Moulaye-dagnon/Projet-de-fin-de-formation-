@@ -1,7 +1,6 @@
 import { useState, useContext } from "react";
 import Email from "../../Components/Forms/logupInputs/Email";
 import Role from "../../Components/Forms/logupInputs/Role";
-import Poste from "../../Components/Forms/logupInputs/Poste";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { UserContext } from "../../Context/UserContext";
 import { toast, ToastContainer } from "react-toastify";

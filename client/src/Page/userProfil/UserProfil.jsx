@@ -1,24 +1,16 @@
 import { useEffect, useState, useContext } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { dateFormat } from "../../Utils/dateFormat";
 import { UserContext } from "../../Context/UserContext";
 import { ProjectContext } from "../../Context/ProjectContext";
 
 export default function UserProfil() {
-  const navigate = useNavigate();
   const params = useParams();
   const [userData, setUserData] = useState("");
-  const { user, token, logout, setToken } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [myTasks, setMyTasks] = useState("");
   const {
-    projets,
-    setProjets,
-    tasks,
-    setTasks,
-    projectUsers,
-    setProjectUsers,
-    removeData,
-    removeTwo,
+    projets
   } = useContext(ProjectContext);
   const getLastConnexion = (date) => {
     const options = {
@@ -30,22 +22,6 @@ export default function UserProfil() {
     };
     return new Date(date).toLocaleDateString(undefined, options);
   };
-  // useEffect(() => {
-  //   fetch("http://localhost:4000/", {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   }).then((req) => {
-  //     if (req.status === 401) {
-  //       logout();
-  //       navigate("/login");
-  //     } else {
-  //       return req.json();
-  //     }
-  //   });
-  // }, [token]);
   useEffect(() => {
     fetch(`http://localhost:4000/users/user/${params.id}`, {
       method: "GET",
@@ -58,6 +34,7 @@ export default function UserProfil() {
         setUserData(res);
       });
   }, []);
+  
   useEffect(() => {
     fetch(`http://localhost:4000/tasks/projecttaskbyuser`, {
       method: "POST",

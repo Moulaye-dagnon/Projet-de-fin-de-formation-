@@ -9,12 +9,11 @@ import { fetchProjectUsers } from "../../api/fetchProjectUsers";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { fetchAuth } from "../../api/fetchAuth";
 
 export default function Dashboard({ task }) {
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const { user, logout, setToken } = useContext(UserContext);
+  const { user} = useContext(UserContext);
   const {
     projets,
     setProjets,
@@ -22,30 +21,22 @@ export default function Dashboard({ task }) {
     setTasks,
     projectUsers,
     setProjectUsers,
-    removeData,
-    removeTwo,
   } = useContext(ProjectContext);
 
   useEffect(() => {
     if (!user || user === null) {
       return;
     } else {
-      fetchProjet(user, setProjets, removeTwo, removeData, projectId);
+      fetchProjet(user, setProjets, projectId, navigate);
     }
   }, [user, projectId]);
 
   useEffect(() => {
-    if (
-      !user ||
-      user === null ||
-      projets === null ||
-      !projets ||
-      projets === undefined
-    ) {
+    if (!user || !projets) {
       return;
     } else {
-      fetchTasks(projets, setTasks, removeData);
-      fetchProjectUsers(projets, setProjectUsers, removeData);
+      fetchTasks(projets, setTasks, navigate);
+      fetchProjectUsers(projets, setProjectUsers, navigate);
     }
   }, [projets]);
   return (

@@ -1,4 +1,4 @@
-export const fetchProjet = async (user, setProjets, removeTwo, removeData,projectId) => {
+export const fetchProjet = async (user, setProjets,projectId,navigate) => {
 
   try {
     const res = await fetch(`http://localhost:4000/project/${user.id}`, {
@@ -22,6 +22,6 @@ export const fetchProjet = async (user, setProjets, removeTwo, removeData,projec
       removeData()
     }
   } catch (error) {
-    console.log("op");
+    navigate("/dashboard")
   }
 };

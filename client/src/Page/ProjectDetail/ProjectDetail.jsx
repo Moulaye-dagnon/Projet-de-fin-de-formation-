@@ -3,16 +3,11 @@ import axios from "axios";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { base_url } from "../../api/config";
 import { UserContext } from "../../Context/UserContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AddTaskComponent } from "../../Components/addTaskComponent/AddTaskComponent";
-import { Patch_api } from "../../api/api";
 import {
-  AllTasksContextProvider,
   UseAllTasksContext,
 } from "../../Context/AllTaskContext";
-import { FiSidebar } from "react-icons/fi";
-import Dashboard from "../dashboard/Dashboard";
-import { Header } from "../../Components/header/header";
 import { SortByPriorityAndOrder } from "../../Utils/getTryByPriority";
 import { CustomDragLayer } from "../../Components/CustomDraglayer/CustomDraglayer";
 import { isAdmin } from "../../Utils/isCanChagetStatusOrPriority";
@@ -22,21 +17,13 @@ import { fetchProjet } from "../../api/fetchProjet";
 import { fetchTasks } from "../../api/fetchTasks";
 import { fetchProjectUsers } from "../../api/fetchProjectUsers";
 export function ProjectDetail() {
+  const navigate = useNavigate();
   const [activeTask, setActiveTask] = useState(null);
-  const [showAddTask, setShowAddTask] = useState(false);
   const { projectId } = useParams();
   const [data, setData] = useState(null);
   const { alltasks, setAllTasks } = UseAllTasksContext();
-  const {
-    projets,
-    setProjets,
-    tasks,
-    setTasks,
-    projectUsers,
-    setProjectUsers,
-    removeData,
-    removeTwo,
-  } = useContext(ProjectContext);
+  const { projets, setProjets, setTasks, setProjectUsers } =
+    useContext(ProjectContext);
   const { user } = useContext(UserContext);
   useEffect(() => {
     async function fetchProject() {
@@ -64,22 +51,16 @@ export function ProjectDetail() {
     if (!user || user === null) {
       return;
     } else {
-      fetchProjet(user, setProjets, removeTwo, removeData, projectId);
+      fetchProjet(user, setProjets, projectId, navigate);
     }
   }, [user, projectId]);
 
   useEffect(() => {
-    if (
-      !user ||
-      user === null ||
-      projets === null ||
-      !projets ||
-      projets === undefined
-    ) {
+    if (!user || !projets) {
       return;
     } else {
-      fetchTasks(projets, setTasks, removeData);
-      fetchProjectUsers(projets, setProjectUsers, removeData);
+      fetchTasks(projets, setTasks, navigate);
+      fetchProjectUsers(projets, setProjectUsers, navigate);
     }
   }, [projets]);
 

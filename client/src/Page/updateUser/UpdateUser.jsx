@@ -5,7 +5,6 @@ import Email from "../../Components/Forms/logupInputs/Email";
 import UserName from "../../Components/Forms/logupInputs/UserName";
 import Password from "../../Components/Forms/logupInputs/Password";
 import Tel from "../../Components/Forms/logupInputs/Tel";
-import Role from "../../Components/Forms/logupInputs/Role";
 import Fdp from "../../Components/Forms/logupInputs/Fdp";
 import Poste from "../../Components/Forms/logupInputs/Poste";
 import { useState, useEffect, useContext } from "react";
@@ -15,7 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 export default function UpdateUser() {
   const params = useParams();
   const navigate = useNavigate();
-  const { user, token, logout, setToken } = useContext(UserContext);
+  const { token, logout } = useContext(UserContext);
 
   const [fields, setFields] = useState({
     nom: "",

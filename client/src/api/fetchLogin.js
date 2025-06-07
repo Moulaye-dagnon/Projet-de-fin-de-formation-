@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-export const fetchLogin = (data, setError, login, navigate) => {
+export const fetchLogin = (data, login, navigate) => {
   fetch("http://localhost:4000/login", {
     method: "POST",
     headers: {

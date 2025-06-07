@@ -4,12 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { UserContext } from "../../Context/UserContext";
 import AddUserComponent from "../../Components/addUserComponent/AddUserComponent";
-import UserAction from "../../Components/Modals/UserAction";
 import { fetchTasks } from "../../api/fetchTasks";
 import { fetchProjectUsers } from "../../api/fetchProjectUsers";
 import { fetchProjet } from "../../api/fetchProjet";
 import { io } from "socket.io-client";
-import { toast } from "react-toastify";
+import { All_user_project } from "../../api/all_project_by_user";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 export default function Users() {
   const navigate = useNavigate();
@@ -24,6 +23,8 @@ export default function Users() {
     removeData,
     removeTwo,
   } = useContext(ProjectContext);
+  const { setNewProject } = All_user_project();
+
   const { user } = useContext(UserContext);
   const myId = user.id;
 
@@ -31,11 +32,13 @@ export default function Users() {
 
   useEffect(() => {
     socket.on("update-role", (updateRoleMessage) => {
-      fetchProjet(user, setProjets, removeTwo, removeData, projectId);
+      fetchProjet(user, setProjets, projectId,navigate);
     });
 
     socket.on("delete-user", (deleteUser) => {
-      fetchProjet(user, setProjets, removeTwo, removeData, projectId);
+      // fetchProjet(user, setProjets, removeTwo, removeData, projectId);
+      setNewProject((state) => !state);
+      navigate("/dashboard");
     });
 
     return () => {
@@ -48,22 +51,16 @@ export default function Users() {
     if (!user || user === null) {
       return;
     } else {
-      fetchProjet(user, setProjets, removeTwo, removeData, projectId);
+      fetchProjet(user, setProjets, projectId,navigate);
     }
   }, [user, projectId]);
 
   useEffect(() => {
-    if (
-      !user ||
-      user === null ||
-      projets === null ||
-      !projets ||
-      projets === undefined
-    ) {
+    if (!user || !projets) {
       return;
     } else {
-      fetchTasks(projets, setTasks, removeData);
-      fetchProjectUsers(projets, setProjectUsers, removeData);
+      fetchTasks(projets, setTasks, navigate);
+      fetchProjectUsers(projets, setProjectUsers, navigate);
     }
   }, [projets]);
 

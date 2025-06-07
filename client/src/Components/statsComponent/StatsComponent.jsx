@@ -1,13 +1,11 @@
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../Context/UserContext";
+import { useContext } from "react";
 import { widthPourcentage } from "../../Utils/widthPourcentage";
 import { dateFormat } from "../../Utils/dateFormat";
 import { ProjectContext } from "../../Context/ProjectContext";
 
 export default function StatsComponent({ tasks }) {
-  const { projets, setProjets, projectUsers, setProjectUsers } =
+  const { projets} =
     useContext(ProjectContext);
-  const { user, token, logout, login } = useContext(UserContext);
   let totalTaches = 0;
   let tasksDone = 0;
   let pourcentage = 0;
@@ -18,7 +16,6 @@ export default function StatsComponent({ tasks }) {
   if (tasksDone > 0) {
     pourcentage = (tasksDone * 100) / totalTaches;
   } else {
-    console.log("first");
     tasksDone = 0;
     pourcentage = 0;
   }

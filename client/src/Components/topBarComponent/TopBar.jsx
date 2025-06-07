@@ -2,15 +2,11 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
 import { io } from "socket.io-client";
-import { ProjectContext } from "../../Context/ProjectContext";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 import { dateFormat } from "../../Utils/dateFormat";
-import { toast } from "react-toastify";
-import avatar from "../../assets/profil.jpg";
 export default function TopBar() {
   const navigate = useNavigate();
-  const { user, logout, login } = useContext(UserContext);
-  const { projets } = useContext(ProjectContext);
+  const { user, logout } = useContext(UserContext);
   const [openNotif, setOpenNotif] = useState("");
   const modalRef = useRef(null);
   const [newNotif, setNewNotif] = useState([]);
@@ -120,7 +116,7 @@ export default function TopBar() {
               )}
               <i className="fas fa-bell cursor-pointer"></i>
             </p>
-            <Link to={`/dashboard/users/user/${user.id}`}>
+            <Link to={`/dashboard/users/user/update-user/${user.id}`}>
               {user.photoProfil ? (
                 <img
                   src={user.photoProfil.url}

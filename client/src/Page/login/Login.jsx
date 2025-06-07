@@ -5,8 +5,6 @@ import Password from "../../Components/Forms/logupInputs/Password";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
 import { fetchLogin } from "../../api/fetchLogin";
-import { ProjectContext } from "../../Context/ProjectContext";
-import { fetchProjet } from "../../api/fetchProjet";
 import { ToastContainer } from "react-toastify";
 
 export default function Login() {
@@ -16,23 +14,11 @@ export default function Login() {
     password: "",
   });
 
-  const { user, token, logout, login } = useContext(UserContext);
-
-  const [error, setError] = useState("");
-  const {
-    projets,
-    setProjets,
-    tasks,
-    setTasks,
-    projectUsers,
-    setProjectUsers,
-    removeData,
-    removeTwo,
-  } = useContext(ProjectContext);
+  const { login } = useContext(UserContext);
 
   function handleSubmit(e) {
     e.preventDefault();
-    fetchLogin(data, setError, login, navigate);
+    fetchLogin(data, login, navigate);
   }
 
   return (

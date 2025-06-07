@@ -15,10 +15,10 @@ export function UserProvider({ children }) {
   function logout(navigate) {
     setUser("");
     setToken("");
-    fetch("http://localhost:4000/logout", {
-      method: "GET",
-      credentials: "include",
-    });
+      fetch("http://localhost:4000/logout", {
+        method: "GET",
+        credentials: "include",
+      });
   }
 
   useEffect(() => {

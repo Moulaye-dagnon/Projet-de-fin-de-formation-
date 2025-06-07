@@ -1,4 +1,4 @@
-export const fetchTasks = async (projets, setTasks, removeData) => {
+export const fetchTasks = async (projets, setTasks, navigate) => {
   try {
     const res = await fetch(
       `http://localhost:4000/tasks/project/${projets._id}`,
@@ -21,6 +21,6 @@ export const fetchTasks = async (projets, setTasks, removeData) => {
       localStorage.setItem("tasks", JSON.stringify(data.tasks));
     }
   } catch (error) {
-    console.log(error);
+    navigate("/dashboard")
   }
 };

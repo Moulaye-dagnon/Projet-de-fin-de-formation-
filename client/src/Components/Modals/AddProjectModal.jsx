@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import Nom from "../Forms/logupInputs/Nom";
 import { ToastContainer } from "react-toastify";
 import { fetchNewProject } from "../../api/fetchNewProject";
 import { UserContext } from "../../Context/UserContext";
@@ -8,6 +7,7 @@ export default function AddProjectModal({ openAddProject, setOpenAddProject }) {
   const [data, setData] = useState({
     name: "",
     description: "",
+    date: null
   });
   const userId = user.id;
   function handleSubmit(e) {
@@ -16,11 +16,11 @@ export default function AddProjectModal({ openAddProject, setOpenAddProject }) {
   }
   return (
     <div
-      className="inset-0 absolute bg-black/50 z-90"
+      className="inset-0 fixed bg-black/50 z-90"
       onClick={() => setOpenAddProject(!openAddProject)}
     >
       <div
-        className=" mx-4 h-9/12 bg-gray-200 rounded-lg m-auto mt-5 p-4"
+        className="mx-4  bg-gray-200 rounded-lg m-auto mt-50 p-4"
         onClick={(e) => e.stopPropagation()}
       >
         <span
@@ -53,6 +53,18 @@ export default function AddProjectModal({ openAddProject, setOpenAddProject }) {
                 setData({ ...data, description: e.target.value })
               }
               placeholder="Une description"
+              required
+            />
+            <label htmlFor="nom">Echéance du projet</label>
+            <input
+              type="date"
+              id="echeance"
+              className="border-2 border-gray-300 rounded p-2.5"
+              value={data.date}
+              onChange={(e) =>
+                setData({ ...data, date: e.target.value })
+              }
+              placeholder="Date d'échéance du projet"
               required
             />
             <button className="btn rounded w-30 p-2 cursor-pointer text-gray-50">

@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { data, Link, Route, useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 import Nom from "../../Components/Forms/logupInputs/Nom";
 import Prenom from "../../Components/Forms/logupInputs/Prenom";
 import UserName from "../../Components/Forms/logupInputs/UserName";

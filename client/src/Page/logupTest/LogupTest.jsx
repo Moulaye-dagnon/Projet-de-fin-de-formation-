@@ -1,16 +1,12 @@
 import { useState } from "react";
-import { Link, Route, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Nom from "../../Components/Forms/logupInputs/Nom";
 import Prenom from "../../Components/Forms/logupInputs/Prenom";
 import Email from "../../Components/Forms/logupInputs/Email";
 import UserName from "../../Components/Forms/logupInputs/UserName";
 import Password from "../../Components/Forms/logupInputs/Password";
 import Tel from "../../Components/Forms/logupInputs/Tel";
-import Role from "../../Components/Forms/logupInputs/Role";
 import Fdp from "../../Components/Forms/logupInputs/Fdp";
-import { createPortal } from "react-dom";
-import ErrorModal from "../../Components/Modals/ErrorModal";
-import { fetchLogup } from "../../api/fetchLogup";
 import Poste from "../../Components/Forms/logupInputs/Poste";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -39,7 +35,6 @@ export default function LogupTest() {
   formData.append("poste", fields.poste);
   formData.append("photoProfil", fields.photoProfil);
 
-  const errorModal = createPortal(<ErrorModal />, document.body);
 
   const filter = [
     {

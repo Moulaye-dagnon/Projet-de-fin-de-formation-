@@ -57,7 +57,6 @@ export function AddTaskComponent({ setToggle }) {
     if (!isFormValid) {
       return;
     } else {
-      console.log(AddTask);
       AddTaskApi({
         data: AddTask,
         alltasks: alltasks,
