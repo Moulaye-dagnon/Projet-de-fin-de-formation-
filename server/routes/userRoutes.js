@@ -82,7 +82,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
       } catch (uploadError) {
         return res
           .status(500)
-          .json({ error: "Erreur lors de l'upload Cloudinary" });
+          .json({ error: uploadError });
       }
     }
 
@@ -351,7 +351,7 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
-router.post("/set-new-password", authentification, async (req, res) => {
+router.post("/set-new-password/:token", authentification, async (req, res) => {
   const new_password = req.body.password;
   const user = req.user;
   const password_hashed = await bcrypt.hash(new_password, 10).then((hashed) => {

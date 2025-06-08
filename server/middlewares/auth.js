@@ -5,8 +5,8 @@ const Project = require("../models/project");
 const { default: mongoose } = require("mongoose");
 
 const authentification = async (req, res, next) => {
-  if (req.cookies.token) {
-    const token = req.cookies.token
+  const token = req.params.token;
+  try {
     if (!token) {
       res.status(401).json("Veuillez vous authentifier!!");
     } else {
@@ -19,106 +19,129 @@ const authentification = async (req, res, next) => {
         res.status(401).json("Vous n'etes pas autorisé!");
       }
     }
-  } else {
-    res.status(401).json("Veuillez vous authentifier!!");
+  } catch (error) {
+    res.status(401).json("Vous n'etes pas autorisé!");
   }
 };
 
 const collaboratorAuth = async (req, res, next) => {
-    const token = req.cookies.token
-    try {
-      if (!token) {
-        res.status(401).json("Veuillez vous authentifier1!!");
-      } else { 
-        const decode = jwt.verify(token, process.env.SECRET_TOKEN);
-        const user = await User.findOne({ email: decode.email });
+  const token = req.cookies.token;
+  try {
+    if (!token) {
+      res.status(401).json("Veuillez vous authentifier1!!");
+    } else {
+      const decode = jwt.verify(token, process.env.SECRET_TOKEN);
+      const user = await User.findOne({ email: decode.email });
 
-        if (user) {
-          req.user = user;
-          next();
-        } else {
-          res.status(401).json("Vous n'etes pas autorisé!");
-        }
+      if (user) {
+        req.user = user;
+        next();
+      } else {
+        res.status(401).json("Vous n'etes pas autorisé!");
       }
-    } catch (error) {
-      console.log(error)
-      res.status(401).json("Vous n'etes pas autorisé!");
     }
+  } catch (error) {
+    console.log(error);
+    res.status(401).json("Vous n'etes pas autorisé!");
+  }
 };
 
 const adminAuth = async (req, res, next) => {
-    const token = req.cookies.token
-    try {
-      if (!token) {
-        res.status(401).json("Veuillez vous authentifier!!");
-      } else {
-        const decode = jwt.verify(token, process.env.SECRET_TOKEN);
-        const user = await User.findOne({ email: decode.email });
-        if (user) {
-          if (user.role === "admin") {
-            req.user = user;
-            next();
-          } else {
-            res
-              .status(401)
-              .json("Seul l'administrateur du projet peux faire cette action");
-          }
-        } else {
-          res.status(401).json("Vous n'etes pas autorisé!");
-        }
-      }
-    } catch (error) {
-      res.status(401).json("Vous n'etes pas autorisé!");
-    }
-  }
-
-const userInviteAuth = async (req, res, next) => {
-    const token = req.params.token
-    try {
-      if (!token) {
-        res.status(401).json("Veuillez vous authentifier1!!");
-      } else {
-        const decode = jwt.verify(token, process.env.SECRET_TOKEN);
-        const user = await GuestUser.findOne({ email: decode.email });
-        if (user) {
-          req.user = user;
-          next();
-        } else {
-          res.status(401).json("Vous n'etes pas autorisé!");
-        }
-      }
-    } catch (error) {
-      res.status(401).json("Vous n'etes pas autorisé!");
-    }
-  }
-
-const isMember = async (req, res, next) => {
-    const token = req.cookies.token
-    if (token) {
+  const token = req.cookies.token;
+  try {
+    if (!token) {
+      res.status(401).json("Veuillez vous authentifier!!");
+    } else {
       const decode = jwt.verify(token, process.env.SECRET_TOKEN);
       const user = await User.findOne({ email: decode.email });
       if (user) {
-        const isMembers = await Project.aggregate([
-          {
-            $match: {
-              _id: new mongoose.Types.ObjectId(req.params.projectID),
-              menbres: new mongoose.Types.ObjectId(user._id),
-            },
-          },
-        ]);
-        if (isMembers) {
-          console.log("first");
+        if (user.role === "admin") {
+          req.user = user;
           next();
         } else {
           res
             .status(401)
-            .json({ error: "Vous n'etes pas membre de ce projet!" });
+            .json("Seul l'administrateur du projet peux faire cette action");
         }
       } else {
-        res.status(409).json({ error: "Utilisateur introuvable!" });
+        res.status(401).json("Vous n'etes pas autorisé!");
       }
     }
+  } catch (error) {
+    res.status(401).json("Vous n'etes pas autorisé!");
   }
+};
+
+const userInviteAuth = async (req, res, next) => {
+  const token = req.params.token;
+  try {
+    if (!token) {
+      res.status(401).json("Veuillez vous authentifier1!!");
+    } else {
+      const decode = jwt.verify(token, process.env.SECRET_TOKEN);
+      const user = await GuestUser.findOne({ email: decode.email });
+      if (user) {
+        req.user = user;
+        next();
+      } else {
+        res.status(401).json("Vous n'etes pas autorisé!");
+      }
+    }
+  } catch (error) {
+    res.status(401).json("Vous n'etes pas autorisé!");
+  }
+};
+
+const isMember = async (req, res, next) => {
+  const token = req.cookies.token;
+  if (token) {
+    const decode = jwt.verify(token, process.env.SECRET_TOKEN);
+    const user = await User.findOne({ email: decode.email });
+    if (user) {
+      const isMembers = await Project.aggregate([
+        {
+          $match: {
+            _id: new mongoose.Types.ObjectId(req.params.projectID),
+            menbres: new mongoose.Types.ObjectId(user._id),
+          },
+        },
+      ]);
+      if (isMembers) {
+        console.log("first");
+        next();
+      } else {
+        res.status(401).json({ error: "Vous n'etes pas membre de ce projet!" });
+      }
+    } else {
+      res.status(409).json({ error: "Utilisateur introuvable!" });
+    }
+  }
+};
+
+const isSuperAdmin = async (req, res, next) => {
+  const token = req.cookies.token;
+  try {
+    const decode = jwt.verify(token, process.env.SECRET_TOKEN);
+    const user = await User.findOne({ email: decode.email });
+    if (user) {
+      const isSuperAdmin = await Project.findOne({
+        _id: new mongoose.Types.ObjectId(req.params.projectID),
+        superAdmin: new mongoose.Types.ObjectId(user._id),
+      });
+      if (isSuperAdmin) {
+        next();
+      } else {
+        res
+          .status(401)
+          .json({ error: "Vous n'etes pas propriétaire de ce projet!" });
+      }
+    }
+  } catch (error) {
+    res
+      .status(401)
+      .json({ error: "Vous n'etes pas propriétaire de ce projet!" });
+  }
+};
 
 module.exports = {
   authentification,
@@ -126,4 +149,5 @@ module.exports = {
   adminAuth,
   userInviteAuth,
   isMember,
+  isSuperAdmin,
 };

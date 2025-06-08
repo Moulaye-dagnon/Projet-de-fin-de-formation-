@@ -6,9 +6,8 @@ const User = require("../models/user.js");
 const task = require("../models/task");
 const {
   collaboratorAuth,
-  adminAuth,
   userInviteAuth,
-  isMember,
+  isSuperAdmin,
 } = require("../middlewares/auth");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
@@ -35,7 +34,7 @@ router.post("/project/:id", async (req, res) => {
 //create new projet
 router.post("/project/:id/new", collaboratorAuth, async (req, res) => {
   const userId = req.params.id;
-  const { name, description,date } = req.body;
+  const { name, description, date } = req.body;
   const newproject = new project({
     name,
     description,
@@ -47,6 +46,49 @@ router.post("/project/:id/new", collaboratorAuth, async (req, res) => {
   await newproject.save();
   return res.status(201).json({ message: "new project created " });
 });
+
+//supprimer un projet
+router.post(
+  "/project/:userId/delete/:projectID",
+  isSuperAdmin,
+  async (req, res) => {
+    const { userId, projectID } = req.params;
+    try {
+      const deleteProject = await project.deleteOne({
+        _id: new mongoose.Types.ObjectId(projectID),
+      });
+      res.status(200).json(deleteProject);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+);
+
+//modifier un projet
+router.post(
+  "/project/:userId/update/:projectID",
+  isSuperAdmin,
+  async (req, res) => {
+    const { userId, projectID } = req.params;
+    const { name, description, date } = req.body;
+    const new_date = new Date(date)
+    try {
+      const findProject = await project.findOne({
+        _id: new mongoose.Types.ObjectId(projectID),
+      });
+      if (findProject) {
+        findProject.name = name;
+        findProject.description = description;
+        findProject.dueDate = new_date;
+        findProject.save();
+        console.log(findProject.date);
+        res.status(200).json(findProject);
+      }
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+);
 
 // Middleware pour vérifier les permissions
 // async function checkProjectAminship(req, res, next) {
