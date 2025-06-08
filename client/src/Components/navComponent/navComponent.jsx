@@ -10,11 +10,18 @@ import { FaSignOutAlt } from "react-icons/fa";
 export function NavComponent({
   toggleNav,
   handleToggleModal,
+  handleToggleProjectUpdate,
   userProject,
   handleToggleNav,
   handleLogOut,
 }) {
   const navRef = useRef(null);
+
+  function confirmLogOut(){
+    if(window.confirm("Voulez vous vraiment vous déconnecter?")){
+      handleLogOut()
+    }
+  }
 
   return (
     <div
@@ -52,11 +59,11 @@ export function NavComponent({
               onClick={handleToggleModal}
             ></i>
           </div>
-          <DropdownMenuList UserProject={userProject} />
+          <DropdownMenuList UserProject={userProject} handleToggleProjectUpdate={handleToggleProjectUpdate}/>
         </div>
       </div>
       <div
-        onClick={handleLogOut}
+        onClick={confirmLogOut}
         className="flex  items-center px-2 cursor-pointer hover:underline hover:scale-90 transition duration-300"
       >
         <span className="w-5 mr-2">

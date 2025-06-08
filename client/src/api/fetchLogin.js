@@ -6,14 +6,14 @@ export const fetchLogin = (data, login, navigate) => {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include", 
+    credentials: "include",
     body: JSON.stringify(data),
   })
     .then((req) => {
-      if(req.status === 409){
-        toast.error("E-mail incorrect!!")
-      }else if(req.status === 500){
-        toast.error("mot de passe incorrect!")
+      if (req.status === 409) {
+        toast.error("E-mail incorrect!!");
+      } else if (req.status === 500) {
+        toast.error("mot de passe incorrect!");
       }
       return req.json();
     })
@@ -22,7 +22,7 @@ export const fetchLogin = (data, login, navigate) => {
         login(res.data);
         navigate("/dashboard");
       } else {
-        setError(true);
+        console.log("erreur");
       }
     });
 };

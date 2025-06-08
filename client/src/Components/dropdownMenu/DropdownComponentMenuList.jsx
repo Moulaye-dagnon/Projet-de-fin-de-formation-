@@ -5,8 +5,8 @@ import iconTask from "../../assets/task.svg";
 import { useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
 
-export function DropdownMenuList({UserProject}) {
-  const {user} = useContext(UserContext)
+export function DropdownMenuList({ UserProject, handleToggleProjectUpdate }) {
+  const { user } = useContext(UserContext);
   return (
     <div>
       <ul className="flex flex-col gap-2 max-w-[280px] mx-auto ">
@@ -98,6 +98,25 @@ export function DropdownMenuList({UserProject}) {
                           <span className="flex-grow text-xs">
                             statistiques
                           </span>
+                        </NavLink>
+                      </li>
+
+                      <li
+                        className="flex gap-2"
+                        onClick={handleToggleProjectUpdate}
+                      >
+                        <NavLink
+                          to={`/dashboard/project/${project._id}`}
+                          className={({ isActive }) =>
+                            `flex items-center w-full p-2 rounded-lg transition-all ${
+                              isActive ? "bg-gray-200 shadow-lg" : "bg-white"
+                            } hover:bg-gray-100 hover:shadow-lg`
+                          }
+                        >
+                          <span className="w-4.5 inline-block mr-2">
+                            <i className="fas fa-wrench text-[#76b1a6]"></i>
+                          </span>
+                          <span className="flex-grow text-xs">Gérer</span>
                         </NavLink>
                       </li>
                     </ul>

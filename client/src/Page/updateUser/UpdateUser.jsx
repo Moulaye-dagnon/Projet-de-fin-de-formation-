@@ -87,7 +87,6 @@ export default function UpdateUser() {
           return req.json();
         })
         .then((res) => {
-          console.log(res);
           setLoading(false);
           setTimeout(() => {
             toast.dismiss();

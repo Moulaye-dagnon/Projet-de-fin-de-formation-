@@ -8,13 +8,13 @@ import { io } from "socket.io-client";
 import AddProjectModal from "../Modals/AddProjectModal";
 import { All_user_project } from "../../api/all_project_by_user";
 import { Header } from "../header/header";
+import UpdateProject from "../Modals/UpdateProject";
 export function LayoutComponent() {
-  const {logout} = useContext(UserContext);
+  const { logout } = useContext(UserContext);
   const { UserProject, setNewProject } = All_user_project();
   useEffect(() => {
     const socket = io("http://localhost:4000/", { transports: ["websocket"] });
-    socket.on("add-user", (addUser) => {
-    });
+    socket.on("add-user", (addUser) => {});
     socket.on("new-project", (newProject) => {
       setNewProject((state) => !state);
     });
@@ -32,9 +32,14 @@ export function LayoutComponent() {
   };
 
   const [openAddProject, setOpenAddProject] = useState("");
+  const [openUpdateProject, setOpenUpdateProject] = useState("");
 
   function handleToggleModal() {
     setOpenAddProject(!openAddProject);
+  }
+
+  function handleToggleProjectUpdate() {
+    setOpenUpdateProject(!openUpdateProject)
   }
   return (
     <DndProvider backend={HTML5Backend}>
@@ -60,6 +65,7 @@ export function LayoutComponent() {
             <NavComponent
               toggleNav={toggleNav}
               handleToggleModal={handleToggleModal}
+              handleToggleProjectUpdate={handleToggleProjectUpdate}
               userProject={UserProject}
               handleToggleNav={handleToggleNav}
               handleLogOut={logout}
@@ -78,6 +84,7 @@ export function LayoutComponent() {
             setOpenAddProject={setOpenAddProject}
           />
         )}
+        {openUpdateProject && <UpdateProject openUpdateProject={openUpdateProject} setOpenUpdateProject={setOpenUpdateProject}/>}
       </div>
     </DndProvider>
   );

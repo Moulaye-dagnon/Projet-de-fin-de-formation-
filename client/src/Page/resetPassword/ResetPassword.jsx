@@ -5,30 +5,28 @@ export default function ResetPassword() {
   const { token } = useParams();
   const [password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
-  const [validate, setValidate] = useState(true)
+  const [validate, setValidate] = useState(true);
   const navigate = useNavigate();
-
 
   function handleSubmit(e) {
     e.preventDefault();
-    setValidate(true)
-    if(ConfirmPassword === password){
-      fetch("http://localhost:4000/set-new-password", {
+    setValidate(true);
+    if (ConfirmPassword === password) {
+      fetch(`http://localhost:4000/set-new-password/${token}`, {
         method: "POST",
         headers: {
           "Content-Type": "Application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify({ password }),
       })
         .then((req) => req.json())
         .then((res) => {
           navigate("/login");
         });
-    }else{
-      setValidate("")
+    } else {
+      setValidate("");
     }
-    
   }
   return (
     <div className="box lg:flex">
@@ -53,6 +51,7 @@ export default function ResetPassword() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            minLength={8}
           />
 
           <label htmlFor="confirm">Confirmation</label>
@@ -63,15 +62,23 @@ export default function ResetPassword() {
             value={ConfirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
+            minLength={8}
           />
-          {!validate && <p className="text-red-500">Mot de passe non conformes!</p>}
-          <button type="submit" className="btn rounded w-30 p-2 ms-auto cursor-pointer text-gray-50">Envoyer</button>
+          {!validate && (
+            <p className="text-red-500">Mot de passe non conformes!</p>
+          )}
+          <button
+            type="submit"
+            className="btn rounded w-30 p-2 ms-auto cursor-pointer text-gray-50"
+          >
+            Envoyer
+          </button>
         </form>
       </div>
 
       <div className="flex-grow-1 right-box w-52 hidden lg:block h-screen">
-          <img className="h-screen w-screen" src="/img1.avif" alt="image" />
-        </div>
+        <img className="h-screen w-screen" src="/img1.avif" alt="image" />
+      </div>
     </div>
   );
 }

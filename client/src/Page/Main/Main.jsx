@@ -21,6 +21,7 @@ import Help from "../help/Help";
 import UserTasks from "../userTasks/UserTasks";
 import ContactUs from "../contactUs/ContactUs";
 import InfoGeneral from "../InfoGeneral/InfoGeneral";
+import UpdateProject from "../../Components/Modals/UpdateProject";
 
 export default function Main() {
   const { user } = useContext(UserContext);
