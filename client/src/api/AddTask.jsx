@@ -1,12 +1,10 @@
 import axios from "axios";
-import { useContext, useState } from "react";
 import { UserContext } from "../Context/UserContext";
 import { SortByPriorityAndOrder } from "../Utils/getTryByPriority";
 import { toast } from "react-toastify";
 
 export async function AddTaskApi({
   data,
-  alltasks,
   setAllTasks,
   userId,
   projectId,
@@ -30,6 +28,8 @@ export async function AddTaskApi({
       return SortByPriorityAndOrder(updateTasks);
     });
   } catch (error) {
+    console.error("il y'a une erreur ", error);
+
     toast.error("Une erreur est survenue!");
   }
 }

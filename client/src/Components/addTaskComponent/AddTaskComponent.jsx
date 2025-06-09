@@ -16,6 +16,7 @@ export function AddTaskComponent({ setToggle }) {
     { value: "todo", label: "À faire" },
     { value: "doing", label: "En cours" },
     { value: "done", label: "Terminée" },
+    { value: "paused", label: "Paused" },
   ];
 
   const priorityOptions = [
@@ -67,8 +68,11 @@ export function AddTaskComponent({ setToggle }) {
       setToggle(false);
     }
   };
+
   const createdAt = new Date(projets.createdAt);
+  const dueDate = new Date(projets.dueDate);
   const minDate = createdAt.toISOString().split("T")[0];
+  const maxDate = dueDate.toISOString().split("T")[0];
   return (
     <div className=" absolute z-30 p-5 inset-0 bg-black/50 backdrop-blur-xs">
       <div className=" w-full py-3 lg:w-3xl rounded-2xl mx-auto bg-slate-50">
@@ -130,12 +134,13 @@ export function AddTaskComponent({ setToggle }) {
                 placeholder="Assigner à"
               />
               <input
+                className="flex items-center justify-center w-full p-2 border border-[#76b1a6] rounded-md bg-[#76b1a6] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 hover:bg-[#50b1a1] hover:rotate-x-30 transition-all duration-500"
                 name="dueDate"
                 onChange={handleOnchange}
                 value={AddTask.dueDate}
                 type="date"
                 min={minDate}
-                // max={}
+                max={maxDate}
               />
             </div>
             <hr className="my-4" />

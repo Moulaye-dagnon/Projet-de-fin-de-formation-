@@ -5,7 +5,7 @@ const taskSchema = new mongoose.Schema({
   description: { type: String },
   status: {
     type: String,
-    enum: ["todo", "doing", "done"],
+    enum: ["todo", "doing", "done", "paused"],
     default: "todo",
   },
   priority: {
@@ -27,7 +27,7 @@ const taskSchema = new mongoose.Schema({
     ref: "Project",
     required: true,
   },
-  dueDate: { type: Date},
+  dueDate: { type: Date },
   files: [{ type: String }],
   createAd: { type: Date, default: Date.now },
   updateAt: { type: Date, default: Date.now },

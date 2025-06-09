@@ -5,9 +5,7 @@ import { base_url } from "../../api/config";
 import { UserContext } from "../../Context/UserContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { AddTaskComponent } from "../../Components/addTaskComponent/AddTaskComponent";
-import {
-  UseAllTasksContext,
-} from "../../Context/AllTaskContext";
+import { UseAllTasksContext } from "../../Context/AllTaskContext";
 import { SortByPriorityAndOrder } from "../../Utils/getTryByPriority";
 import { CustomDragLayer } from "../../Components/CustomDraglayer/CustomDraglayer";
 import { isAdmin } from "../../Utils/isCanChagetStatusOrPriority";
@@ -16,6 +14,7 @@ import { ToastContainer } from "react-toastify";
 import { fetchProjet } from "../../api/fetchProjet";
 import { fetchTasks } from "../../api/fetchTasks";
 import { fetchProjectUsers } from "../../api/fetchProjectUsers";
+import SpinnerComponent from "../../Components/Spinner/SpinnerComponent";
 export function ProjectDetail() {
   const navigate = useNavigate();
   const [activeTask, setActiveTask] = useState(null);
@@ -81,6 +80,13 @@ export function ProjectDetail() {
       ),
     [alltasks]
   );
+  const paused = useMemo(
+    () =>
+      SortByPriorityAndOrder(
+        alltasks.filter((task) => task.status === "paused")
+      ),
+    [alltasks]
+  );
   const done = useMemo(
     () =>
       SortByPriorityAndOrder(alltasks.filter((task) => task.status === "done")),
@@ -98,7 +104,6 @@ export function ProjectDetail() {
                 <BoardItemComponent
                   title={"À faire"}
                   tasks={todo}
-                  project_name={data.Project}
                   columnid="todo"
                   handlerIconPlus={handlerIconPlus}
                   color={"rgba(249, 115, 22, 0.063)"}
@@ -107,7 +112,6 @@ export function ProjectDetail() {
                 <BoardItemComponent
                   title={"En cours"}
                   tasks={doing}
-                  project_name={data.Project}
                   columnid="doing"
                   handlerIconPlus={handlerIconPlus}
                   color={"rgba(250, 204, 21, 0.063)"}
@@ -116,10 +120,16 @@ export function ProjectDetail() {
                 <BoardItemComponent
                   title={"Terminé"}
                   tasks={done}
-                  project_name={data.Project}
                   columnid="done"
                   handlerIconPlus={handlerIconPlus}
                   color={"rgba(139, 92, 246, 0.063)"}
+                />
+                <BoardItemComponent
+                  title={"En pause"}
+                  tasks={paused}
+                  columnid="paused"
+                  handlerIconPlus={handlerIconPlus}
+                  color={"rgba(14, 165, 233, 0.063)"}
                 />
               </div>
             </div>
@@ -130,7 +140,7 @@ export function ProjectDetail() {
           )}
         </>
       ) : (
-        <h1>Chargement...</h1>
+        <SpinnerComponent />
       )}
       <ToastContainer />
     </>

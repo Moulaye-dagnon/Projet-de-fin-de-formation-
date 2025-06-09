@@ -47,7 +47,3 @@ button:hover {
   background-color: #50b1a1;
   transform: rotateX(30deg);
 }
-button:hover {
-  background-color: #3e8e7e;
-  transform: rotateX(30deg);
-}

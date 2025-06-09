@@ -1,9 +1,9 @@
 import { useDrag } from "react-dnd";
-import iconMenuPoint from "../../assets/menu-point.svg";
 import iconPerson from "../../assets/person.svg";
 import { useContext, useState } from "react";
 import { RiProgress1Line, RiProgress3Line } from "react-icons/ri";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { TbClockPause } from "react-icons/tb";
 import { FaRegCircle } from "react-icons/fa";
 import { LuCircleDashed } from "react-icons/lu";
 import {
@@ -17,9 +17,10 @@ import { motion } from "motion/react";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { isCanChagetStatusOrPriority } from "../../Utils/isCanChagetStatusOrPriority";
 import { UserContext } from "../../Context/UserContext";
-export function TaskComponent({ item }) {
-  const { projets } = useContext(ProjectContext);
+export function TaskComponent({ item, perso }) {
+  const { projets, projectUsers } = useContext(ProjectContext);
   const { user } = useContext(UserContext);
+  const itemName = projectUsers?.find((u) => u._id == item.assignTo);
   const [toggleMenu, setToggleMenu] = useState({
     status: false,
     priority: false,
@@ -28,7 +29,7 @@ export function TaskComponent({ item }) {
     type: "task",
     item: item,
     canDrag: isCanChagetStatusOrPriority({
-      isAssigneTo: { item },
+      item: { item },
       user,
       projets,
     }),
@@ -90,17 +91,18 @@ export function TaskComponent({ item }) {
           {item.status == "done" && (
             <IoMdCheckmarkCircleOutline color="#8B5CF6" />
           )}
+          {item.status == "paused" && <TbClockPause color="#0ea5e9" />}
         </span>
       </div>
       {toggleMenu.status &&
         isCanChagetStatusOrPriority({
-          isAssigneTo: { item },
+          item: { item },
           user,
           projets,
         }) && <DropdownStatus setToggleMenu={setToggleMenu} task={item} />}
       {toggleMenu.priority &&
         isCanChagetStatusOrPriority({
-          isAssigneTo: { item },
+          item: { item },
           user,
           projets,
         }) && <DropdownPriority setToggleMenu={setToggleMenu} task={item} />}
@@ -111,14 +113,16 @@ export function TaskComponent({ item }) {
         </div>
       </div>
       <div className="flex justify-between items-center">
-        {item.dueDate && (
-          <p className="text-xs text-gray-500">
-            Échéance: {new Date(item.dueDate).toLocaleDateString()}
-          </p>
+        <p className="text-xs text-gray-500">
+          {item.dueDate
+            ? new Date(item.dueDate).toLocaleDateString()
+            : "Pas defini"}
+        </p>
+        {!perso && (
+          <span className="text-xs text-gray-500">
+            {itemName ? itemName?.username : "pas defini"}
+          </span>
         )}
-        <span>
-          <img src={iconPerson} alt="" />
-        </span>
       </div>
     </motion.div>
   );

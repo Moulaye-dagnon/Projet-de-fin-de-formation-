@@ -26,7 +26,7 @@ router.post("/task/:userId/new", async (req, res) => {
   if (!name || typeof name !== "string" || name.trim() === "") {
     return res.status(400).json({ message: "Le nom de la tâche est requis" });
   }
-  const validStatuses = ["todo", "doing", "done"];
+  const validStatuses = ["todo", "doing", "done", "paused"];
   if (status && !validStatuses.includes(status)) {
     return res.status(400).json({ message: "Statut invalide" });
   }

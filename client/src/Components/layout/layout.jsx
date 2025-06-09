@@ -26,7 +26,7 @@ export function LayoutComponent() {
     };
   }, []);
 
-  const [toggleNav, setToggleNav] = useState(true);
+  const [toggleNav, setToggleNav] = useState(false);
   const handleToggleNav = () => {
     setToggleNav((c) => !c);
   };
@@ -39,7 +39,7 @@ export function LayoutComponent() {
   }
 
   function handleToggleProjectUpdate() {
-    setOpenUpdateProject(!openUpdateProject)
+    setOpenUpdateProject(!openUpdateProject);
   }
   return (
     <DndProvider backend={HTML5Backend}>
@@ -84,7 +84,12 @@ export function LayoutComponent() {
             setOpenAddProject={setOpenAddProject}
           />
         )}
-        {openUpdateProject && <UpdateProject openUpdateProject={openUpdateProject} setOpenUpdateProject={setOpenUpdateProject}/>}
+        {openUpdateProject && (
+          <UpdateProject
+            openUpdateProject={openUpdateProject}
+            setOpenUpdateProject={setOpenUpdateProject}
+          />
+        )}
       </div>
     </DndProvider>
   );

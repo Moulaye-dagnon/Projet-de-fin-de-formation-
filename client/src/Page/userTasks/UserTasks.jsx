@@ -1,20 +1,20 @@
 import { BoardItemComponent } from "../../Components/BoardItem/BoardItemComponent";
 import iconMenuPoint from "../../assets/menu-point.svg";
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { base_url } from "../../api/config";
 import { UserContext } from "../../Context/UserContext";
 import iconPerson from "../../assets/person.svg";
 import { useParams } from "react-router-dom";
 import { AddTaskComponent } from "../../Components/addTaskComponent/AddTaskComponent";
 import { useDragLayer } from "react-dnd";
-import {
-  UseAllTasksContext,
-} from "../../Context/AllTaskContext";
+import { UseAllTasksContext } from "../../Context/AllTaskContext";
+import SpinnerComponent from "../../Components/Spinner/SpinnerComponent";
+import { SortByPriorityAndOrder } from "../../Utils/getTryByPriority";
 
 export default function UserTasks() {
   const [activeTask, setActiveTask] = useState(null);
-  const { projectId,userId } = useParams();
+  const { projectId, userId } = useParams();
 
   const [data, setData] = useState(null);
   const { token } = useContext(UserContext);
@@ -33,7 +33,7 @@ export default function UserTasks() {
             allTasks.push({ ...task, status: group._id });
           });
         });
-        const userTasks = allTasks.filter(t=> t.assignTo === userId)
+        const userTasks = allTasks.filter((t) => t.assignTo === userId);
         setAllTasks(userTasks);
       } catch (error) {
         console.log("Erreur:", error);
@@ -43,55 +43,73 @@ export default function UserTasks() {
   }, [projectId, token]);
   const handlerIconPlus = (e) => {
     e.preventDefault();
-    setActiveTask((c) => true);
+    setActiveTask(() => true);
   };
-  const todo = alltasks
-    .filter((task) => task.status === "todo")
-    .sort((a, b) => a.order - b.order);
-  const doing = alltasks
-    .filter((task) => task.status === "doing")
-    .sort((a, b) => a.order - b.order);
-  const done = alltasks
-    .filter((task) => task.status === "done")
-    .sort((a, b) => a.order - b.order);
-  const columns = ["todo", "doing", "done"];
-
-
+  const todo = useMemo(
+    () =>
+      SortByPriorityAndOrder(alltasks.filter((task) => task.status === "todo")),
+    [alltasks]
+  );
+  const doing = useMemo(
+    () =>
+      SortByPriorityAndOrder(
+        alltasks.filter((task) => task.status === "doing")
+      ),
+    [alltasks]
+  );
+  const paused = useMemo(
+    () =>
+      SortByPriorityAndOrder(
+        alltasks.filter((task) => task.status === "paused")
+      ),
+    [alltasks]
+  );
+  const done = useMemo(
+    () =>
+      SortByPriorityAndOrder(alltasks.filter((task) => task.status === "done")),
+    [alltasks]
+  );
   return (
     <>
       {data ? (
         <>
-          <div className="flex items-center flex-col h-full w-full">
-            <div className="h-full w-full overflow-auto">
-              <div className="w-full h-full overflow-x-auto">
-                <div className="flex h-full overflow-x-auto gap-3 px-2 min-w-max">
-                  <BoardItemComponent
-                    title={"À faire"}
-                    tasks={todo}
-                    project_name={data.Project}
-                    columnid="todo"
-                    handlerIconPlus={handlerIconPlus}
-                    color={"rgba(249, 115, 22, 0.063)"}
-                  />
+          <div className="overflow-x-auto  flex-1 flex items-center flex-col h-[calc(100%-104px)] w-full ">
+            <div className="h-full w-full">
+              <div className="flex h-full overflow-x-auto gap-3 px-2 min-w-max">
+                <BoardItemComponent
+                  title={"À faire"}
+                  tasks={todo}
+                  columnid="todo"
+                  handlerIconPlus={handlerIconPlus}
+                  color={"rgba(249, 115, 22, 0.063)"}
+                  ColumPerso={true}
+                />
 
-                  <BoardItemComponent
-                    title={"En cours"}
-                    tasks={doing}
-                    project_name={data.Project}
-                    columnid="doing"
-                    handlerIconPlus={handlerIconPlus}
-                    color={"rgba(250, 204, 21, 0.063)"}
-                  />
+                <BoardItemComponent
+                  title={"En cours"}
+                  tasks={doing}
+                  columnid="doing"
+                  handlerIconPlus={handlerIconPlus}
+                  color={"rgba(250, 204, 21, 0.063)"}
+                  ColumPerso={true}
+                />
 
-                  <BoardItemComponent
-                    title={"Terminé"}
-                    tasks={done}
-                    project_name={data.Project}
-                    columnid="done"
-                    handlerIconPlus={handlerIconPlus}
-                    color={"rgba(139, 92, 246, 0.063)"}
-                  />
-                </div>
+                <BoardItemComponent
+                  title={"Terminé"}
+                  tasks={done}
+                  columnid="done"
+                  handlerIconPlus={handlerIconPlus}
+                  color={"rgba(139, 92, 246, 0.063)"}
+                  ColumPerso={true}
+                />
+                <BoardItemComponent
+                  title={"En pause"}
+                  tasks={paused}
+                  columnid="paused"
+                  handlerIconPlus={handlerIconPlus}
+                  color={"rgba(14, 165, 233, 0.063)"}
+                  ColumPerso={true}
+                />
               </div>
             </div>
           </div>
@@ -99,7 +117,7 @@ export default function UserTasks() {
           {activeTask && <AddTaskComponent setToggle={setActiveTask} />}
         </>
       ) : (
-        <h1>Chargement...</h1>
+        <SpinnerComponent />
       )}
     </>
   );

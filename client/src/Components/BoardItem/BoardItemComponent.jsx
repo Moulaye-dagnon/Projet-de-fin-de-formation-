@@ -1,8 +1,10 @@
 import { TaskComponent } from "../Task/TaskComponent";
 import iconPlus from "../../assets/plus.svg";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { RiProgress1Line, RiProgress3Line } from "react-icons/ri";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { TbClockPause } from "react-icons/tb";
+
 import { useDrop } from "react-dnd";
 import { Patch_api } from "../../api/api";
 import { UserContext } from "../../Context/UserContext";
@@ -17,17 +19,15 @@ import { SortByPriorityAndOrder } from "../../Utils/getTryByPriority";
 import { motion, AnimatePresence } from "motion/react";
 export function BoardItemComponent({
   title,
-  status,
   tasks,
-  project_name,
   columnid,
   handlerIconPlus,
   color,
+  ColumPerso = false,
 }) {
   const { user } = useContext(UserContext);
   const { alltasks, setAllTasks } = UseAllTasksContext();
   const { projectId } = useParams();
-  const { projets } = useContext(ProjectContext);
   const ref = useRef();
 
   const [{ isOver }, drop] = useDrop({
@@ -79,16 +79,21 @@ export function BoardItemComponent({
             {title == "Terminé" && (
               <IoMdCheckmarkCircleOutline color="#8B5CF6" fontSize="30px" />
             )}
+            {title == "En pause" && (
+              <TbClockPause color="#0ea5e9" fontSize="30px" />
+            )}
           </span>
           {title}
           <span className=" opacity-50 ml-1.5">{tasks.length}</span>
         </div>
-        <span
-          onClick={handlerIconPlus}
-          className="absolute hover:bg-sky-50 p-1 cursor-pointer rounded-xs  top-4 right-2"
-        >
-          <img src={iconPlus} alt="" />
-        </span>
+        {!ColumPerso && (
+          <span
+            onClick={handlerIconPlus}
+            className="absolute hover:bg-sky-50 p-1 cursor-pointer rounded-xs  top-4 right-2"
+          >
+            <img src={iconPlus} alt="" />
+          </span>
+        )}
       </div>
 
       <div
@@ -121,7 +126,7 @@ export function BoardItemComponent({
         </AnimatePresence>
 
         {tasks.map((task) => (
-          <TaskComponent key={task._id} item={task} />
+          <TaskComponent key={task._id} item={task} perso={ColumPerso} />
         ))}
       </div>
     </div>

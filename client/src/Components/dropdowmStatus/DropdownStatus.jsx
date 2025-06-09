@@ -1,6 +1,7 @@
 import { RiProgress1Line } from "react-icons/ri";
 import { LuCircleDashed } from "react-icons/lu";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { TbClockPause } from "react-icons/tb";
 import { MdDone } from "react-icons/md";
 import { useEffect, useRef } from "react";
 
@@ -24,13 +25,13 @@ export default function DropdownStatus({ task, setToggleMenu }) {
   const changeStatus = async (status) => {
     const result = await updateTask(task._id, "status", status);
     if (!result.success) {
-      console.log(result.error);
+      console.error("Une erreur dans  UpdateTask", result.error);
     }
   };
   return (
     <div
       ref={dropdownRef}
-      className="bg-slate-50 p-2 shadow-2xl rounded-2xl w-60 absolute right-8 "
+      className=" overflow-y-auto h-25 bg-slate-50 p-2 shadow-2xl rounded-2xl w-60 absolute right-8 z-30 "
     >
       <li
         onClick={() => changeStatus("todo")}
@@ -72,9 +73,25 @@ export default function DropdownStatus({ task, setToggleMenu }) {
           <span>
             <IoMdCheckmarkCircleOutline color="#8B5CF6" />
           </span>
-          <span> termier</span>
+          <span> Terminer</span>
         </div>
         {task.status == "done" && (
+          <span>
+            <MdDone />
+          </span>
+        )}
+      </li>
+      <li
+        onClick={() => changeStatus("paused")}
+        className=" list-none gap-3 py-1 hover:bg-gray-100 hover:shadow-lg flex items-center justify-between"
+      >
+        <div className="flex items-center gap-3">
+          <span>
+            <TbClockPause color="#0ea5e9" />
+          </span>
+          <span> En pause</span>
+        </div>
+        {task.status == "paused" && (
           <span>
             <MdDone />
           </span>
