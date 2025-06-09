@@ -1,7 +1,9 @@
+import { base_url } from "./config"
+
 export const fetchProjectUsers = async (projets, setProjectUsers, navigate) => {
   try {
     const res = await fetch(
-      `http://localhost:4000/projet/${projets._id}/users`,
+      `${base_url}/projet/${projets._id}/users`,
       {
         method: "POST",
         headers: {

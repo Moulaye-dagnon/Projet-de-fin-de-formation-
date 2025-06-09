@@ -1,7 +1,9 @@
+import { base_url } from "./config"
+
 export const fetchTasks = async (projets, setTasks, navigate) => {
   try {
     const res = await fetch(
-      `http://localhost:4000/tasks/project/${projets._id}`,
+      `${base_url}/tasks/project/${projets._id}`,
       {
         method: "GET",
         headers: {

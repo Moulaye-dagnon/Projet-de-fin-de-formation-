@@ -1,9 +1,10 @@
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
+import { base_url } from "./config";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 
 export function removeUserToAdmin(idproject, id, userId) {
-  fetch(`http://localhost:4000/projet/${idproject}/removeToAdmin/${id}`, {
+  fetch(`${base_url}/projet/${idproject}/removeToAdmin/${id}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -15,7 +15,7 @@ export default function UpdateProject({
   const [data, setData] = useState({
     name: "",
     description: "",
-    date: null,
+    date: "",
   });
   const userId = user.id;
   const projectID = projets._id;
@@ -38,7 +38,7 @@ export default function UpdateProject({
       onClick={() => setOpenUpdateProject(!openUpdateProject)}
     >
       <div
-        className="mx-4  bg-gray-200 rounded-lg m-auto mt-50 p-4"
+        className="mx-4 bg-gray-200 rounded-lg m-auto mt-3 p-4"
         onClick={(e) => e.stopPropagation()}
       >
         <span

@@ -1,9 +1,10 @@
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
+import { base_url } from "./config";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 
 export const fetchNotif = (notifData) => {
-  fetch("http://localhost:4000/new-notification", {
+  fetch(`${base_url}/new-notification`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -1,6 +1,8 @@
+import { base_url } from "./config"
+
 export const fetchAuth = (logout, navigate, projectID) => {
   try {
-    fetch(`http://localhost:4000/${projectID}`, {
+    fetch(`${base_url}/${projectID}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

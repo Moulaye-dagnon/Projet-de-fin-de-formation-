@@ -1,7 +1,8 @@
 import { toast } from "react-toastify";
+import { base_url } from "./config";
 
 export const fetchContact = (data) => {
-  fetch("http://localhost:4000/contactus", {
+  fetch(`${base_url}/contactus`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

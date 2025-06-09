@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { base_url } from "./config";
 
 export function updateProjectApi(
   userId,
@@ -7,7 +8,7 @@ export function updateProjectApi(
   navigate,
   data
 ) {
-  fetch(`http://localhost:4000/project/${userId}/update/${projectID}`, {
+  fetch(`${base_url}/project/${userId}/update/${projectID}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
