@@ -1,7 +1,7 @@
 const express = require("express");
 
 const cors = require("cors");
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
 const path = require("path");
 const app = express();
 
@@ -12,18 +12,20 @@ const TaskRouter = require("./routes/taskRouter");
 const http = require("http");
 const { Server } = require("socket.io");
 
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true             
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
-const server = http.createServer(app); 
+const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { 
+  cors: {
     origin: "http://localhost:5173/",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
@@ -35,28 +37,27 @@ io.on("connection", (socket) => {
     io.emit("update-role", updateRoleMessage);
   });
 
-  socket.on("delete-user", deleteUser=>{
-    io.emit("delete-user", deleteUser)
-  })  
-
-  socket.on("add-user", addUser=>{
-    io.emit("add-user", addUser)
-  })
-
-  socket.on("new-project", newProject=>{
-    io.emit("new-project", newProject)
-  })
-
-  socket.on("fetch-notif", notif=>{
-    io.emit("fetch-notif", notif)
-  })
-
-  socket.on("new-notif", notif=>{ 
-    io.emit("new-notif", notif)
-  })
-
-  socket.on("disconnect", () => {
+  socket.on("delete-user", (deleteUser) => {
+    io.emit("delete-user", deleteUser);
   });
+
+  socket.on("add-user", (addUser) => {
+    io.emit("add-user", addUser);
+  });
+
+  socket.on("new-project", (newProject) => {
+    io.emit("new-project", newProject);
+  });
+
+  socket.on("fetch-notif", (notif) => {
+    io.emit("fetch-notif", notif);
+  });
+
+  socket.on("new-notif", (notif) => {
+    io.emit("new-notif", notif);
+  });
+
+  socket.on("disconnect", () => {});
 });
 
 app.use("/", router);

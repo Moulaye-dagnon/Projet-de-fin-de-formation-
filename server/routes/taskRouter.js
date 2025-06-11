@@ -119,25 +119,46 @@ router.patch("/task/reorder/:userid", async (req, res) => {
 
 // Route pour supprimer une tâche
 router.delete("/task/:id/:userId", async (req, res) => {
-  const userId = req.params.userId;
-  const taskId = req.params.id;
-  const { projectId } = req.body;
+  try {
+    const userId = req.params.userId;
+    const taskId = req.params.id;
+    const { projectId } = req.body;
+    if (!projectId || !userId || !taskId) {
+      return res.status(400).json({ message: "Données manquantes" });
+    }
 
-  const project = await Project.findOne({
-    _id: new mongoose.Types.ObjectId(projectId),
-    owner: { $in: [new mongoose.Types.ObjectId(userId)] },
-  });
+    if (
+      !mongoose.Types.ObjectId.isValid(projectId) ||
+      !mongoose.Types.ObjectId.isValid(userId) ||
+      !mongoose.Types.ObjectId.isValid(taskId)
+    ) {
+      return res.status(400).json({ message: "Identifiants invalides" });
+    }
 
-  if (!project) {
-    return res.status(401).json({
-      message: "Vous n'avez pas les droits nécessaires sur ce projet",
+    const project = await Project.findOne({
+      _id: new mongoose.Types.ObjectId(projectId),
+      superAdmin: new mongoose.Types.ObjectId(userId),
     });
-  }
 
-  await Task.deleteOne({
-    _id: new mongoose.Types.ObjectId(taskId),
-  });
-  return res.status(200).json({ message: "Tâche supprimée" });
+    if (!project) {
+      return res.status(401).json({
+        message: "Vous n'avez pas les droits nécessaires sur ce projet",
+      });
+    }
+
+    const task = await Task.findOne({
+      _id: new mongoose.Types.ObjectId(taskId),
+    });
+    if (!task) {
+      return res.status(404).json({ message: "Tâche introuvable" });
+    }
+
+    await Task.deleteOne({ _id: new mongoose.Types.ObjectId(taskId) });
+    return res.status(200).json({ message: "Tâche supprimée avec succès" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur serveur" });
+  }
 });
 
 // Route pour recuperer tout les taches d'un utilisateur par projet

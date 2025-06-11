@@ -1,5 +1,5 @@
 import UsersComponent from "../../Components/userComponent/UsersComponent";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { UserContext } from "../../Context/UserContext";
@@ -13,30 +13,19 @@ const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 export default function Users() {
   const navigate = useNavigate();
   const { projectId } = useParams();
-  const {
-    projets,
-    setProjets,
-    tasks,
-    setTasks,
-    projectUsers,
-    setProjectUsers,
-    removeData,
-    removeTwo,
-  } = useContext(ProjectContext);
+  const { projets, setProjets, setTasks, projectUsers, setProjectUsers } =
+    useContext(ProjectContext);
   const { setNewProject } = All_user_project();
 
   const { user } = useContext(UserContext);
   const myId = user.id;
 
-  const ids = projectUsers.map((u) => u._id);
-
   useEffect(() => {
-    socket.on("update-role", (updateRoleMessage) => {
-      fetchProjet(user, setProjets, projectId,navigate);
+    socket.on("update-role", () => {
+      fetchProjet(user, setProjets, projectId, navigate);
     });
 
-    socket.on("delete-user", (deleteUser) => {
-      // fetchProjet(user, setProjets, removeTwo, removeData, projectId);
+    socket.on("delete-user", () => {
       setNewProject((state) => !state);
       navigate("/dashboard");
     });
@@ -51,7 +40,7 @@ export default function Users() {
     if (!user || user === null) {
       return;
     } else {
-      fetchProjet(user, setProjets, projectId,navigate);
+      fetchProjet(user, setProjets, projectId, navigate);
     }
   }, [user, projectId]);
 
@@ -64,7 +53,7 @@ export default function Users() {
     }
   }, [projets]);
 
-  const isAdmin = projets.owners?.find((owner) => owner === user.id);
+  const isAdmin = projets?.owners?.find((owner) => owner === user.id);
   return (
     <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10 place-items-center mt-4 mb-4 sm:h-[calc(90svh-90px)] overflow-auto">
       {projets && (

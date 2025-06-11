@@ -12,14 +12,14 @@ export default function UsersComponent({ user, myId }) {
   const isAdmin = projets.owners?.includes(myId);
   const isAdminn = projets.owners?.includes(user._id);
   const SuperAdmin = projets.superAdmin === myId;
-  const isSuperAdminProfile = projets.superAdmin === user._id;
+  const isSuperAdmin = projets.superAdmin === user._id;
   function closeModal() {
     setOpenModal(!openModal);
   }
 
   return (
     <div className="rounded-3xl relative   0 w-70 flex flex-col gap-2 border-[#50b1a1] shadow-md hover:shadow-lg transition-all">
-      {(SuperAdmin || (!isAdminn && isAdmin)) && !isSuperAdminProfile && (
+      {(SuperAdmin || (!isAdminn && isAdmin)) && !isSuperAdmin && (
         <div
           className="header ml-auto cursor-pointer p-4 "
           onClick={() => setOpenModal((c) => !c)}

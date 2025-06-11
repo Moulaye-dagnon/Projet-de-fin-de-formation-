@@ -1,11 +1,12 @@
 import { useDrag } from "react-dnd";
-import iconPerson from "../../assets/person.svg";
 import { useContext, useState } from "react";
 import { RiProgress1Line, RiProgress3Line } from "react-icons/ri";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { TbClockPause } from "react-icons/tb";
 import { FaRegCircle } from "react-icons/fa";
 import { LuCircleDashed } from "react-icons/lu";
+import { FaTrashAlt } from "react-icons/fa";
+
 import {
   MdOutlineSignalCellularAlt,
   MdOutlineSignalCellularAlt2Bar,
@@ -17,10 +18,15 @@ import { motion } from "motion/react";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { isCanChagetStatusOrPriority } from "../../Utils/isCanChagetStatusOrPriority";
 import { UserContext } from "../../Context/UserContext";
+import deleteTask from "../../api/deleteTask";
+import { useParams } from "react-router-dom";
 export function TaskComponent({ item, perso }) {
   const { projets, projectUsers } = useContext(ProjectContext);
   const { user } = useContext(UserContext);
-  const itemName = projectUsers?.find((u) => u._id == item.assignTo);
+  const itemUser = projectUsers?.find((u) => u._id == item.assignTo);
+  const { projectId } = useParams();
+  const isSuperAdmin = projets.superAdmin === user.id;
+
   const [toggleMenu, setToggleMenu] = useState({
     status: false,
     priority: false,
@@ -49,6 +55,7 @@ export function TaskComponent({ item, perso }) {
       priority: !toggleMenu.priority,
     });
   };
+  const handleDelete = () => deleteTask(user.id, projectId, item._id);
   const cardVariants = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1 },
@@ -93,6 +100,7 @@ export function TaskComponent({ item, perso }) {
           )}
           {item.status == "paused" && <TbClockPause color="#0ea5e9" />}
         </span>
+        <span></span>
       </div>
       {toggleMenu.status &&
         isCanChagetStatusOrPriority({
@@ -106,8 +114,25 @@ export function TaskComponent({ item, perso }) {
           user,
           projets,
         }) && <DropdownPriority setToggleMenu={setToggleMenu} task={item} />}
+
       <div className="my-4">
-        <div className="text-[15px] font-bold">{item.name}</div>
+        <div
+          className={`text-[15px] font-bold ${
+            isSuperAdmin
+              ? "justify-between flex transition-all duration-300 items-center"
+              : ""
+          } `}
+        >
+          <span className=" flex-1  ">{item.name}</span>
+          {isSuperAdmin && (
+            <span
+              onClick={handleDelete}
+              className="p-o.5 flex justify-end mr-1.5 hover:scale-105 "
+            >
+              <FaTrashAlt />
+            </span>
+          )}
+        </div>
         <div className="text-[11px]">
           {item.description || "Sans description"}
         </div>
@@ -120,7 +145,7 @@ export function TaskComponent({ item, perso }) {
         </p>
         {!perso && (
           <span className="text-xs text-gray-500">
-            {itemName ? itemName?.username : "pas defini"}
+            {itemUser ? itemUser?.username : "pas defini"}
           </span>
         )}
       </div>
