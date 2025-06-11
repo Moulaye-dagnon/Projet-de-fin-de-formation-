@@ -4,10 +4,11 @@ import UserAction from "../Modals/UserAction";
 import { useState, useContext } from "react";
 import { ToastContainer } from "react-toastify";
 import { ProjectContext } from "../../Context/ProjectContext";
+import ErrorModal from "../Modals/ErrorModal";
 
 export default function UsersComponent({ user, myId }) {
   const [openModal, setOpenModal] = useState("");
-
+  const [loading, setLoading] = useState("");
   const { projets } = useContext(ProjectContext);
   const isAdmin = projets.owners?.includes(myId);
   const isAdminn = projets.owners?.includes(user._id);
@@ -33,6 +34,7 @@ export default function UsersComponent({ user, myId }) {
               closeModal={closeModal}
               setOpenModal={setOpenModal}
               openModal={openModal}
+              setLoading={setLoading}
             />
           )}
         </div>
@@ -67,6 +69,7 @@ export default function UsersComponent({ user, myId }) {
           <p className="cursor-pointer">Voir le profil</p>
         </Link>
       </div>
+      {loading && <ErrorModal/>}
       <ToastContainer />
     </div>
   );

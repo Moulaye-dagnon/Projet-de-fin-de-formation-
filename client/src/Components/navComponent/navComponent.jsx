@@ -26,7 +26,7 @@ export function NavComponent({
   return (
     <div
       ref={navRef}
-      className={`z-90  w-full h-full max-h-screen overflow-hidden transition-all duration-300 flex flex-col   bg-gray-100 shadow-lg rounded-2xl py-1 1`}
+      className={`z-90  w-full h-full max-h-screen overflow-hidden transition-all duration-300 flex flex-col bg-gray-100 shadow-lg rounded-2xl py-1 1`}
     >
       <div className="w-full  my-10 h-[75%]  overflow-y-auto">
         <div>

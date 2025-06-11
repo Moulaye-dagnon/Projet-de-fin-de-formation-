@@ -9,6 +9,7 @@ import { fetchProjectUsers } from "../../api/fetchProjectUsers";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorModal from "../../Components/Modals/ErrorModal";
 
 export default function Dashboard({ task }) {
   const navigate = useNavigate();
@@ -22,12 +23,13 @@ export default function Dashboard({ task }) {
     projectUsers,
     setProjectUsers,
   } = useContext(ProjectContext);
+  const [loading, setLoading] = useState("")
 
   useEffect(() => {
     if (!user || user === null) {
       return;
     } else {
-      fetchProjet(user, setProjets, projectId, navigate);
+      fetchProjet(user, setProjets, projectId, navigate,setLoading);
     }
   }, [user, projectId]);
 
@@ -35,8 +37,8 @@ export default function Dashboard({ task }) {
     if (!user || !projets) {
       return;
     } else {
-      fetchTasks(projets, setTasks, navigate);
-      fetchProjectUsers(projets, setProjectUsers, navigate);
+      fetchTasks(projets, setTasks, navigate,setLoading);
+      fetchProjectUsers(projets, setProjectUsers, navigate,setLoading);
     }
   }, [projets]);
   return (
@@ -48,6 +50,7 @@ export default function Dashboard({ task }) {
             {projectUsers && <ViewUsersComponent />}
           </div>
         )}
+        {loading && <ErrorModal/>}
         <ToastContainer />
       </div>
     </div>

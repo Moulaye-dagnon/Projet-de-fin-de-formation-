@@ -1,7 +1,7 @@
 export default function UserName({ data, setData, update }) {
   return (
     <>
-      <label htmlFor="username">Username</label>
+      <label htmlFor="username">Nom d'utilisateur</label>
       {!update ? (
         <input
           type="text"

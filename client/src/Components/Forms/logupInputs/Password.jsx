@@ -2,7 +2,7 @@ export default function Password({ data, setData, update }) {
   return (
     <>
       <>
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">Mot de passe</label>
         <input
           type="password"
           id="password"

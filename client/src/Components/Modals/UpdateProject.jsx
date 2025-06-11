@@ -5,23 +5,25 @@ import { ProjectContext } from "../../Context/ProjectContext";
 import { deleteProjectApi } from "../../api/deleteProjectApi";
 import { useNavigate } from "react-router-dom";
 import { updateProjectApi } from "../../api/updateProjectApi";
+import ErrorModal from "./ErrorModal";
 export default function UpdateProject({
   openUpdateProject,
   setOpenUpdateProject,
 }) {
   const navigate = useNavigate();
-  const { user, token } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const { projets } = useContext(ProjectContext);
   const [data, setData] = useState({
     name: "",
     description: "",
     date: "",
   });
+  const [loading, setLoading] = useState("");
   const userId = user.id;
   const projectID = projets._id;
   function handleSubmit(e) {
     e.preventDefault();
-    updateProjectApi(userId, projectID, setOpenUpdateProject, navigate,data);
+    updateProjectApi(userId, projectID, setOpenUpdateProject, navigate, data,setLoading);
   }
   function handleDelete() {
     if (
@@ -29,7 +31,7 @@ export default function UpdateProject({
         "Ce projet sera totalement supprimer si vous décider de confirmer"
       )
     ) {
-      deleteProjectApi(userId, projectID, setOpenUpdateProject, navigate);
+      deleteProjectApi(userId, projectID, setOpenUpdateProject, navigate,setLoading);
     }
   }
   return (
@@ -95,6 +97,7 @@ export default function UpdateProject({
               </a>
             </div>
           </form>
+          {loading && <ErrorModal/>}
           <ToastContainer />
         </div>
       </div>

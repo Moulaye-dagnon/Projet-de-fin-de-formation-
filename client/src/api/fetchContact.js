@@ -1,7 +1,8 @@
 import { toast } from "react-toastify";
 import { base_url } from "./config";
 
-export const fetchContact = (data) => {
+export const fetchContact = (data,setLoading) => {
+  setLoading(true)
   fetch(`${base_url}/contactus`, {
     method: "POST",
     headers: {
@@ -14,9 +15,15 @@ export const fetchContact = (data) => {
       return req.json();
     })
     .then((res) => {
-      toast.success("Message envoyé avec succès, nous vous contacterons dès que possible");
+      setTimeout(() => {
+        setLoading(false)
+        toast.success("Message envoyé avec succès, nous vous contacterons dès que possible");
+      }, 1500);
     })
     .catch((e) => {
-      toast.error("Une erreur est survenue!");
+      setTimeout(() => {
+        setLoading(false)
+        toast.error("Une erreur est survenue!");
+      }, 1500);
     });
 };

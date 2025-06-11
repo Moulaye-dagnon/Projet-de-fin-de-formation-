@@ -3,7 +3,8 @@ import { io } from "socket.io-client";
 import { base_url } from "./config";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 
-export function updateUserToAdmin(idproject, id, userId) {
+export function updateUserToAdmin(idproject, id, userId, setLoading) {
+  setLoading(true);
   fetch(`${base_url}/projet/${idproject}/setToAdmin/${id}`, {
     method: "POST",
     headers: {
@@ -18,9 +19,15 @@ export function updateUserToAdmin(idproject, id, userId) {
       return req.json();
     })
     .then(() => {
-      socket.emit("update-role");
+      setTimeout(() => {
+        setLoading(false);
+        socket.emit("update-role");
+      }, 1500);
     })
     .catch(() => {
-      toast.error("Une erreur est survenue!");
+      setTimeout(() => {
+        setLoading(false);
+        toast.error("Une erreur est survenue!");
+      }, 1500);
     });
 }
