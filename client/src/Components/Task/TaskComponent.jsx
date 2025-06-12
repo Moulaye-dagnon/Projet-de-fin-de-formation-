@@ -1,0 +1,154 @@
+import { useDrag } from "react-dnd";
+import { useContext, useState } from "react";
+import { RiProgress1Line, RiProgress3Line } from "react-icons/ri";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { TbClockPause } from "react-icons/tb";
+import { FaRegCircle } from "react-icons/fa";
+import { LuCircleDashed } from "react-icons/lu";
+import { FaTrashAlt } from "react-icons/fa";
+
+import {
+  MdOutlineSignalCellularAlt,
+  MdOutlineSignalCellularAlt2Bar,
+  MdOutlineSignalCellularAlt1Bar,
+} from "react-icons/md";
+import DropdownStatus from "../dropdowmStatus/DropdownStatus";
+import DropdownPriority from "../dropdowPriority/dropdownPriority";
+import { motion } from "motion/react";
+import { ProjectContext } from "../../Context/ProjectContext";
+import { isCanChagetStatusOrPriority } from "../../Utils/isCanChagetStatusOrPriority";
+import { UserContext } from "../../Context/UserContext";
+import deleteTask from "../../api/deleteTask";
+import { useParams } from "react-router-dom";
+export function TaskComponent({ item, perso }) {
+  const { projets, projectUsers } = useContext(ProjectContext);
+  const { user } = useContext(UserContext);
+  const itemUser = projectUsers?.find((u) => u._id == item.assignTo);
+  const { projectId } = useParams();
+  const isSuperAdmin = projets.superAdmin === user.id;
+
+  const [toggleMenu, setToggleMenu] = useState({
+    status: false,
+    priority: false,
+  });
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "task",
+    item: item,
+    canDrag: isCanChagetStatusOrPriority({
+      item: { item },
+      user,
+      projets,
+    }),
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+  const handleToggleStatus = () => {
+    setToggleMenu({
+      ...toggleMenu,
+      status: !toggleMenu.status,
+    });
+  };
+  const handleTogglePriority = () => {
+    setToggleMenu({
+      ...toggleMenu,
+      priority: !toggleMenu.priority,
+    });
+  };
+  const handleDelete = () => deleteTask(user.id, projectId, item._id);
+  const cardVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    dragging: { scale: 1.05, boxShadow: "0 4px 8px rgba(0,0,0,0.2)" },
+  };
+
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      variants={cardVariants}
+      initial="initial"
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      animate={isDragging ? "dragging" : "animate"}
+      exit="exit"
+      layout
+      ref={drag}
+      className={`bg-white p-4 w-72 rounded-2xl mx-auto relative  ${
+        isDragging ? "opacity-50" : "opacity-100"
+      }`}
+    >
+      <div className="relative ">
+        <span
+          onClick={handleTogglePriority}
+          className=" p-0.5   border-2 border-transparent hover:border-slate-100 hover:shadow-2xl rounded-xs text-xl font-extrabold cursor-pointer absolute top-0 left-0 "
+        >
+          {item.priority == "low" && <MdOutlineSignalCellularAlt1Bar />}
+          {item.priority == "medium" && <MdOutlineSignalCellularAlt2Bar />}
+          {item.priority == "hight" && <MdOutlineSignalCellularAlt />}
+        </span>
+        <span className="text-xs opacity-50 inline-block ml-8 font-bold">
+          {projets.name}
+        </span>
+        <span
+          onClick={handleToggleStatus}
+          className=" p-0.5   border-2 border-transparent hover:border-slate-100 hover:shadow-2xl rounded-xs text-xl font-extrabold cursor-pointer absolute  right-0"
+        >
+          {item.status == "todo" && <LuCircleDashed color="#F97316" />}
+          {item.status == "doing" && <RiProgress1Line color="#FACC15" />}
+          {item.status == "done" && (
+            <IoMdCheckmarkCircleOutline color="#8B5CF6" />
+          )}
+          {item.status == "paused" && <TbClockPause color="#0ea5e9" />}
+        </span>
+        <span></span>
+      </div>
+      {toggleMenu.status &&
+        isCanChagetStatusOrPriority({
+          item: { item },
+          user,
+          projets,
+        }) && <DropdownStatus setToggleMenu={setToggleMenu} task={item} />}
+      {toggleMenu.priority &&
+        isCanChagetStatusOrPriority({
+          item: { item },
+          user,
+          projets,
+        }) && <DropdownPriority setToggleMenu={setToggleMenu} task={item} />}
+
+      <div className="my-4">
+        <div
+          className={`text-[15px] font-bold ${
+            isSuperAdmin
+              ? "justify-between flex transition-all duration-300 items-center"
+              : ""
+          } `}
+        >
+          <span className=" flex-1  ">{item.name}</span>
+          {isSuperAdmin && (
+            <span
+              onClick={handleDelete}
+              className="p-o.5 flex justify-end mr-1.5 hover:scale-105 "
+            >
+              <FaTrashAlt />
+            </span>
+          )}
+        </div>
+        <div className="text-[11px]">
+          {item.description || "Sans description"}
+        </div>
+      </div>
+      <div className="flex justify-between items-center">
+        <p className="text-xs text-gray-500">
+          {item.dueDate
+            ? new Date(item.dueDate).toLocaleDateString()
+            : "Pas defini"}
+        </p>
+        {!perso && (
+          <span className="text-xs text-gray-500">
+            {itemUser ? itemUser?.username : "pas defini"}
+          </span>
+        )}
+      </div>
+    </motion.div>
+  );
+}
