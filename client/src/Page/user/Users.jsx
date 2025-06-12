@@ -21,11 +21,11 @@ export default function Users() {
   const { user } = useContext(UserContext);
   const myId = user.id;
 
-
   const [loading,setLoading] = useState("")
   useEffect(() => {
     socket.on("update-role", () => {
       fetchProjet(user, setProjets, projectId,navigate,setLoading);
+
     });
 
     socket.on("delete-user", () => {
@@ -45,6 +45,7 @@ export default function Users() {
     } else {
 
       fetchProjet(user, setProjets, projectId,navigate,setLoading);
+
     }
   }, [user, projectId]);
 

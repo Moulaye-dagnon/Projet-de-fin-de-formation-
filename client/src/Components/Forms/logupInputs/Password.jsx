@@ -11,7 +11,7 @@ export default function Password({ data, setData, update }) {
           onChange={(e) => setData({ ...data, password: e.target.value })}
           placeholder="Saisissez votre mot de passe"
           required
-          //   minLength={8}
+          minLength={8}
         />
       </>
       {update && (

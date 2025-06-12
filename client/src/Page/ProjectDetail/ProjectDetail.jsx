@@ -16,6 +16,7 @@ import { fetchTasks } from "../../api/fetchTasks";
 import { fetchProjectUsers } from "../../api/fetchProjectUsers";
 import SpinnerComponent from "../../Components/Spinner/SpinnerComponent";
 import ErrorModal from "../../Components/Modals/ErrorModal";
+
 export function ProjectDetail() {
   const navigate = useNavigate();
   const [activeTask, setActiveTask] = useState(null);
@@ -68,7 +69,7 @@ export function ProjectDetail() {
   const handlerIconPlus = (e) => {
     e.preventDefault();
 
-    setActiveTask((c) => true);
+    setActiveTask(() => true);
   };
   const todo = useMemo(
     () =>
