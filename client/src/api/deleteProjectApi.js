@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
+import { base_url } from "./config";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 export function deleteProjectApi(
   userId,
@@ -8,7 +9,7 @@ export function deleteProjectApi(
   navigate,
   
 ) {
-  fetch(`http://localhost:4000/project/${userId}/delete/${projectID}`, {
+  fetch(`${base_url}/project/${userId}/delete/${projectID}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

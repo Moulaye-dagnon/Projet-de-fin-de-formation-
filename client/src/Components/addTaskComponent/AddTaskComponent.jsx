@@ -75,9 +75,9 @@ export function AddTaskComponent({ setToggle }) {
   const maxDate = dueDate.toISOString().split("T")[0];
   return (
     <div className=" absolute z-30 p-5 inset-0 bg-black/50 backdrop-blur-xs">
-      <div className=" w-full py-3 lg:w-3xl rounded-2xl mx-auto bg-slate-50">
+      <div className="w-full py-3 lg:w-3xl rounded-2xl mx-auto bg-slate-50">
         <div className="flex items-center justify-between">
-          <span className="  ml-3  w-20 flex items-center border rounded-2xl  ">
+          <span className="ml-3  w-20 flex items-center border rounded-2xl  ">
             <MdAddTask size={"2rem"} /> <span className=" font-bold">Task</span>
           </span>
           <span

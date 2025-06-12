@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { fetchNewProject } from "../../api/fetchNewProject";
 import { UserContext } from "../../Context/UserContext";
+import ErrorModal from "./ErrorModal";
 export default function AddProjectModal({ openAddProject, setOpenAddProject }) {
   const { user, token } = useContext(UserContext);
   const [data, setData] = useState({
@@ -9,10 +10,11 @@ export default function AddProjectModal({ openAddProject, setOpenAddProject }) {
     description: "",
     date: null
   });
+  const [loading, setLoading] = useState("")
   const userId = user.id;
   function handleSubmit(e) {
     e.preventDefault();
-    fetchNewProject(userId, token, data, setOpenAddProject);
+    fetchNewProject(userId, token, data, setOpenAddProject,setLoading);
   }
   return (
     <div
@@ -20,7 +22,7 @@ export default function AddProjectModal({ openAddProject, setOpenAddProject }) {
       onClick={() => setOpenAddProject(!openAddProject)}
     >
       <div
-        className="mx-4  bg-gray-200 rounded-lg m-auto mt-50 p-4"
+        className="mx-4 bg-gray-200 rounded-lg m-auto p-4 mt-3"
         onClick={(e) => e.stopPropagation()}
       >
         <span
@@ -71,6 +73,7 @@ export default function AddProjectModal({ openAddProject, setOpenAddProject }) {
               Ajouter
             </button>
           </form>
+          {loading && <ErrorModal/>}
           <ToastContainer />
         </div>
       </div>

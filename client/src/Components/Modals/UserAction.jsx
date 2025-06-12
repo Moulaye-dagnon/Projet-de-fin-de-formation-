@@ -1,4 +1,4 @@
-import { useContext, useRef, useEffect } from "react";
+import { useContext, useRef, useEffect, useState } from "react";
 import { deleteUserFromProject } from "../../api/deleteUserFromProject";
 import { UserContext } from "../../Context/UserContext";
 import { ProjectContext } from "../../Context/ProjectContext";
@@ -6,6 +6,8 @@ import { ProjectContext } from "../../Context/ProjectContext";
 import { updateUserToAdmin } from "../../api/updateUserToAdmin";
 import { io } from "socket.io-client";
 import { removeUserToAdmin } from "../../api/RemoveUserToAdmin";
+import ErrorModal from "./ErrorModal";
+import { ToastContainer } from "react-toastify";
 io("http://localhost:4000/", { transports: ["websocket"] });
 
 export default function UserAction({
@@ -13,29 +15,29 @@ export default function UserAction({
   userId,
   setOpenModal,
   openModal,
+  setLoading
 }) {
   const { user } = useContext(UserContext);
   const { projets } = useContext(ProjectContext);
   const isAdminn = projets.owners?.includes(userId);
 
   const SuperAdmin = projets.superAdmin === user.id;
-  console.log(isAdminn && SuperAdmin);
 
   function handleDelete() {
     if (
       window.confirm("Voulez-vous vraiment supprimer cet membre du projet?")
     ) {
-      deleteUserFromProject(projets._id, user.id, userId);
+      deleteUserFromProject(projets._id, user.id, userId, setLoading);
     }
   }
   function handleUpdate() {
     if (window.confirm("Voulez-vous continuer?")) {
-      updateUserToAdmin(projets._id, user.id, userId);
+      updateUserToAdmin(projets._id, user.id, userId, setLoading);
     }
   }
   function handleRemoveToAdmin() {
     if (window.confirm("Voulez-vous continuer?")) {
-      removeUserToAdmin(projets._id, user.id, userId);
+      removeUserToAdmin(projets._id, user.id, userId, setLoading);
     }
   }
   const modalRef = useRef(null);
@@ -76,6 +78,7 @@ export default function UserAction({
             : "Changer en administrateur"}
         </p>
       </div>
+      <ToastContainer/>
     </div>
   );
 }

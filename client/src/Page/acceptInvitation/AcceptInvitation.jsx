@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import {useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Nom from "../../Components/Forms/logupInputs/Nom";
 import Prenom from "../../Components/Forms/logupInputs/Prenom";
 import UserName from "../../Components/Forms/logupInputs/UserName";
@@ -83,6 +83,7 @@ export default function AcceptInvitation() {
     },
   ];
   useEffect(() => {
+    setLoading(true);
     fetch(`http://localhost:4000/project/users/finduserinvite/${param.token}`, {
       method: "POST",
       headers: {
@@ -97,28 +98,37 @@ export default function AcceptInvitation() {
           socket.emit("add-user");
           navigate("/login");
         }
+
         return res.json();
       })
       .then((data) => {
-        setFields({
-          ...fields,
-          email: data.email,
-        });
+        setTimeout(() => {
+          setLoading(false);
+          setFields({
+            ...fields,
+            email: data.email,
+          });
+        }, 1500);
       })
-      .catch((err) => console.error("Erreur:", err));
+      .catch((err) => {
+        setTimeout(() => {
+          console.error("Erreur:", err);
+          setLoading(false);
+        }, timeout);
+      });
   }, []);
 
   const [canSubmit, setCanSubmit] = useState("");
   const [current, setCurrent] = useState(0);
   function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true);
     if (current < 5) {
       if (current === 4) {
         setCanSubmit(true);
       }
       setCurrent(current + 1);
     } else {
+      setLoading(true);
       fetch(`http://localhost:4000/logup/acceptInvitation/${param.token}`, {
         method: "POST",
         headers: {},
@@ -127,13 +137,17 @@ export default function AcceptInvitation() {
         body: formData,
       }).then((req) => {
         if (req.status === 201) {
-          toast.success("Compte créer avec succès!");
-          socket.emit("add-user");
           setTimeout(() => {
+            setLoading(false);
+            socket.emit("add-user");
             navigate("/login");
-          }, 3000);
+          }, 1500);
+          toast.success("Compte créer avec succès!");
         } else {
-          toast.error("Une erreur est survenue!");
+          setTimeout(() => {
+            setLoading(false);
+            toast.error("Une erreur est survenue!");
+          }, 1500);
         }
         return req.json();
       });
@@ -213,6 +227,7 @@ export default function AcceptInvitation() {
           alt="image"
         />
       </div>
+      {loading && <ErrorModal />}
       <ToastContainer />
     </div>
   );

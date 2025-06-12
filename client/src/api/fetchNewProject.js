@@ -1,10 +1,18 @@
 import { toast } from "react-toastify";
 import { All_user_project } from "./all_project_by_user";
 import { io } from "socket.io-client";
+import { base_url } from "./config";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 
-export const fetchNewProject = (userId, token, data, setOpenAddProject) => {
-  fetch(`http://localhost:4000/project/${userId}/new`, {
+export const fetchNewProject = (
+  userId,
+  token,
+  data,
+  setOpenAddProject,
+  setLoading
+) => {
+  setLoading(true);
+  fetch(`${base_url}/project/${userId}/new`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -20,11 +28,14 @@ export const fetchNewProject = (userId, token, data, setOpenAddProject) => {
     })
     .then((res) => {
       toast.success("Projet créer avec succès");
-      socket.emit("new-project");
       setTimeout(() => {
+        setLoading(false);
         setOpenAddProject("");
         socket.emit("new-project");
-      }, 5000);
+      }, 1500);
     })
-    .catch((e) => toast.error("Une erreur est survenue!!"));
+    .catch((e) => {
+      setLoading(false);
+      toast.error("Une erreur est survenue!!");
+    });
 };

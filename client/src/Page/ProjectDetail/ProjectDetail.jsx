@@ -14,7 +14,11 @@ import { ToastContainer } from "react-toastify";
 import { fetchProjet } from "../../api/fetchProjet";
 import { fetchTasks } from "../../api/fetchTasks";
 import { fetchProjectUsers } from "../../api/fetchProjectUsers";
+<<<<<<< HEAD
 import SpinnerComponent from "../../Components/Spinner/SpinnerComponent";
+=======
+import ErrorModal from "../../Components/Modals/ErrorModal";
+>>>>>>> 02d1d1ae8f7f681f751074db4bfb9efbffecb99e
 export function ProjectDetail() {
   const navigate = useNavigate();
   const [activeTask, setActiveTask] = useState(null);
@@ -24,6 +28,7 @@ export function ProjectDetail() {
   const { projets, setProjets, setTasks, setProjectUsers } =
     useContext(ProjectContext);
   const { user } = useContext(UserContext);
+  const [loading,setLoading] = useState("")
   useEffect(() => {
     async function fetchProject() {
       try {
@@ -50,7 +55,7 @@ export function ProjectDetail() {
     if (!user || user === null) {
       return;
     } else {
-      fetchProjet(user, setProjets, projectId, navigate);
+      fetchProjet(user, setProjets, projectId, navigate,setLoading);
     }
   }, [user, projectId]);
 
@@ -58,8 +63,8 @@ export function ProjectDetail() {
     if (!user || !projets) {
       return;
     } else {
-      fetchTasks(projets, setTasks, navigate);
-      fetchProjectUsers(projets, setProjectUsers, navigate);
+      fetchTasks(projets, setTasks, navigate,setLoading);
+      fetchProjectUsers(projets, setProjectUsers, navigate,setLoading);
     }
   }, [projets]);
 
@@ -142,6 +147,7 @@ export function ProjectDetail() {
       ) : (
         <SpinnerComponent />
       )}
+      {loading && <ErrorModal/>}
       <ToastContainer />
     </>
   );
