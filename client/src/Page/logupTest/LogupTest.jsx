@@ -10,6 +10,7 @@ import Fdp from "../../Components/Forms/logupInputs/Fdp";
 import Poste from "../../Components/Forms/logupInputs/Poste";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorModal from "../../Components/Modals/ErrorModal";
 
 export default function LogupTest() {
   const navigate = useNavigate();
@@ -34,7 +35,6 @@ export default function LogupTest() {
   formData.append("password", fields.password);
   formData.append("poste", fields.poste);
   formData.append("photoProfil", fields.photoProfil);
-
 
   const filter = [
     {
@@ -75,13 +75,13 @@ export default function LogupTest() {
   const [current, setCurrent] = useState(0);
   function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true);
     if (current < 7) {
       if (current === 6) {
         setCanSubmit(true);
       }
       setCurrent(current + 1);
     } else {
+      setLoading(true);
       fetch("http://localhost:4000/logup", {
         method: "POST",
         body: formData,
@@ -94,10 +94,10 @@ export default function LogupTest() {
           } else {
             toast.error("Une erreur est survenue!");
           }
+          setLoading(false);
           return req.json();
         })
         .then((res) => {
-          setLoading(false);
           if (res === "Cet utilisateur existe déjà..." || res.error) {
             console.log(res);
           } else {
@@ -108,6 +108,7 @@ export default function LogupTest() {
           }
         })
         .catch((error) => {
+          setLoading(false);
           toast.error("Une erreur est survenue!");
         });
     }
@@ -165,24 +166,23 @@ export default function LogupTest() {
                 Précédent
               </a>
             )}
-             {(current === 3 ||  current === 6) && (
-          <a
-            onClick={handleSkip}
-            className="cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded "
-          >
-            Passer
-          </a>
-        )}
+            {(current === 3 || current === 6) && (
+              <a
+                onClick={handleSkip}
+                className="cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded "
+              >
+                Passer
+              </a>
+            )}
             <button
               className="btn rounded w-30 p-2 cursor-pointer text-gray-50"
               type="submit"
-              disabled={(current === 3 ||  current === 6) && true}
+              disabled={(current === 3 || current === 6) && true}
             >
               {!canSubmit ? "Suivant" : "Envoyer"}
             </button>
           </div>
         </form>
-       
       </div>
 
       <div className="right-box w-full md:w-1/5 flex-grow-1 hidden md:block h-full">
@@ -196,6 +196,7 @@ export default function LogupTest() {
           alt="image"
         />
       </div>
+      {loading && <ErrorModal />}
       <ToastContainer />
     </div>
   );

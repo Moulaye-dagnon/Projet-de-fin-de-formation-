@@ -4,6 +4,7 @@ import Nom from "../../Components/Forms/logupInputs/Nom";
 import Prenom from "../../Components/Forms/logupInputs/Prenom";
 import { fetchContact } from "../../api/fetchContact";
 import { ToastContainer } from "react-toastify";
+import ErrorModal from "../../Components/Modals/ErrorModal";
 
 export default function ContactUs() {
   const [data, setData] = useState({
@@ -13,9 +14,10 @@ export default function ContactUs() {
     objet: "",
     message: "",
   });
+  const [loading, setLoading] = useState("")
   function handleSubmit(e) {
     e.preventDefault();
-    fetchContact(data);
+    fetchContact(data,setLoading);
   }
   return (
     <div className=" flex-1 overflow-y-auto py-10 px-2">
@@ -55,6 +57,7 @@ export default function ContactUs() {
           </button>
         </form>
       </div>
+      {loading && <ErrorModal/>}
       <ToastContainer />
     </div>
   );

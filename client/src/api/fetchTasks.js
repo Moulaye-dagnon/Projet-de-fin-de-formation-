@@ -1,7 +1,10 @@
-export const fetchTasks = async (projets, setTasks, navigate) => {
+import { base_url } from "./config"
+
+export const fetchTasks = async (projets, setTasks, navigate,setLoading) => {
   try {
+    setLoading(true)
     const res = await fetch(
-      `http://localhost:4000/tasks/project/${projets._id}`,
+      `${base_url}/tasks/project/${projets._id}`,
       {
         method: "GET",
         headers: {
@@ -9,10 +12,12 @@ export const fetchTasks = async (projets, setTasks, navigate) => {
         },
         credentials: "include",
       }
-    );
+    )
 
     const data = await res.json();
-
+    // setTimeout(() => {
+    //   setLoading(false)
+    // }, 1000);
     if (!data.tasks) {
       localStorage.removeItem("tasks");
       setTasks([]);
@@ -21,6 +26,9 @@ export const fetchTasks = async (projets, setTasks, navigate) => {
       localStorage.setItem("tasks", JSON.stringify(data.tasks));
     }
   } catch (error) {
+    // setTimeout(() => {
+    //   setLoading(false)
+    // }, 1000);
     navigate("/dashboard")
   }
 };

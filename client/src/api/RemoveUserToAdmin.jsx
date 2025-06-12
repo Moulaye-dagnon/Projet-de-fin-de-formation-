@@ -1,9 +1,11 @@
 import { toast } from "react-toastify";
+import { base_url } from "./config";
 import { io } from "socket.io-client";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 
-export function removeUserToAdmin(idproject, id, userId) {
-  fetch(`http://localhost:4000/projet/${idproject}/removeToAdmin/${id}`, {
+export function removeUserToAdmin(idproject, id, userId, setLoading) {
+  setLoading(true);
+  fetch(`${base_url}/projet/${idproject}/removeToAdmin/${id}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -17,9 +19,15 @@ export function removeUserToAdmin(idproject, id, userId) {
       return req.json();
     })
     .then(() => {
-      socket.emit("update-role");
+      setTimeout(() => {
+        socket.emit("update-role");
+        setLoading(false);
+      }, 1500);
     })
     .catch(() => {
-      toast.error("Une erreur est survenue!");
+      setTimeout(() => {
+        toast.error("Une erreur est survenue!");
+        setLoading(false);
+      }, 1500);
     });
 }

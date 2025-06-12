@@ -1,5 +1,5 @@
 import UsersComponent from "../../Components/userComponent/UsersComponent";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { UserContext } from "../../Context/UserContext";
@@ -9,6 +9,7 @@ import { fetchProjectUsers } from "../../api/fetchProjectUsers";
 import { fetchProjet } from "../../api/fetchProjet";
 import { io } from "socket.io-client";
 import { All_user_project } from "../../api/all_project_by_user";
+import ErrorModal from "../../Components/Modals/ErrorModal";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] });
 export default function Users() {
   const navigate = useNavigate();
@@ -20,9 +21,11 @@ export default function Users() {
   const { user } = useContext(UserContext);
   const myId = user.id;
 
+
+  const [loading,setLoading] = useState("")
   useEffect(() => {
     socket.on("update-role", () => {
-      fetchProjet(user, setProjets, projectId, navigate);
+      fetchProjet(user, setProjets, projectId,navigate,setLoading);
     });
 
     socket.on("delete-user", () => {
@@ -40,7 +43,8 @@ export default function Users() {
     if (!user || user === null) {
       return;
     } else {
-      fetchProjet(user, setProjets, projectId, navigate);
+
+      fetchProjet(user, setProjets, projectId,navigate,setLoading);
     }
   }, [user, projectId]);
 
@@ -48,8 +52,8 @@ export default function Users() {
     if (!user || !projets) {
       return;
     } else {
-      fetchTasks(projets, setTasks, navigate);
-      fetchProjectUsers(projets, setProjectUsers, navigate);
+      fetchTasks(projets, setTasks, navigate,setLoading);
+      fetchProjectUsers(projets, setProjectUsers, navigate,setLoading);
     }
   }, [projets]);
 
@@ -63,6 +67,7 @@ export default function Users() {
           ))}
         </>
       )}
+      {loading && <ErrorModal/>}
       {isAdmin && <AddUserComponent />}
     </div>
   );

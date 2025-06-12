@@ -101,7 +101,7 @@ export function DropdownMenuList({ UserProject, handleToggleProjectUpdate }) {
                         </NavLink>
                       </li>
 
-                      <li
+                      {project.superAdmin === user.id && <li
                         className="flex gap-2"
                         onClick={handleToggleProjectUpdate}
                       >
@@ -118,7 +118,7 @@ export function DropdownMenuList({ UserProject, handleToggleProjectUpdate }) {
                           </span>
                           <span className="flex-grow text-xs">Gérer</span>
                         </NavLink>
-                      </li>
+                      </li>}
                     </ul>
                   </article>
                 </details>

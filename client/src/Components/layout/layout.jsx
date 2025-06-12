@@ -9,6 +9,7 @@ import AddProjectModal from "../Modals/AddProjectModal";
 import { All_user_project } from "../../api/all_project_by_user";
 import { Header } from "../header/header";
 import UpdateProject from "../Modals/UpdateProject";
+import ErrorModal from "../Modals/ErrorModal";
 export function LayoutComponent() {
   const { logout } = useContext(UserContext);
   const { UserProject, setNewProject } = All_user_project();

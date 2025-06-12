@@ -1,8 +1,10 @@
 import { toast } from "react-toastify";
 import {io} from "socket.io-client"
+import { base_url } from "./config";
 const socket = io("http://localhost:4000/", { transports: ["websocket"] })
-export function deleteUserFromProject(idproject, id, userId) {
-  fetch(`http://localhost:4000/projet/${idproject}/deleteuser/${id}`, {
+export function deleteUserFromProject(idproject, id, userId,setLoading) {
+  setLoading(true)
+  fetch(`${base_url}/projet/${idproject}/deleteuser/${id}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -16,9 +18,15 @@ export function deleteUserFromProject(idproject, id, userId) {
         return req.json()
     })
     .then((res) => {
-      socket.emit("delete-user")
+      setTimeout(() => {
+        socket.emit("delete-user")
+        setLoading(false)
+      }, 1500);
     })
     .catch((e) => {
-      toast.error("Une erreur est survenue!");
+      setTimeout(() => {
+        setLoading(false)
+        toast.error("Une erreur est survenue!");
+      }, 1500);
     });
 }
