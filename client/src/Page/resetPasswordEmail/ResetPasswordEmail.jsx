@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import { base_url } from "../../api/config";
 
 export default function ResetPasswordEmail() {
   const [email, setEmail] = useState("");
@@ -7,7 +8,7 @@ export default function ResetPasswordEmail() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    fetch("http://localhost:4000/reset-password", {
+    fetch(`${base_url}/reset-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

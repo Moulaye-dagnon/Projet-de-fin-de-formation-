@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { base_url } from "./config";
 
 async function deleteTask(userId, projectId, taskId) {
   if (!taskId || !userId || !projectId) {
@@ -12,7 +13,7 @@ async function deleteTask(userId, projectId, taskId) {
 
   try {
     const response = await axios.delete(
-      `http://localhost:4000/task/${taskId}/${userId}`,
+      `${base_url}/task/${taskId}/${userId}`,
       {
         data: { projectId },
       }

@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { fetchAuth } from "../api/fetchAuth";
+import { base_url } from "../api/config";
 
 export const UserContext = createContext();
 
@@ -15,14 +16,14 @@ export function UserProvider({ children }) {
   function logout(navigate) {
     setUser("");
     setToken("");
-      fetch("http://localhost:4000/logout", {
+      fetch(`${base_url}/logout`, {
         method: "GET",
         credentials: "include",
       });
   }
 
   useEffect(() => {
-    fetch(`http://localhost:4000/me`, {
+    fetch(`${base_url}/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

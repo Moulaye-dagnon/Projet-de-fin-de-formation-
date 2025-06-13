@@ -13,7 +13,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { UserContext } from "../../Context/UserContext";
 import { io } from "socket.io-client";
-const socket = io("http://localhost:4000/", { transports: ["websocket"] });
+import { base_url } from "../../api/config";
+const socket = io("https://server-production-f288.up.railway.app", { transports: ["websocket"] });
 
 export default function AcceptInvitation() {
   const navigate = useNavigate();
@@ -84,7 +85,7 @@ export default function AcceptInvitation() {
   ];
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:4000/project/users/finduserinvite/${param.token}`, {
+    fetch(`${base_url}/project/users/finduserinvite/${param.token}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -129,7 +130,7 @@ export default function AcceptInvitation() {
       setCurrent(current + 1);
     } else {
       setLoading(true);
-      fetch(`http://localhost:4000/logup/acceptInvitation/${param.token}`, {
+      fetch(`${base_url}/logup/acceptInvitation/${param.token}`, {
         method: "POST",
         headers: {},
         credentials: "include",

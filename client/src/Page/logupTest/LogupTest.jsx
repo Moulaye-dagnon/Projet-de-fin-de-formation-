@@ -11,6 +11,7 @@ import Poste from "../../Components/Forms/logupInputs/Poste";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorModal from "../../Components/Modals/ErrorModal";
+import { base_url } from "../../api/config";
 
 export default function LogupTest() {
   const navigate = useNavigate();
@@ -82,7 +83,7 @@ export default function LogupTest() {
       setCurrent(current + 1);
     } else {
       setLoading(true);
-      fetch("http://localhost:4000/logup", {
+      fetch(`${base_url}/logup`, {
         method: "POST",
         body: formData,
       })

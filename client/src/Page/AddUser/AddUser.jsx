@@ -6,9 +6,10 @@ import { UserContext } from "../../Context/UserContext";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
-const socket = io("http://localhost:4000/", { transports: ["websocket"] });
+const socket = io("https://server-production-f288.up.railway.app", { transports: ["websocket"] });
 import { fetchNotif } from "../../api/fetchNotif";
 import ErrorModal from "../../Components/Modals/ErrorModal";
+import { base_url } from "../../api/config";
 
 export default function AddUser() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function AddUser() {
   function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    fetch(`http://localhost:4000/projet/${projets._id}/adduser/${user.id}`, {
+    fetch(`${base_url}/projet/${projets._id}/adduser/${user.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -14,7 +14,7 @@ export function LayoutComponent() {
   const { logout } = useContext(UserContext);
   const { UserProject, setNewProject } = All_user_project();
   useEffect(() => {
-    const socket = io("http://localhost:4000/", { transports: ["websocket"] });
+    const socket = io("https://server-production-f288.up.railway.app", { transports: ["websocket"] });
     socket.on("add-user", (addUser) => {});
     socket.on("new-project", (newProject) => {
       setNewProject((state) => !state);

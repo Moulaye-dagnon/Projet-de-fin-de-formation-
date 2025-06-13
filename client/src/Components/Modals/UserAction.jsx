@@ -8,7 +8,7 @@ import { io } from "socket.io-client";
 import { removeUserToAdmin } from "../../api/RemoveUserToAdmin";
 import ErrorModal from "./ErrorModal";
 import { ToastContainer } from "react-toastify";
-io("http://localhost:4000/", { transports: ["websocket"] });
+io("https://server-production-f288.up.railway.app", { transports: ["websocket"] });
 
 export default function UserAction({
   closeModal,
