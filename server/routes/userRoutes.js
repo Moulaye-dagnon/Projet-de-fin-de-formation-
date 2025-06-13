@@ -80,9 +80,7 @@ router.post("/logup", upload.single("photoProfil"), async (req, res) => {
           url: cloudinaryUploadResponse.secure_url,
         };
       } catch (uploadError) {
-        return res
-          .status(500)
-          .json({ error: uploadError });
+        return res.status(500).json({ error: uploadError });
       }
     }
 
@@ -112,16 +110,8 @@ router.post(
   userInviteAuth,
   upload.single("photoProfil"),
   async (req, res) => {
-    const {
-      nom,
-      prenom,
-      username,
-      tel,
-      email,
-      password,
-      poste,
-      photoProfile,
-    } = req.body;
+    const { nom, prenom, username, tel, email, password, poste, photoProfile } =
+      req.body;
     const guestUser = req.user;
     const hashedPassword = await bcrypt
       .hash(password, 10)
