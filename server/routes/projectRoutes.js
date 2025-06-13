@@ -252,7 +252,7 @@ router.post(
           newUser.authTokens.push({ authToken });
           newUser.save();
 
-          const link = `http://localhost:5173/logup/${authToken}`;
+          const link = `https://gpc-production-2842.up.railway.app/logup/${authToken}`;
           sendEmail(newUser, link);
           res.status(200).json({ message: "Membre ajouté au projet" });
         }
@@ -272,7 +272,7 @@ router.post(
 
           newUser.save();
 
-          const link = `http://localhost:5173/logup/${authToken}`;
+          const link = `https://gpc-production-2842.up.railway.app/logup/${authToken}`;
           sendEmail(newUser, link);
           res.status(200).json({ message: "Membre ajouté au projet" });
         } else {
