@@ -167,18 +167,18 @@ export default function LogupTest() {
                 Précédent
               </a>
             )}
-            {(current === 3 || current === 6) && (
+            {/* {(current === 3 || current === 6) && (
               <a
                 onClick={handleSkip}
                 className="cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded "
               >
                 Passer
               </a>
-            )}
+            )} */}
             <button
               className="btn rounded w-30 p-2 cursor-pointer text-gray-50"
               type="submit"
-              disabled={(current === 3 || current === 6) && true}
+              // disabled={(current === 3 || current === 6) && true}
             >
               {!canSubmit ? "Suivant" : "Envoyer"}
             </button>
