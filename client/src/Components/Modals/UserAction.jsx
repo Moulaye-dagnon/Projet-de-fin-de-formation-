@@ -8,7 +8,8 @@ import { io } from "socket.io-client";
 import { removeUserToAdmin } from "../../api/RemoveUserToAdmin";
 import ErrorModal from "./ErrorModal";
 import { ToastContainer } from "react-toastify";
-io("https://server-production-f288.up.railway.app", { transports: ["websocket"] });
+import { front_url } from "../../api/config";
+io(front_url, { transports: ["websocket"] });
 
 export default function UserAction({
   closeModal,

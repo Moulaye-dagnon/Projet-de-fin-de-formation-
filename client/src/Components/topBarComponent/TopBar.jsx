@@ -2,9 +2,9 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
 import { io } from "socket.io-client";
-const socket = io("https://server-production-f288.up.railway.app", { transports: ["websocket"] });
+const socket = io(front_url, { transports: ["websocket"] });
 import { dateFormat } from "../../Utils/dateFormat";
-import { base_url } from "../../api/config";
+import { base_url, front_url } from "../../api/config";
 export default function TopBar() {
   const navigate = useNavigate();
   const { user, logout } = useContext(UserContext);

@@ -10,11 +10,12 @@ import { All_user_project } from "../../api/all_project_by_user";
 import { Header } from "../header/header";
 import UpdateProject from "../Modals/UpdateProject";
 import ErrorModal from "../Modals/ErrorModal";
+import { front_url } from "../../api/config";
 export function LayoutComponent() {
   const { logout } = useContext(UserContext);
   const { UserProject, setNewProject } = All_user_project();
   useEffect(() => {
-    const socket = io("https://server-production-f288.up.railway.app", { transports: ["websocket"] });
+    const socket = io(front_url, { transports: ["websocket"] });
     socket.on("add-user", (addUser) => {});
     socket.on("new-project", (newProject) => {
       setNewProject((state) => !state);

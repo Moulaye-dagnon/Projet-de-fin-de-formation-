@@ -10,7 +10,8 @@ import { fetchProjet } from "../../api/fetchProjet";
 import { io } from "socket.io-client";
 import { All_user_project } from "../../api/all_project_by_user";
 import ErrorModal from "../../Components/Modals/ErrorModal";
-const socket = io("https://server-production-f288.up.railway.app", { transports: ["websocket"] });
+import { front_url } from "../../api/config";
+const socket = io(front_url, { transports: ["websocket"] });
 export default function Users() {
   const navigate = useNavigate();
   const { projectId } = useParams();

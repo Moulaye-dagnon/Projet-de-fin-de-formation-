@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
-import { base_url } from "./config";
+import { base_url, front_url } from "./config";
 import { io } from "socket.io-client";
-const socket = io(`${base_url}`, { transports: ["websocket"] });
+const socket = io(`${front_url}`, { transports: ["websocket"] });
 
 export function removeUserToAdmin(idproject, id, userId, setLoading) {
   setLoading(true);

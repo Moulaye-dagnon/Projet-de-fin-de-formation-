@@ -13,8 +13,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { UserContext } from "../../Context/UserContext";
 import { io } from "socket.io-client";
-import { base_url } from "../../api/config";
-const socket = io("https://server-production-f288.up.railway.app", { transports: ["websocket"] });
+import { base_url, front_url } from "../../api/config";
+const socket = io(front_url, { transports: ["websocket"] });
 
 export default function AcceptInvitation() {
   const navigate = useNavigate();
