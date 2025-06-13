@@ -60,12 +60,14 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {});
 });
 
-app.use("/", router);
-app.use("/", ProjectRouter);
-app.use("/", TaskRouter);
+app.use("/api", router);
+app.use("/api", ProjectRouter);
+app.use("/api", TaskRouter);
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+app.use(express.static(path.join(__dirname, '../dist')));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist", "index.html"));
 });
 
 
