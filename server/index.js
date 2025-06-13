@@ -14,7 +14,7 @@ const { Server } = require("socket.io");
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://gpc-production-2842.up.railway.app",
     credentials: true,
   })
 );
@@ -26,7 +26,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173/",
+    origin: "https://gpc-production-2842.up.railway.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   },
