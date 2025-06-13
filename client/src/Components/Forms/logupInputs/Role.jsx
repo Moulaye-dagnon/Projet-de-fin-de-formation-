@@ -1,4 +1,11 @@
 export default function Role({ data, setData, update }) {
+  function remplissage(e) {
+    let value = e.target.value;
+    if (e.target.value[0] === " ") {
+      value = e.target.value.slice(1);
+    }
+    setData({ ...data, role: value });
+  }
   return (
     <>
       <label htmlFor="role">Role</label>
@@ -8,7 +15,7 @@ export default function Role({ data, setData, update }) {
           id="role"
           className="border-2 border-gray-300 rounded p-2.5"
           value={data.role}
-          onChange={(e) => setData({ ...data, role: e.target.value })}
+          onChange={(e) => remplissage(e)}
           required
         >
           <option value="">Role</option>
@@ -21,7 +28,7 @@ export default function Role({ data, setData, update }) {
           id="role"
           className="border-2 border-gray-300 rounded p-2.5"
           value={data.role}
-          onChange={(e) => setData({ ...data, role: e.target.value })}
+          onChange={(e) => remplissage(e)}
         >
           <option value="">Vous etes?</option>
           <option value="admin">Administrateur</option>

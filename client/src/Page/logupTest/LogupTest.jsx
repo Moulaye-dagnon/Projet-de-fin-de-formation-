@@ -28,13 +28,13 @@ export default function LogupTest() {
   const [loading, setLoading] = useState(false);
 
   const formData = new FormData();
-  formData.append("nom", fields.nom);
-  formData.append("prenom", fields.prenom);
-  formData.append("username", fields.username);
+  formData.append("nom", fields.nom.slice(0,-1));
+  formData.append("prenom", fields.prenom.slice(0,-1));
+  formData.append("username", fields.username.slice(0,-1));
   formData.append("tel", fields.telephone);
   formData.append("email", fields.email);
   formData.append("password", fields.password);
-  formData.append("poste", fields.poste);
+  formData.append("poste", fields.poste.slice(0,-1));
   formData.append("photoProfil", fields.photoProfil);
 
   const filter = [

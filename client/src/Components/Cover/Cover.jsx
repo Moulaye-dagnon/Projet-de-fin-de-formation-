@@ -25,7 +25,7 @@ function Cover() {
               type="button"
               className="rounded px-4 py-2 ms-auto cursor-pointer text-gray-50"
             >
-              <Link to={"/loguptest"}>
+              <Link to={"/login"}>
                 Commencer <i className="fas fa-arrow-right"></i>
               </Link>
             </button>
