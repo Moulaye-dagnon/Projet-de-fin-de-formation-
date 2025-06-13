@@ -4,7 +4,6 @@ import { UserContext } from "../Context/UserContext";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { base_url } from "./config";
-import { OrderedFunction } from "../../../server/Utils/orderdedFunction";
 import { SortByPriorityAndOrder } from "../Utils/getTryByPriority";
 
 const useUpdateTask = () => {
