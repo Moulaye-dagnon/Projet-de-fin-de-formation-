@@ -27,7 +27,7 @@ const CustomDropdown = ({ name, value, onChange, options, placeholder }) => {
   const selectedOption = options.find((option) => option.value === value);
 
   return (
-    <div className="relative w-full" ref={dropdownRef}>
+    <div className="relative w-[45%]  sm:w-full" ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}

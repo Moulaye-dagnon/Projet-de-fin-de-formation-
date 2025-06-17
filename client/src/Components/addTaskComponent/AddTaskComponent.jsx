@@ -109,7 +109,7 @@ export function AddTaskComponent({ setToggle }) {
                 onChange={handleOnchange}
               />
             </div>
-            <div className="flex justify-between items-center w-[95%] space-x-4">
+            <div className="flex justify-between flex-wrap sm:flex-nowrap items-center w-[95%] space-x-0 sm:space-x-4 gap-y-2 sm:gap-y-0">
               <CustomDropdown
                 name="status"
                 value={AddTask.status}
@@ -134,7 +134,7 @@ export function AddTaskComponent({ setToggle }) {
                 placeholder="Assigner à"
               />
               <input
-                className="flex items-center justify-center w-full p-2 border border-[#76b1a6] rounded-md bg-[#76b1a6] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 hover:bg-[#50b1a1] hover:rotate-x-30 transition-all duration-500"
+                className="flex items-center justify-center w-[45%] sm:w-full p-2 border border-[#76b1a6] rounded-md bg-[#76b1a6] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 hover:bg-[#50b1a1] hover:rotate-x-30 transition-all duration-500"
                 name="dueDate"
                 onChange={handleOnchange}
                 value={AddTask.dueDate}

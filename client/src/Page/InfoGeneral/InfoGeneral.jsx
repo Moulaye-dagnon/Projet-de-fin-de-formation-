@@ -14,6 +14,11 @@ function InfoGeneral() {
         ))}
       </div>
     );
+  return (
+    <div className="flex-1 flex justify-center items-center  ">
+      <p className=" uppercase"> Vous n'avez pas de projet</p>
+    </div>
+  );
 }
 
 export default InfoGeneral;
