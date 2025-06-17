@@ -6,7 +6,7 @@ function InfoGeneral() {
   const { UserProject, loading } = All_user_project();
 
   if (loading) return <SpinnerComponent />;
-  if (!UserProject) {
+  if (UserProject.length === 0) {
     return (
       <div className=" flex-1 flex justify-center items-center ">
         <p> Ouup! Vous n'avez pas encore de projet</p>
