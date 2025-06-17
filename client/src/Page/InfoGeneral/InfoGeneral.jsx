@@ -6,17 +6,19 @@ function InfoGeneral() {
   const { UserProject, loading } = All_user_project();
 
   if (loading) return <SpinnerComponent />;
-  if (UserProject)
+  if (!UserProject) {
     return (
-      <div className=" flex-1 overflow-y-auto">
-        {UserProject.map((item) => (
-          <InfoProjectItem item={item} key={item._id} />
-        ))}
+      <div className=" flex-1 flex justify-center items-center ">
+        <p> Ouup! Vous n'avez pas encore de projet</p>
       </div>
     );
+  }
+
   return (
-    <div className="flex-1 flex justify-center items-center  ">
-      <p className=" uppercase"> Vous n'avez pas de projet</p>
+    <div className=" flex-1 overflow-y-auto">
+      {UserProject.map((item) => (
+        <InfoProjectItem item={item} key={item._id} />
+      ))}
     </div>
   );
 }
