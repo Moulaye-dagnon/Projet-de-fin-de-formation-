@@ -10,7 +10,7 @@ function InfoGeneral() {
   if (UserProject.length === 0) {
     return (
       <div className=" flex-1 flex justify-center items-center ">
-        <p> Oups! Vous n'avez pas encore de projet</p>
+        <p> Oupss! Vous n'avez pas encore de projet</p>
       </div>
     );
   }
