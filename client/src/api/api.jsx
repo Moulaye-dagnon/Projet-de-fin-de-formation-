@@ -3,7 +3,10 @@ import { base_url } from "./config";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../Context/UserContext";
-export async function Patch_api( tasks ) {
+import { io } from "socket.io-client";
+import { front_url } from "./config";
+const socket = io(`${front_url}`, { transports: ["websocket"] });
+export async function Patch_api(tasks) {
   const { user } = useContext(UserContext);
   const { projectId } = useParams;
 

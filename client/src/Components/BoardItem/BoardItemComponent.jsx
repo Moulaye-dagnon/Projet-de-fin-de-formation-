@@ -16,6 +16,10 @@ import { LuCircleDashed } from "react-icons/lu";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { SortByPriorityAndOrder } from "../../Utils/getTryByPriority";
 import { motion, AnimatePresence } from "motion/react";
+import { io } from "socket.io-client";
+import { front_url } from "../../api/config";
+import { useEffect } from "react";
+const socket = io(`${front_url}`, { transports: ["websocket"] });
 export function BoardItemComponent({
   title,
   tasks,
@@ -57,6 +61,7 @@ export function BoardItemComponent({
         projectId,
       });
       setAllTasks([...orderedTask]);
+      socket.emit("task-change");
     } catch (err) {
       console.log(err);
     }

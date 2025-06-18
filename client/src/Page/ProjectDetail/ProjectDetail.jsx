@@ -16,6 +16,7 @@ import { fetchTasks } from "../../api/fetchTasks";
 import { fetchProjectUsers } from "../../api/fetchProjectUsers";
 import SpinnerComponent from "../../Components/Spinner/SpinnerComponent";
 import ErrorModal from "../../Components/Modals/ErrorModal";
+import socket from "../../api/socket";
 
 export function ProjectDetail() {
   const navigate = useNavigate();
@@ -26,7 +27,34 @@ export function ProjectDetail() {
   const { projets, setProjets, setTasks, setProjectUsers } =
     useContext(ProjectContext);
   const { user } = useContext(UserContext);
-  const [loading,setLoading] = useState("")
+  const [loading, setLoading] = useState("");
+  useEffect(() => {
+    socket.on("task-change", (e) => {
+      async function fetchProject() {
+        try {
+          const response = await axios.get(
+            `${base_url}/tasks/project/${projectId}`
+          );
+          const result = await response.data;
+          setData(result);
+          const allTasks = [];
+          result.tasks.forEach((group) => {
+            group.tasks.forEach((task) => {
+              allTasks.push({ ...task, status: group._id });
+            });
+          });
+          setAllTasks(allTasks);
+        } catch (error) {
+          console.log("Erreur:", error);
+        }
+      }
+      fetchProject();
+    });
+
+    return () => {
+      socket.off("task-change");
+    };
+  }, []);
   useEffect(() => {
     async function fetchProject() {
       try {
@@ -53,7 +81,7 @@ export function ProjectDetail() {
     if (!user || user === null) {
       return;
     } else {
-      fetchProjet(user, setProjets, projectId, navigate,setLoading);
+      fetchProjet(user, setProjets, projectId, navigate, setLoading);
     }
   }, [user, projectId]);
 
@@ -61,8 +89,8 @@ export function ProjectDetail() {
     if (!user || !projets) {
       return;
     } else {
-      fetchTasks(projets, setTasks, navigate,setLoading);
-      fetchProjectUsers(projets, setProjectUsers, navigate,setLoading);
+      fetchTasks(projets, setTasks, navigate, setLoading);
+      fetchProjectUsers(projets, setProjectUsers, navigate, setLoading);
     }
   }, [projets]);
 
@@ -145,7 +173,7 @@ export function ProjectDetail() {
       ) : (
         <SpinnerComponent />
       )}
-      {loading && <ErrorModal/>}
+      {loading && <ErrorModal />}
       <ToastContainer />
     </>
   );

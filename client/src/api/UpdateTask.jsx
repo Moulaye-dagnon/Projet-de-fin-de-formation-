@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { base_url } from "./config";
 import { SortByPriorityAndOrder } from "../Utils/getTryByPriority";
+import socket from "./socket";
 
 const useUpdateTask = () => {
   const { alltasks, setAllTasks } = UseAllTasksContext();
@@ -28,8 +29,8 @@ const useUpdateTask = () => {
         })),
         projectId,
       });
-
       setAllTasks(orderedTask);
+      socket.emit("task-change");
       return { success: true };
     } catch (err) {
       const errorMessage =

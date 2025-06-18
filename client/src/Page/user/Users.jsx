@@ -26,7 +26,6 @@ export default function Users() {
   useEffect(() => {
     socket.on("update-role", () => {
       fetchProjet(user, setProjets, projectId,navigate,setLoading);
-
     });
 
     socket.on("delete-user", () => {

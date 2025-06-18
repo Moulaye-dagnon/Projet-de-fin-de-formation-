@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
-import { io } from "socket.io-client";
-import { base_url, front_url } from "./config";
-const socket = io(`${front_url}`, { transports: ["websocket"] });
+import { base_url } from "./config";
+import socket from "./socket";
 
 export const fetchNotif = (notifData) => {
   fetch(`${base_url}/new-notification`, {

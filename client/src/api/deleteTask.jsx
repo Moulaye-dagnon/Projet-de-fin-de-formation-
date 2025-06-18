@@ -7,9 +7,6 @@ async function deleteTask(userId, projectId, taskId) {
     toast.error("Données manquantes pour la suppression !");
     return;
   }
-  console.log("task", taskId);
-  console.log("user", userId);
-  console.log("project", projectId);
 
   try {
     const response = await axios.delete(

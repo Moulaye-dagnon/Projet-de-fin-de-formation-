@@ -20,11 +20,16 @@ export function LayoutComponent() {
     socket.on("new-project", (newProject) => {
       setNewProject((state) => !state);
     });
+    // socket.on("task-change", (newProject) => {
+    //   // setNewProject((state) => !state);
+    //   console.log("first");
+    // });
 
     return () => {
       socket.off("add-user");
       socket.off("new-project");
       socket.off("fetch-notif");
+      socket.off("task-change");
     };
   }, []);
 
