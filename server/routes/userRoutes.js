@@ -340,7 +340,7 @@ router.post("/reset-password", async (req, res) => {
         }
       };
 
-      const link = `http://localhost:5173/resetpassword/${authToken}`;
+      const link = `https://gpc-production-2842.up.railway.app/resetpassword/${authToken}`;
       sendEmail(findUser.email, findUser.nom, link);
       return res.status(200).send({ email: email });
     } else {

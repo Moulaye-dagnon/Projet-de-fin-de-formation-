@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { dateFormat } from "../../Utils/dateFormat";
 import { UserContext } from "../../Context/UserContext";
 import { ProjectContext } from "../../Context/ProjectContext";
+import { base_url } from "../../api/config";
 
 export default function UserProfil() {
   const params = useParams();
@@ -23,7 +24,7 @@ export default function UserProfil() {
     return new Date(date).toLocaleDateString(undefined, options);
   };
   useEffect(() => {
-    fetch(`http://localhost:4000/users/user/${params.id}`, {
+    fetch(`${base_url}/users/user/${params.id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +37,7 @@ export default function UserProfil() {
   }, []);
   
   useEffect(() => {
-    fetch(`http://localhost:4000/tasks/projecttaskbyuser`, {
+    fetch(`${base_url}/tasks/projecttaskbyuser`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

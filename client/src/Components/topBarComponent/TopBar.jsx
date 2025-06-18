@@ -2,8 +2,9 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
 import { io } from "socket.io-client";
-const socket = io("http://localhost:4000/", { transports: ["websocket"] });
+const socket = io(front_url, { transports: ["websocket"] });
 import { dateFormat } from "../../Utils/dateFormat";
+import { base_url, front_url } from "../../api/config";
 export default function TopBar() {
   const navigate = useNavigate();
   const { user, logout } = useContext(UserContext);
@@ -11,7 +12,7 @@ export default function TopBar() {
   const modalRef = useRef(null);
   const [newNotif, setNewNotif] = useState([]);
   useEffect(() => {
-    fetch(`http://localhost:4000/notifications`, {
+    fetch(`${base_url}/notifications`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +31,7 @@ export default function TopBar() {
 
   useEffect(() => {
     socket.on("new-notif", async (updateRoleMessage) => {
-      fetch(`http://localhost:4000/notifications/`, {
+      fetch(`${base_url}/notifications/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +52,7 @@ export default function TopBar() {
   }, []);
   function handleOpenNotif() {
     setOpenNotif(!openNotif);
-    fetch(`http://localhost:4000/view-notifications/${user.id}`, {
+    fetch(`${base_url}/view-notifications/${user.id}`, {
       method: "POST",
     })
       .then((req) => {

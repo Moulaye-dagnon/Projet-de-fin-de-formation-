@@ -14,7 +14,10 @@ const { Server } = require("socket.io");
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "https://gpc-production-2842.up.railway.app",
+      "http://localhost:5173",
+    ],
     credentials: true,
   })
 );
@@ -26,9 +29,13 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173/",
+    origin: [
+      "https://gpc-production-2842.up.railway.app",
+      "http://localhost:5173",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    credentials: true,
   },
 });
 
@@ -57,12 +64,22 @@ io.on("connection", (socket) => {
     io.emit("new-notif", notif);
   });
 
+  socket.on("task-change", (notif) => {
+    io.emit("task-change", notif);
+  });
+
   socket.on("disconnect", () => {});
 });
 
-app.use("/", router);
-app.use("/", ProjectRouter);
-app.use("/", TaskRouter);
+app.use("/api", router);
+app.use("/api", ProjectRouter);
+app.use("/api", TaskRouter);
+
+app.use(express.static(path.join(__dirname, "../client/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+});
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { base_url } from "../../api/config";
 
 export default function ResetPassword() {
   const { token } = useParams();
@@ -12,7 +13,7 @@ export default function ResetPassword() {
     e.preventDefault();
     setValidate(true);
     if (ConfirmPassword === password) {
-      fetch(`http://localhost:4000/set-new-password/${token}`, {
+      fetch(`${base_url}/set-new-password/${token}`, {
         method: "POST",
         headers: {
           "Content-Type": "Application/json",

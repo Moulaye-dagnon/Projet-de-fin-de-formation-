@@ -5,9 +5,9 @@ function Cover() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="h-screen max-h-[900px] w-full max-w-5xl mx-auto flex flex-col sm:flex-row p-4 sm:p-6 overflow-hidden">
-      <div className="divmin1 flex-1 flex flex-col justify-center items-center  h-full min-h-0">
-        <div className="thom-div1 mt-19 sm:mt-0 ">
+    <div className="h-screen w-full mx-auto flex flex-col justify-between sm:flex-row p-4  overflow-hidden">
+      <div className="divmin1 flex-1 flex flex-col items-center justify-around h-full min-h-0">
+        <div className="thom-div1 sm:mt-0 ">
           <div className="flex">
             <h2 className="text-lg sm:text-xl font-bold">
               Gestion de Projet Collaboratif
@@ -25,7 +25,7 @@ function Cover() {
               type="button"
               className="rounded px-4 py-2 ms-auto cursor-pointer text-gray-50"
             >
-              <Link to={"/loguptest"}>
+              <Link to={"/login"}>
                 Commencer <i className="fas fa-arrow-right"></i>
               </Link>
             </button>
@@ -42,7 +42,7 @@ function Cover() {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col justify-start sm:justify-center h-full min-h-0">
+      <div className="flex-1 flex flex-col items-center justify-around h-full min-h-0">
         <div className="hidden sm:block md:max-w-80">
           <img
             className="w-full max-h-[80%] object-contain"

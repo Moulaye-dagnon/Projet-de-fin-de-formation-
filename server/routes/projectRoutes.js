@@ -90,22 +90,6 @@ router.post(
   }
 );
 
-// Middleware pour vérifier les permissions
-// async function checkProjectAminship(req, res, next) {
-//   const userId = req.params.id;
-//   const projectID = req.params.idproject;
-//   const projectC = await project.findOne({
-//     _id: projectID,
-//     owners: { $in: [new mongoose.Schema.Types.ObjectId(userId)] },
-//   });
-//   if (!projectC) {
-//     return res.status(401).json({
-//       message: "L'utilisateur n'a pas le droit d'ajouter à ce projet",
-//     });
-//   }
-//   req.project = projectC;
-//   next();
-// }
 
 // Ajouter un nouveau membre au projet
 router.post(
@@ -252,7 +236,7 @@ router.post(
           newUser.authTokens.push({ authToken });
           newUser.save();
 
-          const link = `http://localhost:5173/logup/${authToken}`;
+          const link = `https://gpc-production-2842.up.railway.app/logup/${authToken}`;
           sendEmail(newUser, link);
           res.status(200).json({ message: "Membre ajouté au projet" });
         }
@@ -272,7 +256,7 @@ router.post(
 
           newUser.save();
 
-          const link = `http://localhost:5173/logup/${authToken}`;
+          const link = `https://gpc-production-2842.up.railway.app/logup/${authToken}`;
           sendEmail(newUser, link);
           res.status(200).json({ message: "Membre ajouté au projet" });
         } else {

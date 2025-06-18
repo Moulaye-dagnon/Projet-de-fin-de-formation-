@@ -10,7 +10,8 @@ import { fetchProjet } from "../../api/fetchProjet";
 import { io } from "socket.io-client";
 import { All_user_project } from "../../api/all_project_by_user";
 import ErrorModal from "../../Components/Modals/ErrorModal";
-const socket = io("http://localhost:4000/", { transports: ["websocket"] });
+import { front_url } from "../../api/config";
+const socket = io(front_url, { transports: ["websocket"] });
 export default function Users() {
   const navigate = useNavigate();
   const { projectId } = useParams();
@@ -25,7 +26,6 @@ export default function Users() {
   useEffect(() => {
     socket.on("update-role", () => {
       fetchProjet(user, setProjets, projectId,navigate,setLoading);
-
     });
 
     socket.on("delete-user", () => {

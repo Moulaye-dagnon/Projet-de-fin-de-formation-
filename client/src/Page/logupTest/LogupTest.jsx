@@ -11,6 +11,7 @@ import Poste from "../../Components/Forms/logupInputs/Poste";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorModal from "../../Components/Modals/ErrorModal";
+import { base_url } from "../../api/config";
 
 export default function LogupTest() {
   const navigate = useNavigate();
@@ -27,13 +28,13 @@ export default function LogupTest() {
   const [loading, setLoading] = useState(false);
 
   const formData = new FormData();
-  formData.append("nom", fields.nom);
-  formData.append("prenom", fields.prenom);
-  formData.append("username", fields.username);
+  formData.append("nom", fields.nom.slice(0,-1));
+  formData.append("prenom", fields.prenom.slice(0,-1));
+  formData.append("username", fields.username.slice(0,-1));
   formData.append("tel", fields.telephone);
   formData.append("email", fields.email);
   formData.append("password", fields.password);
-  formData.append("poste", fields.poste);
+  formData.append("poste", fields.poste.slice(0,-1));
   formData.append("photoProfil", fields.photoProfil);
 
   const filter = [
@@ -82,7 +83,7 @@ export default function LogupTest() {
       setCurrent(current + 1);
     } else {
       setLoading(true);
-      fetch("http://localhost:4000/logup", {
+      fetch(`${base_url}/logup`, {
         method: "POST",
         body: formData,
       })
@@ -166,18 +167,18 @@ export default function LogupTest() {
                 Précédent
               </a>
             )}
-            {(current === 3 || current === 6) && (
+            {/* {(current === 3 || current === 6) && (
               <a
                 onClick={handleSkip}
                 className="cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded "
               >
                 Passer
               </a>
-            )}
+            )} */}
             <button
               className="btn rounded w-30 p-2 cursor-pointer text-gray-50"
               type="submit"
-              disabled={(current === 3 || current === 6) && true}
+              // disabled={(current === 3 || current === 6) && true}
             >
               {!canSubmit ? "Suivant" : "Envoyer"}
             </button>

@@ -2,6 +2,7 @@ import axios from "axios";
 import { UserContext } from "../Context/UserContext";
 import { SortByPriorityAndOrder } from "../Utils/getTryByPriority";
 import { toast } from "react-toastify";
+import { base_url } from "./config";
 
 export async function AddTaskApi({
   data,
@@ -12,7 +13,7 @@ export async function AddTaskApi({
   console.log(data.assignTo);
   try {
     const response = await axios.post(
-      `http://localhost:4000/task/${userId}/new`,
+      `${base_url}/task/${userId}/new`,
       {
         name: data.name,
         description: data.description,

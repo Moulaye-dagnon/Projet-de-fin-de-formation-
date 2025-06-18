@@ -1,8 +1,6 @@
 import { toast } from "react-toastify";
-import { All_user_project } from "./all_project_by_user";
-import { io } from "socket.io-client";
 import { base_url } from "./config";
-const socket = io("http://localhost:4000/", { transports: ["websocket"] });
+import socket from "./socket";
 
 export const fetchNewProject = (
   userId,

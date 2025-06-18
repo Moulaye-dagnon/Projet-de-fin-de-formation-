@@ -11,6 +11,7 @@ import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { base_url } from "../../api/config";
 export default function UpdateUser() {
   const params = useParams();
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ export default function UpdateUser() {
   formData.append("poste", fields.poste);
   formData.append("photoProfil", fields.photoProfil);
   useEffect(() => {
-    fetch(`http://localhost:4000/users/user/${params.id}`, {
+    fetch(`${base_url}/users/user/${params.id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +69,7 @@ export default function UpdateUser() {
     } else {
       setLoading(true);
       setValidate(!validate);
-      fetch("http://localhost:4000/update-account", {
+      fetch(`${base_url}/update-account`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

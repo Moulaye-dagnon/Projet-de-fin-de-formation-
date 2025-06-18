@@ -1,3 +1,5 @@
+import { base_url } from "./config";
+
 export const fetchLogup = (isSubmited,setCanSubmit,fields,setIsSubmited,canSubmit,formData,setLoading,setFormError,navigate,formError)=>{
     if (isSubmited === "role") {
         setCanSubmit(true);
@@ -45,7 +47,7 @@ export const fetchLogup = (isSubmited,setCanSubmit,fields,setIsSubmited,canSubmi
           setIsSubmited("role");
           setCanSubmit(true);
         } else {
-          fetch("http://localhost:4000/logup", {
+          fetch(`${base_url}/logup`, {
             method: "POST",
             body: formData,
           })
@@ -79,7 +81,7 @@ export const fetchLogup = (isSubmited,setCanSubmit,fields,setIsSubmited,canSubmi
         setIsSubmited("tel");
       } else if (canSubmit === true) {
         console.log("envoyé");
-        fetch("http://localhost:4000/logup", {
+        fetch(`${base_url}/logup`, {
           method: "POST",
           body: formData,
         })

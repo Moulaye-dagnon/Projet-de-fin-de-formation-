@@ -11,7 +11,6 @@ export default function Tel({ data, setData, update }) {
           onChange={(e) => setData({ ...data, telephone: e.target.value })}
           placeholder="+212 6 12 34 56 78"
           pattern="^\+212[5-7]\d{8}$"
-          required
         />
       ) : (
         <input

@@ -10,20 +10,26 @@ import { All_user_project } from "../../api/all_project_by_user";
 import { Header } from "../header/header";
 import UpdateProject from "../Modals/UpdateProject";
 import ErrorModal from "../Modals/ErrorModal";
+import { front_url } from "../../api/config";
 export function LayoutComponent() {
   const { logout } = useContext(UserContext);
   const { UserProject, setNewProject } = All_user_project();
   useEffect(() => {
-    const socket = io("http://localhost:4000/", { transports: ["websocket"] });
+    const socket = io(front_url, { transports: ["websocket"] });
     socket.on("add-user", (addUser) => {});
     socket.on("new-project", (newProject) => {
       setNewProject((state) => !state);
     });
+    // socket.on("task-change", (newProject) => {
+    //   // setNewProject((state) => !state);
+    //   console.log("first");
+    // });
 
     return () => {
       socket.off("add-user");
       socket.off("new-project");
       socket.off("fetch-notif");
+      socket.off("task-change");
     };
   }, []);
 

@@ -7,14 +7,7 @@ export default function ViewUsersComponent() {
   const { user, token, logout } = useContext(UserContext);
   const { projectId } = useParams();
 
-  const {
-    projets,
-    setProjets,
-    tasks,
-    setTasks,
-    projectUsers,
-    setProjectUsers,
-  } = useContext(ProjectContext);
+  const { projectUsers } = useContext(ProjectContext);
   const showUsers = projectUsers.slice(0, 2);
   return (
     <div className="border-[#50b1a1] shadow-lg rounded-3xl bg-white w-full h-1/3 p-4 flex flex-col gap-2">

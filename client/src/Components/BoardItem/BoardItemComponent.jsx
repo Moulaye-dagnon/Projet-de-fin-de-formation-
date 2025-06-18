@@ -13,10 +13,13 @@ import axios from "axios";
 import { base_url } from "../../api/config";
 import { UseAllTasksContext } from "../../Context/AllTaskContext";
 import { LuCircleDashed } from "react-icons/lu";
-import { OrderedFunction } from "../../../../server/Utils/orderdedFunction";
 import { ProjectContext } from "../../Context/ProjectContext";
 import { SortByPriorityAndOrder } from "../../Utils/getTryByPriority";
 import { motion, AnimatePresence } from "motion/react";
+import { io } from "socket.io-client";
+import { front_url } from "../../api/config";
+import { useEffect } from "react";
+const socket = io(`${front_url}`, { transports: ["websocket"] });
 export function BoardItemComponent({
   title,
   tasks,
@@ -58,6 +61,7 @@ export function BoardItemComponent({
         projectId,
       });
       setAllTasks([...orderedTask]);
+      socket.emit("task-change");
     } catch (err) {
       console.log(err);
     }
