@@ -84,15 +84,17 @@ router.post("/task/:userId/new", async (req, res) => {
 });
 
 router.patch("/task/reorder/:userid", async (req, res) => {
+  console.log("test");
   const { userId } = req.params;
   const { tasks, projectId } = req.body;
-  const project = Project.findOne({
+  const project = await Project.findOne({
     _id: new mongoose.Types.ObjectId(projectId),
     $or: [
       { owner: new mongoose.Types.ObjectId(userId) },
       { menbres: new mongoose.Types.ObjectId(userId) },
     ],
   });
+
   if (!project) {
     return res.status(401).json({
       message: "Vous n'avez pas les droits nécessaires sur ce projet",
