@@ -22,7 +22,7 @@ const useUpdateTask = () => {
         item._id === taskId ? { ...item, [property]: value } : item
       );
       const orderedTask = SortByPriorityAndOrder(updatedTasks);
-      await axios.patch(`${base_url}/task/reorder/${user._id}`, {
+      await axios.patch(`${base_url}/task/reorder/${user.id}`, {
         tasks: orderedTask.map((task) => ({
           _id: task._id,
           [property]: task[property],
