@@ -86,7 +86,6 @@ router.post("/task/:userId/new", async (req, res) => {
 router.patch("/task/reorder/:userid", async (req, res) => {
   const  userId  = req.params.userid;
   const { tasks, projectId } = req.body;
-  console.log(userId);
   const project = await Project.findOne({
     _id: new mongoose.Types.ObjectId(projectId),
     $or: [
