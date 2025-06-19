@@ -30,7 +30,7 @@ export default function UsersComponent({ user, myId }) {
           ) : (
             <img
               className="w-full h-full rounded-2xl object-cover mx-auto"
-              src="/src/assets/noimages.jpg"
+              src="../../assets/noimages.jpg"
               alt="users-photodeProfil"
             />
           )}
