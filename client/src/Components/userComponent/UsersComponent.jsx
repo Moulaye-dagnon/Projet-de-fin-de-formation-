@@ -30,7 +30,7 @@ export default function UsersComponent({ user, myId }) {
           ) : (
             <img
               className="w-full h-full rounded-2xl object-cover mx-auto"
-              src="../../assets/noimages.jpg"
+              src="/noimages.jpg"
               alt="users-photodeProfil"
             />
           )}
@@ -71,24 +71,24 @@ export default function UsersComponent({ user, myId }) {
           </Link>
         </button>
         {(SuperAdmin || (!isAdminn && isAdmin)) && !isSuperAdmin && (
-        <div
-          className="header cursor-pointer p-4 "
-          onClick={() => setOpenModal((c) => !c)}
-        >
-          <>
-            <i className="fas fa-ellipsis-v"></i>
-          </>
-          {openModal && (
-            <UserAction
-              userId={user._id}
-              closeModal={closeModal}
-              setOpenModal={setOpenModal}
-              openModal={openModal}
-              setLoading={setLoading}
-            />
-          )}
-        </div>
-      )}
+          <div
+            className="header cursor-pointer p-4 "
+            onClick={() => setOpenModal((c) => !c)}
+          >
+            <>
+              <i className="fas fa-ellipsis-v"></i>
+            </>
+            {openModal && (
+              <UserAction
+                userId={user._id}
+                closeModal={closeModal}
+                setOpenModal={setOpenModal}
+                openModal={openModal}
+                setLoading={setLoading}
+              />
+            )}
+          </div>
+        )}
       </div>
       {loading && <ErrorModal />}
       <ToastContainer />
