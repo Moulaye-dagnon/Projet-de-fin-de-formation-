@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { base_url } from "./config";
+import socket from "./socket";
 
 async function deleteTask(userId, projectId, taskId) {
   if (!taskId || !userId || !projectId) {
@@ -16,6 +17,7 @@ async function deleteTask(userId, projectId, taskId) {
       }
     );
     if (response.status === 200) {
+      socket.emit("task-change");
       toast.success("Tâche supprimée avec succès !");
     }
   } catch (error) {

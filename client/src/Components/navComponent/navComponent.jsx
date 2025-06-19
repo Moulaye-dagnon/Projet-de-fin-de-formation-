@@ -26,14 +26,14 @@ export function NavComponent({
   return (
     <div
       ref={navRef}
-      className={`z-90  w-full h-full max-h-screen overflow-hidden transition-all duration-300 flex flex-col bg-gray-100 shadow-lg rounded-2xl py-1 1`}
+      className={`z-90  w-full h-full max-h-screen overflow-hidden transition-all duration-300 flex flex-col bg-gray-100 shadow-lg  py-1 1`}
     >
-      <div className="w-full  my-10 h-[75%]  overflow-y-auto">
+      <div className="w-full my-10 h-[75%] overflow-y-auto">
         <div>
           <div className=" ml-2 mb-3 opacity-70">Espace de travail</div>
           <div className="w-full px-2 mt-2 mb-5">
             <ul>
-              <li className="w-full">
+              <li className="w-full ">
                 <NavLink
                   to={"/dashboard"}
                   className={({ isActive }) =>
@@ -42,7 +42,7 @@ export function NavComponent({
                     } hover:bg-gray-200 hover:shadow-lg`
                   }
                 >
-                  <span className="w-4.5 inline-block mr-2">
+                  <span className="w-4.5 inline-block mr-2 ">
                     <i className="fas fa-lightbulb text-mygreen"></i>{" "}
                   </span>
                   <span className="flex-grow text-md">Aperçu</span>
@@ -55,7 +55,7 @@ export function NavComponent({
           <div className=" mb-3 opacity-70 px-2 cursor-pointer flex items-center">
             Mes projets
             <i
-              className="fas fa-plus ml-auto text-mygreen"
+              className="fas fa-plus ml-auto "
               onClick={handleToggleModal}
             ></i>
           </div>

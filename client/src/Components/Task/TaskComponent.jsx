@@ -55,7 +55,11 @@ export function TaskComponent({ item, perso }) {
       priority: !toggleMenu.priority,
     });
   };
-  const handleDelete = () => deleteTask(user.id, projectId, item._id);
+  const handleDelete = () => {
+    if (window.confirm("Voulez-vous supprimer cette tache?")) {
+      deleteTask(user.id, projectId, item._id);
+    }
+  };
   const cardVariants = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1 },

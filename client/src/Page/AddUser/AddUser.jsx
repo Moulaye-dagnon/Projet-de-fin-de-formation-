@@ -40,7 +40,7 @@ export default function AddUser() {
     })
       .then((req) => {
         if (req.status === 200) {
-          toast.success("Membre ajouté avec succès!");
+          toast.success("Membre Invité à rejoindre!");
           setTimeout(() => {
             fetchNotif(notifData);
             socket.emit("fetch-notif");

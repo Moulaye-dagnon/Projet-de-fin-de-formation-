@@ -17,12 +17,62 @@ export default function UsersComponent({ user, myId }) {
   function closeModal() {
     setOpenModal(!openModal);
   }
-
   return (
-    <div className="rounded-3xl relative   0 w-70 flex flex-col gap-2 border-[#50b1a1] shadow-md hover:shadow-lg transition-all">
-      {(SuperAdmin || (!isAdminn && isAdmin)) && !isSuperAdmin && (
+    <div className="rounded-3xl h-96 w-75 bg-white shadow-lg hover:shadow-xl transition-all">
+      <div className="m-4">
+        <div className="img w-full h-50">
+          {user.photoProfil ? (
+            <img
+              className="w-full h-full rounded-2xl object-cover mx-auto"
+              src={user.photoProfil.url}
+              alt="users-photodeProfil"
+            />
+          ) : (
+            <img
+              className="w-full h-full rounded-2xl object-cover mx-auto"
+              src="/src/assets/noimages.jpg"
+              alt="users-photodeProfil"
+            />
+          )}
+        </div>
+      </div>
+
+      <div className="">
+        {isSuperAdmin && isAdminn && (
+          <p className="text-center ">
+            <i class="fas fa-crown text-mygreen"></i>
+          </p>
+        )}
+
+        {!isSuperAdmin && isAdminn && (
+          <p className="text-center ">
+            <i class="fas fa-user-cog text-mygreen"></i>
+          </p>
+        )}
+
+        <p className="text-center text-xl font-semibold text-gray-800 mb-2">
+          {user.nom} {user.prenom}
+        </p>
+        <p className="text-gray-600 text-sm leading-relaxed text-center">
+          {user.email}
+        </p>
+      </div>
+
+      <div className="footer mt-2 flex items-center justify-around relative">
+        <a
+          href={`mailto:${user.email}`}
+          class="text-gray-400 hover:text-mygreen block"
+        >
+          <i className="fas fa-envelope text-xl"></i>
+        </a>
+        <button className="p-4 rounded-full">
+          <Link to={`/dashboard/users/user/${user._id}`}>
+            <p className="cursor-pointer">Voir le profil</p>
+          </Link>
+        </button>
+        {(SuperAdmin || (!isAdminn && isAdmin)) && !isSuperAdmin && (
         <div
-          className="header ml-auto cursor-pointer p-4 "
+          className="header cursor-pointer p-4 "
           onClick={() => setOpenModal((c) => !c)}
         >
           <>
@@ -39,37 +89,8 @@ export default function UsersComponent({ user, myId }) {
           )}
         </div>
       )}
-
-      <div className="flex-grow-1 p-4">
-        <div className="img">
-          {user.photoProfil ? (
-            <img
-              className="w-24 h-24 rounded-full object-cover mx-auto"
-              src={user.photoProfil.url}
-              alt="users-photodeProfil"
-            />
-          ) : (
-            <img
-              className="w-24 h-24 rounded-full object-cover mx-auto"
-              src="/src/assets/fdp.avif"
-              alt="users-photodeProfil"
-            />
-          )}
-        </div>
-        <p className="text-center text-xl font-semibold text-gray-800 mb-2">
-          {user.nom} {user.prenom}
-        </p>
-        <p className="text-gray-600 text-sm leading-relaxed text-center">
-          {user.email}
-        </p>
       </div>
-
-      <div className="footer border-slate-900 bg-slate-200 flex-grow-1 rounded-b-lg p-2 text-center">
-        <Link to={`/dashboard/users/user/${user._id}`}>
-          <p className="cursor-pointer">Voir le profil</p>
-        </Link>
-      </div>
-      {loading && <ErrorModal/>}
+      {loading && <ErrorModal />}
       <ToastContainer />
     </div>
   );

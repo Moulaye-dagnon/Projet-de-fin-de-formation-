@@ -13,17 +13,25 @@ export default function UpdateProject({
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const { projets } = useContext(ProjectContext);
+  const currentProjectDate = new Date(projets.dueDate).toISOString().split('T')[0];
   const [data, setData] = useState({
-    name: "",
-    description: "",
-    date: "",
+    name: projets.name,
+    description: projets.description,
+    date: currentProjectDate,
   });
   const [loading, setLoading] = useState("");
   const userId = user.id;
   const projectID = projets._id;
   function handleSubmit(e) {
     e.preventDefault();
-    updateProjectApi(userId, projectID, setOpenUpdateProject, navigate, data,setLoading);
+    updateProjectApi(
+      userId,
+      projectID,
+      setOpenUpdateProject,
+      navigate,
+      data,
+      setLoading
+    );
   }
   function handleDelete() {
     if (
@@ -31,7 +39,13 @@ export default function UpdateProject({
         "Ce projet sera totalement supprimer si vous décider de confirmer"
       )
     ) {
-      deleteProjectApi(userId, projectID, setOpenUpdateProject, navigate,setLoading);
+      deleteProjectApi(
+        userId,
+        projectID,
+        setOpenUpdateProject,
+        navigate,
+        setLoading
+      );
     }
   }
   return (
@@ -57,7 +71,7 @@ export default function UpdateProject({
               type="text"
               id="description"
               className="border-2 border-gray-300 rounded p-2.5"
-              value={data.nom}
+              value={data.name}
               onChange={(e) => setData({ ...data, name: e.target.value })}
               placeholder="Saisissez le nom"
               required
@@ -68,7 +82,7 @@ export default function UpdateProject({
               type="text"
               id="description"
               className="border-2 border-gray-300 rounded p-2.5"
-              value={data.nom}
+              value={data.description}
               onChange={(e) =>
                 setData({ ...data, description: e.target.value })
               }
@@ -97,7 +111,7 @@ export default function UpdateProject({
               </a>
             </div>
           </form>
-          {loading && <ErrorModal/>}
+          {loading && <ErrorModal />}
           <ToastContainer />
         </div>
       </div>

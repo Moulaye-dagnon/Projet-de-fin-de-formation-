@@ -1,7 +1,9 @@
+import SpinnerComponent from "../Spinner/SpinnerComponent";
+
 export default function ErrorModal() {
   return (
-    <div className="inset-0 fixed bg-black/50 m-auto z-96">
-      <img src="/spinner.svg" className="inset-0 fixed m-auto" alt="spinner" />
+    <div className="inset-0 fixed bg-gray-100 m-auto z-96">
+      <SpinnerComponent />
     </div>
   );
 }

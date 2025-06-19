@@ -15,7 +15,7 @@ export function Header({ handleToggleNav }) {
 
                 transition duration-300 ease-in-out transform hover:scale-110"
           >
-            <FiSidebar size={"20px"} />
+            <i className="fas fa-bars cursor-pointer"></i>
           </span>
         </div>
       </div>

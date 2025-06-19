@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function AddUserComponent() {
   return (
-    <div className="rounded-3xl bg-green-100 0 w-70 flex flex-col gap-2 border-[#50b1a1] shadow-md hover:shadow-lg transition-all">
+    <div className="rounded-3xl bg-white h-96 0 w-70 flex flex-col gap-2 shadow-md hover:shadow-lg transition-all">
       <div className="header ml-auto cursor-pointer p-4">
       </div>
 

@@ -15,9 +15,9 @@ export function DropdownMenuList({ UserProject, handleToggleProjectUpdate }) {
             return (
               <li key={project._id}>
                 <details className="group">
-                  <summary className="flex items-center justify-between gap-2 p-2 font-medium marker:content-none hover:cursor-pointer">
+                  <summary className="flex items-center justify-between gap-2 p-2 font-medium marker:content-none hover:cursor-pointer hover:bg-mygreen transition-all">
                     <span className="flex gap-2 items-center">
-                      <span className="text-xs font-bold">{project.name}</span>
+                      <span className="text-md font-bold">{project.name}</span>
                     </span>
                     <svg
                       className="w-4 h-4 text-gray-500 transition group-open:rotate-90"
@@ -41,12 +41,12 @@ export function DropdownMenuList({ UserProject, handleToggleProjectUpdate }) {
                           to={`/dashboard/project/${project._id}`}
                           className={({ isActive }) =>
                             `flex items-center w-full p-2 rounded-lg transition-all ${
-                              isActive ? "bg-gray-200 shadow-lg" : "bg-white"
-                            } hover:bg-gray-100 hover:shadow-lg`
+                              isActive ? "bg-mygreen shadow-lg" : "bg-white"
+                            } hover:bg-mygreen hover:shadow-lg`
                           }
                         >
                           <span className="w-4.5 inline-block mr-2">
-                            <i className="fas fa-lightbulb text-[#76b1a6]"></i>{" "}
+                            <i className="fas fa-lightbulb"></i>{" "}
                           </span>
                           <span className="flex-grow text-xs">Principale</span>
                         </NavLink>
@@ -56,12 +56,12 @@ export function DropdownMenuList({ UserProject, handleToggleProjectUpdate }) {
                           to={`/dashboard/${project._id}/userTasks/${user.id}`}
                           className={({ isActive }) =>
                             `flex items-center w-full p-2 rounded-lg transition-all ${
-                              isActive ? "bg-gray-200 shadow-lg" : "bg-white"
-                            } hover:bg-gray-100 hover:shadow-lg`
+                              isActive ? "bg-mygreen shadow-lg" : "bg-white"
+                            } hover:bg-mygreen hover:shadow-lg`
                           }
                         >
                           <span className="w-4.5 inline-block mr-2">
-                            <i className="fas fa-tasks text-[#76b1a6]"></i>{" "}
+                            <i className="fas fa-tasks "></i>{" "}
                           </span>
                           <span className="flex-grow text-xs">Mes taches</span>
                         </NavLink>
@@ -72,12 +72,12 @@ export function DropdownMenuList({ UserProject, handleToggleProjectUpdate }) {
                           to={`/dashboard/users/${project._id}`}
                           className={({ isActive }) =>
                             `flex items-center w-full p-2 rounded-lg transition-all ${
-                              isActive ? "bg-gray-200 shadow-lg" : "bg-white"
-                            } hover:bg-gray-100 hover:shadow-lg`
+                              isActive ? "bg-mygreen shadow-lg" : "bg-white"
+                            } hover:bg-mygreen hover:shadow-lg`
                           }
                         >
                           <span className="w-4.5 inline-block mr-2">
-                            <i className="fas fa-users text-[#76b1a6]"></i>{" "}
+                            <i className="fas fa-users"></i>{" "}
                           </span>
                           <span className="flex-grow text-xs">L'équipe</span>
                         </NavLink>
@@ -88,12 +88,12 @@ export function DropdownMenuList({ UserProject, handleToggleProjectUpdate }) {
                           to={`/dashboard/stats/${project._id}`}
                           className={({ isActive }) =>
                             `flex items-center w-full p-2 rounded-lg transition-all ${
-                              isActive ? "bg-gray-200 shadow-lg" : "bg-white"
-                            } hover:bg-gray-100 hover:shadow-lg`
+                              isActive ? "bg-mygreen shadow-lg" : "bg-white"
+                            } hover:bg-mygreen hover:shadow-lg`
                           }
                         >
                           <span className="w-4.5 inline-block mr-2">
-                            <i className="fas fa-chart-line text-[#76b1a6]"></i>
+                            <i className="fas fa-chart-line"></i>
                           </span>
                           <span className="flex-grow text-xs">
                             statistiques
@@ -101,24 +101,26 @@ export function DropdownMenuList({ UserProject, handleToggleProjectUpdate }) {
                         </NavLink>
                       </li>
 
-                      {project.superAdmin === user.id && <li
-                        className="flex gap-2"
-                        onClick={handleToggleProjectUpdate}
-                      >
-                        <NavLink
-                          to={`/dashboard/project/${project._id}`}
-                          className={({ isActive }) =>
-                            `flex items-center w-full p-2 rounded-lg transition-all ${
-                              isActive ? "bg-gray-200 shadow-lg" : "bg-white"
-                            } hover:bg-gray-100 hover:shadow-lg`
-                          }
+                      {project.superAdmin === user.id && (
+                        <li
+                          className="flex gap-2"
+                          onClick={handleToggleProjectUpdate}
                         >
-                          <span className="w-4.5 inline-block mr-2">
-                            <i className="fas fa-wrench text-[#76b1a6]"></i>
-                          </span>
-                          <span className="flex-grow text-xs">Gérer</span>
-                        </NavLink>
-                      </li>}
+                          <NavLink
+                            to={`/dashboard/project/${project._id}`}
+                            className={({ isActive }) =>
+                              `flex items-center w-full p-2 rounded-lg transition-all ${
+                                isActive ? "bg-mygreen shadow-lg" : "bg-white"
+                              } hover:bg-mygreen hover:shadow-lg`
+                            }
+                          >
+                            <span className="w-4.5 inline-block mr-2">
+                              <i className="fas fa-wrench"></i>
+                            </span>
+                            <span className="flex-grow text-xs">Réglages</span>
+                          </NavLink>
+                        </li>
+                      )}
                     </ul>
                   </article>
                 </details>

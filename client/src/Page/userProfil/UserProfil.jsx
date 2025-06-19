@@ -74,8 +74,8 @@ export default function UserProfil() {
   const isAdmin = projets?.owners?.find((owner) => owner === userData?._id);
   return (
     userData && (
-      <div className=" h-10/12 py-4 my-4 overflow-y-auto px-4 bg-white">
-        <div className="shadow-lg rounded-2xl p-8 max-w-3xl w-full m-auto">
+      <div className=" h-10/12 py-4 my-4 overflow-y-auto px-4">
+        <div className="shadow-lg rounded-2xl p-8 max-w-3xl w-full m-auto bg-white">
           <div className="h-full flex flex-col items-center sm:items-start gap-6">
             <img
               src={
