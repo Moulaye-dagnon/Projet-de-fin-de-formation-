@@ -50,6 +50,7 @@ export function BoardItemComponent({
       return task;
     });
     const orderedTask = SortByPriorityAndOrder(updateTasks);
+    console.log(user._id);
     try {
       await axios.patch(`${base_url}/task/reorder/${user._id}`, {
         tasks: orderedTask.map((task) => ({
